@@ -164,7 +164,9 @@ const kostka = [
 					<li><b>Zaplatíte u {partner}</b><span>Nákup dokončíte bezpečně přímo u partnera, za stejnou cenu.</span></li>
 					{store?.slug === 'skvele-cesko'
 						? <li><b>Vstupenka přijde e-mailem</b><span>Na místě ukážete QR kód v telefonu. Termín můžete bezplatně změnit.</span></li>
-						: <li><b>Voucher přijde e-mailem</b><span>Vytisknete ho, darujete nebo rovnou rezervujete termín.</span></li>}
+						: pt.voucher === false
+							? <li><b>Potvrzení rezervace</b><span>{pt.unit ? 'Termín a cenu za celý pobyt uvidíte u partnera, potvrzení přijde e-mailem.' : 'Po objednání termínu vám cestovní kancelář pošle potvrzení a pokyny k cestě.'}</span></li>
+							: <li><b>Voucher přijde e-mailem</b><span>Vytisknete ho, darujete nebo rovnou rezervujete termín.</span></li>}
 				</ol>
 			</aside>
 		</div>

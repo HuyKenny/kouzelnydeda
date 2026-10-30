@@ -76,7 +76,7 @@ const subcats = (t: Tree, cat: Cat): Chip[] => (t.kids.get(cat.id) ?? []).filter
   .sort((a, b) => a.sort - b.sort).map((c) => ({ name: decode(c.name), url: `/${c.slug}/`, count: c.count_total, image: c.image, icon: catIcon(t, c.id), grp: c.grp }));
 
 export interface ListingView {
-  meta: Meta; crumbs: Crumb[]; h1: string; h2: string; intro: string; introTitle: string; descriptionHtml: string; items: Card[]; total: number;
+  meta: Meta; crumbs: Crumb[]; h1: string; h2: string; intro: string; introTitle: string; descriptionHtml: string; bodyHtml?: string; items: Card[]; total: number;
   page: number; pages: number; base: string; qs: string; f: FilterState; filtered: boolean; chipsTitle: string; chips: Chip[]; related: Chip[];
   subcats: Chip[]; faq: Array<{ q: string; a: string }>; trust: string; tree: Tree; pageType: string; icon: string; section: string;
   gifts: Gift[]; ill?: string;
@@ -157,7 +157,10 @@ export async function categoryView(db: D1Database, catId: number, page: number, 
     canonical = main ? abs(`/${main.slug}/`) : url;
   }
   if (lok) crumbs.push({ name: cityName(lok.slug).nom, url: base });
-  const faq = categoryFaq(name, kind);
+  // the category's own questions first (written for its searches), then the general "how buying works" one
+  let own: Array<{ q: string; a: string }> = [];
+  try { own = cat.faq_json ? JSON.parse(cat.faq_json) as typeof own : []; } catch { /* none */ }
+  const faq = own.length && !lok ? [...own, ...categoryFaq(name, kind).filter((x) => /nákup|rezervace/i.test(x.q)).slice(0, 1)] : categoryFaq(name, kind);
   const meta: Meta = {
     title: paged(title, page), description, robots: filtered ? ['noindex', 'follow'] : robots(noindex, cat.seo_robots),
     ...(noindex || filtered ? {} : { canonical }),
@@ -168,7 +171,7 @@ export async function categoryView(db: D1Database, catId: number, page: number, 
     jsonLd: [breadcrumbLd(lok ? crumbs.slice(0, -1) : crumbs), itemListLd(name, items), faqLd(faq)].filter(Boolean),
   };
   return {
-    meta, crumbs, h1, h2, intro, introTitle, descriptionHtml: page === 1 && !lok && !filtered ? cat.description_html : '', items, total, page, pages, base,
+    meta, crumbs, h1, h2, intro: cat.body_html && !lok ? '' : intro, introTitle, descriptionHtml: page === 1 && !lok && !filtered ? cat.description_html : '', bodyHtml: page === 1 && !lok && !filtered ? cat.body_html : '', items, total, page, pages, base,
     qs: toQuery(f), f, filtered, chipsTitle: 'Podle města', chips: cityChips(cat, cc, lok?.slug), related: related(t, cat), subcats: lok ? [] : subcats(t, cat),
     faq, trust, tree: t, pageType: lok ? 'combo' : 'category', icon: catIcon(t, cat.id), section: chain[0]?.slug ?? '', side: sectionSide(t, cat, cc, lok?.slug),
     gifts: chain[0] ? GIFTS.filter((g) => !g.hub && g.cats.some((s) => s === chain[0]!.slug || chain.some((c) => c.slug === s))).slice(0, 6) : [],

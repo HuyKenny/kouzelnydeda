@@ -324,6 +324,8 @@ export async function finalizeDay(env: Env, force = false): Promise<Record<strin
     db.prepare(`UPDATE products SET pop = COALESCE((SELECT COUNT(*) FROM clicks c WHERE c.product_id = products.id AND c.clicked_at > ?), 0) * 50
         + MIN(COALESCE(CAST(json_extract(info, '$.cu') AS INTEGER), 0), 5000) / 10 + COALESCE(CAST(json_extract(info, '$.pr') AS INTEGER), 0) WHERE active = 1`).bind(since),
     db.prepare('UPDATE cat_products SET pop = (SELECT p.pop FROM products p WHERE p.id = cat_products.product_id)'),
+    // click log retention promised in the privacy policy (/ochrana-osobnich-udaju/): 24 months
+    db.prepare("DELETE FROM clicks WHERE clicked_at < datetime('now', '-24 months')"),
   ]);
   await recount(db);
   await remix(db);

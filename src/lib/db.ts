@@ -6,7 +6,7 @@ export interface Cat {
   id: number; slug: string; name: string; parent: number; count_total: number; count_direct: number; noindex: number; canon_id: number; image: string;
   icon: string; grp: string; short: string; sort: number;
 }
-export interface CatFull extends Cat { description_html: string; seo_title: string; seo_desc: string; seo_robots: string }
+export interface CatFull extends Cat { description_html: string; seo_title: string; seo_desc: string; seo_robots: string; body_html: string; faq_json: string }
 export interface Card {
   id: number; slug: string; name: string; image: string; price: number; price_old: number; disc_pct: number; store_id: number; city: string;
   rating: number; reviews: number; deal_end: string | null; bought: number | null; created_at: string;
@@ -176,8 +176,9 @@ export async function boxOffers(db: D1Database, catId: number, seed: string): Pr
   return rows.slice(0, 9);
 }
 
+/** Home "Nejprodávanější teď": partners mixed, only gift-sized prices (a 57 000 Kč jet flight is no bestseller). */
 export async function popular(db: D1Database, n = 8): Promise<Card[]> {
-  return (await db.prepare(`SELECT ${CARD} FROM products p WHERE p.active = 1 AND p.image <> '' ORDER BY p.mix DESC, p.pop DESC LIMIT ?`).bind(n).all<Card>()).results;
+  return (await db.prepare(`SELECT ${CARD} FROM products p WHERE p.active = 1 AND p.image <> '' AND p.price BETWEEN 150 AND 6000 ORDER BY p.mix DESC, p.pop DESC LIMIT ?`).bind(n).all<Card>()).results;
 }
 
 export async function loadPost(db: D1Database, id: number): Promise<Post | null> {

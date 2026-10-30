@@ -8,7 +8,7 @@ export const INDEXNOW_KEY = 'b44e9e81085a8e09ad851279ee1b8ce8';
 export const LOGO_URL = BASE + '/a/logo-512.png';
 export const OG_DEFAULT = BASE + '/a/og.jpg';
 export const PER_PAGE = 24;
-export const POSTS_PER_PAGE = 10;
+export const POSTS_PER_PAGE = 12;
 /** kd_combo: a category × city listing with at least this many offers is its own landing page (canonical to itself). */
 export const COMBO_MIN = 40;
 /** Days an ended offer keeps its page ("Nabídka skončila", noindex) before it 301s to its category. */

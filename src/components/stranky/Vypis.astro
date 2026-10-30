@@ -70,6 +70,7 @@ const sec = v.section || v.pageType;
 				<DarkyMrizka items={v.gifts} />
 			</section>
 		)}
+		{v.bodyHtml && <section class="sek txt kat-text" set:html={v.bodyHtml} />}
 		{v.intro && (
 			<section class="sek txt">
 				{v.introTitle && <h2>{v.introTitle}</h2>}

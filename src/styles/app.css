@@ -164,6 +164,21 @@ button, input, select { font: inherit; color: inherit; }
 .k__s { font-size: .8rem; color: var(--ok); font-weight: 700; }
 .k__go { position: relative; z-index: 3; display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 8px 13px; background: var(--coral-l); color: var(--coral-d); font-weight: 800; font-size: .86rem; text-decoration: none; white-space: nowrap; }
 .k__go:hover { background: var(--coral); color: #fff; }
+/* phones: two compact cards per row — twice as many offers per scroll, the "K nabídce" button spans the card */
+@media (max-width: 599px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 12px; }
+  .k .uspora { top: 8px; left: 7px; font-size: .82rem; padding: 3px 7px; }
+  .k__badge { left: 6px; bottom: 6px; font-size: .68rem; padding: 3px 7px; gap: 3px; }
+  .k__b { padding: 8px 2px 0; gap: 3px; }
+  .k__m { font-size: .72rem; gap: 1px 6px; }
+  .k__m > :nth-child(n+3) { display: none; }
+  .k__n { font-size: .9rem; line-height: 1.3; }
+  .k__f { flex-direction: column; align-items: stretch; gap: 7px; padding: 6px 2px 0; }
+  .k__p del { display: inline; margin-right: 6px; font-size: .74rem; }
+  .k__p strong { font-size: 1.1rem; }
+  .k__p strong small { font-size: .7rem; }
+  .k__go { justify-content: center; padding: 8px 6px; font-size: .82rem; }
+}
 .k--end { opacity: .7; }
 
 /* ---------- listing ---------- */
@@ -463,3 +478,4 @@ button, input, select { font: inherit; color: inherit; }
 .box__perks li { display: flex; gap: 8px; align-items: flex-start; line-height: 1.35; }
 .box__perks .ik { color: var(--ok); flex: none; margin-top: 2px; }
 [hidden] { display: none !important; }
+.kat-text, .sek.faq, .ft { content-visibility: auto; contain-intrinsic-size: auto 900px; }
