@@ -108,10 +108,9 @@ export async function categoryView(db: D1Database, catId: number, page: number, 
     trust = `${n.toLocaleString('cs-CZ')}+ nabídek ${name.toLowerCase()} ${cn.lok}`;
     // a thin combination is not a landing: canonical to the category (WordPress did the same)
     canonical = cn.known && n >= COMBO_MIN ? url : abs(`/${cat.slug}/`);
-    if (!cn.known) title = categoryTitle(name, cat.seo_title);
-    if (total === 0) noindex = true;
+    if (!cn.known) title = categoryTitle(name);
   } else {
-    title = categoryTitle(name, cat.seo_title);
+    title = categoryTitle(name);
     description = cat.seo_desc || categoryDesc(name, cat.count_total);
     h1 = name;
     h2 = `${name} se slevou — ${cat.count_total.toLocaleString('cs-CZ')} nabídek`;

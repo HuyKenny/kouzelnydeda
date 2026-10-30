@@ -26,8 +26,8 @@ export function clamp(text: string, max = 160): string {
   return (i > max * 0.6 ? cutAt.slice(0, i) : t.slice(0, max)).replace(/[\s,;:–(-]+$/, '') + '…';
 }
 
-export function categoryTitle(name: string, custom = ''): string {
-  if (custom) return rmVars(custom, name);
+/** The child theme overrode every category title (also the Rank Math per-term ones) with this template. */
+export function categoryTitle(name: string): string {
   const n = decode(name);
   const long = `${n} se slevou – ověřené nabídky${SEP}${SITE}`;
   return long.length <= 62 ? long : `${n} se slevou${SEP}${SITE}`;
@@ -50,9 +50,17 @@ export function rmVars(tpl: string, name: string): string {
 export function offerTitle(name: string, custom = ''): string {
   return custom ? rmVars(custom, name) : withSite(name);
 }
+/** Rank Math %excerpt%: whole when it (about) fits, else cut at the last word before 160 characters, no ellipsis. */
+export function rmExcerpt(text: string): string {
+  const t = text.replace(/\s+/g, ' ').trim();
+  if (t.length <= 165) return t;
+  const c = t.slice(0, 161);
+  const i = c.lastIndexOf(' ');
+  return (i > 100 ? c.slice(0, i) : t.slice(0, 160)).replace(/[\s,;:–-]+$/, '');
+}
 export function descFrom(custom: string, text: string, fallback = ''): string {
   if (custom) return custom;
-  return clamp(stripTags(text) || fallback);
+  return rmExcerpt(stripTags(text) || fallback);
 }
 /** " – strana N" on paged listings (Rank Math %page%). */
 export function paged(title: string, page: number): string {
@@ -62,7 +70,7 @@ export function paged(title: string, page: number): string {
 /** Rank Math robots meta: follow/nofollow, index/noindex, the object's extra flags, max-* defaults on indexable pages. */
 export function robots(noindex: boolean, extra = ''): string[] {
   const parts = extra.split(',').map((x) => x.trim()).filter(Boolean);
-  const flags = parts.filter((x) => !['index', 'noindex', 'follow', 'nofollow'].includes(x));
+  const flags = parts.filter((x) => !['index', 'noindex', 'follow', 'nofollow'].includes(x) && !x.startsWith('max-'));
   const head = [parts.includes('nofollow') ? 'nofollow' : 'follow', noindex ? 'noindex' : 'index', ...flags];
   return noindex ? head : [...head, 'max-snippet:-1', 'max-video-preview:-1', 'max-image-preview:large'];
 }

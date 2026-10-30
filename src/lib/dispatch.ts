@@ -48,7 +48,8 @@ export async function dispatch(db: D1Database, pathname: string): Promise<Route>
     return { kind: 'notfound' };
   }
   if (s.length === 1) {
-    const r = await resolveSlug(db, s[0]!);
+    // WordPress kept non-ASCII slugs percent-encoded in lower case (Slevomat titles with U+2060 word joiners)
+    const r = (await resolveSlug(db, s[0]!)) ?? (/[^\x00-\x7f]/.test(s[0]!) ? await resolveSlug(db, enc(s[0]!).toLowerCase()) : null);
     if (r) {
       if (page > 1 && r.kind !== 'category' && r.kind !== 'postcat') return { kind: 'redirect', to: `/${enc(s[0]!)}/` };
       return { kind: r.kind as 'product', id: r.ref_id, page };
@@ -56,6 +57,9 @@ export async function dispatch(db: D1Database, pathname: string): Promise<Route>
     if (JUNK.test(path)) return { kind: 'notfound' };
     // kd-redirects.php: /<gone listing>/page/N/ → its base; an offer-like slug → the section it belongs to
     if (page > 1) return { kind: 'notfound' };
+    // /<offer>-2/ = an older copy of the same offer (WordPress guessed it the same way)
+    const base = /^(.{15,})-\d{1,2}$/.exec(s[0]!)?.[1];
+    if (base) { const b = await resolveSlug(db, base); if (b && b.kind === 'product') return { kind: 'redirect', to: `/${base}/` }; }
     if (/^[a-z0-9-]{15,}$/.test(s[0]!)) return { kind: 'redirect', to: themeTarget(s[0]!) };
     return { kind: 'notfound' };
   }
