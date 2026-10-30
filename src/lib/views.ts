@@ -7,7 +7,7 @@ import {
 import { isFiltered, parseFilters, toListQuery, toQuery, type FilterState } from './filters';
 import { BASE, COMBO_MIN, EXPIRED_KEEP_DAYS, OG_DEFAULT, PER_PAGE, POSTS_PER_PAGE, isoPrague } from './site';
 import {
-  BLOG_DESC, BLOG_TITLE, categoryDesc, categoryTitle, cityDesc, cityTitle, clamp, comboDesc, comboTitle, descFrom, offerTitle, paged, robots, withSite,
+  BLOG_DESC, BLOG_TITLE, rmVars, categoryDesc, categoryTitle, cityDesc, cityTitle, clamp, comboDesc, comboTitle, descFrom, offerTitle, paged, robots, withSite,
 } from './seo';
 import { categoryFaq, categoryIntro, cityIntro, comboIntro, kindOf, SERVICE_CATS, themeTarget, type Kind } from './kd';
 import { cityName } from './cities';
@@ -254,7 +254,7 @@ export async function postView(db: D1Database, id: number) {
   if (!post) return null;
   const t = await tree(db);
   const url = abs(`/${post.slug}/`);
-  const title = post.seo_title || withSite(post.title);
+  const title = post.seo_title ? rmVars(post.seo_title, post.title) : withSite(post.title);
   let ld: { graph?: unknown[] } = {};
   try { ld = post.ld_json ? JSON.parse(post.ld_json) : {}; } catch { /* none */ }
   const graph = ld.graph?.length ? ld.graph : [{

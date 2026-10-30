@@ -4,7 +4,7 @@
 //   /lokalita/<mesto>/  /brand/<store>/  /blog/ — blog categories sit in the root like everything else
 //   unknown → the old product bases (/slevy/<x>/, /kategorie-produktu/…/<x>/) to the last segment, /…/page/N/ of a dead
 //            listing to its base, an offer-like slug (≥ 15 chars) to its section (kd-redirects.php fallback), else 404
-import { resolveSlug } from './db';
+import { guessSlug, resolveSlug } from './db';
 import { themeTarget } from './kd';
 
 const JUNK = /\.[a-z0-9]{2,5}$|^\/(\.|wp-|cgi-bin|admin|administrator|phpmyadmin|xmlrpc|vendor|api\/|_)/i;
@@ -57,6 +57,8 @@ export async function dispatch(db: D1Database, pathname: string): Promise<Route>
     if (JUNK.test(path)) return { kind: 'notfound' };
     // kd-redirects.php: /<gone listing>/page/N/ → its base; an offer-like slug → the section it belongs to
     if (page > 1) return { kind: 'notfound' };
+    const g = await guessSlug(db, s[0]!);
+    if (g) return { kind: 'redirect', to: `/${g}/` };
     // /<offer>-2/ = an older copy of the same offer (WordPress guessed it the same way)
     const base = /^(.{15,})-\d{1,2}$/.exec(s[0]!)?.[1];
     if (base) { const b = await resolveSlug(db, base); if (b && b.kind === 'product') return { kind: 'redirect', to: `/${base}/` }; }

@@ -58,6 +58,14 @@ export async function resolveSlug(db: D1Database, slug: string): Promise<{ kind:
   return db.prepare('SELECT kind, ref_id FROM slugs WHERE slug = ?').bind(slug).first();
 }
 
+/** Unknown slug → a page only when the match is unambiguous: exactly one slug continues it with "-" and the requested
+ *  slug is at least half of it (a cut-off URL, WordPress redirect_guess_404_permalink). */
+export async function guessSlug(db: D1Database, slug: string): Promise<string | null> {
+  if (slug.length < 8) return null;
+  const rows = (await db.prepare("SELECT slug FROM slugs WHERE slug > ? AND slug < ? ORDER BY slug LIMIT 2").bind(slug + '-', slug + '-\uffff').all<{ slug: string }>()).results;
+  return rows.length === 1 && slug.length >= rows[0]!.slug.length * 0.5 ? rows[0]!.slug : null;
+}
+
 export type Sort = 'pop' | 'price' | 'price-desc' | 'date' | 'disc';
 export interface ListQuery { page: number; sort: Sort; min?: number | undefined; max?: number | undefined; store?: number | undefined; lok?: number | undefined }
 
