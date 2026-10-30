@@ -1,0 +1,54 @@
+---
+// Header: logo, offer search (suggestions via /api/suggest), menu of the five sections with their biggest
+// subcategories (the WordPress menu had the same five sections), section strip.
+import { tree } from '../lib/db';
+import { decode } from '../lib/format';
+import { getEnv } from '../lib/server/env';
+
+const t = await tree(getEnv().DB);
+const SECTIONS: Array<[string, string]> = [['cestovani', 'Cestování'], ['zazitky', 'Zážitky'], ['restaurace-a-bary', 'Restaurace a bary'], ['krasa-zdravi-a-relaxace', 'Krása, zdraví a relaxace']];
+const cols = SECTIONS.map(([slug, label]) => {
+	const c = t.bySlug.get(slug);
+	const kids = c ? (t.kids.get(c.id) ?? []).filter((k) => k.count_total >= 10 && !k.noindex && !k.canon_id).sort((a, b) => b.count_total - a.count_total).slice(0, 9) : [];
+	return { slug, label, kids: kids.map((k) => ({ slug: k.slug, name: decode(k.name) })) };
+}).filter((c) => t.bySlug.has(c.slug));
+const path = Astro.url.pathname;
+---
+<a class="skip" href="#obsah">Přeskočit na obsah</a>
+<header class="hd">
+	<div class="w hd__in">
+		<a class="logo" href="/" aria-label="Kouzelný děda – úvod"><img src="/a/logo-240.webp" srcset="/a/logo-240.webp 1x, /a/logo-480.webp 2x" alt="Kouzelný děda" width="120" height="46" /></a>
+		<div class="hl">
+			<form action="/" method="get" role="search">
+				<label class="sr" for="q">Hledat zážitky, pobyty a slevy</label>
+				<input id="q" type="search" name="s" placeholder="Wellness, masáž, glamping…" autocomplete="off" data-suggest />
+				<input type="hidden" name="post_type" value="product" />
+				<button type="submit">Hledat</button>
+			</form>
+			<div class="hl__s" role="listbox" hidden></div>
+		</div>
+		<details class="nav">
+			<summary>Nabídky <span aria-hidden="true">▾</span></summary>
+			<div class="nav__p">
+				{cols.map((c) => (
+					<div>
+						<h3><a href={`/${c.slug}/`}>{c.label}</a></h3>
+						<ul>{c.kids.map((k) => <li><a href={`/${k.slug}/`}>{k.name}</a></li>)}</ul>
+					</div>
+				))}
+				<div>
+					<h3><a href="/slevy/">Slevy</a></h3>
+					<ul><li><a href="/blog/">Blog a tipy</a></li><li><a href="/lokalita/praha/">Praha</a></li><li><a href="/lokalita/brno/">Brno</a></li><li><a href="/lokalita/ostrava/">Ostrava</a></li></ul>
+				</div>
+			</div>
+		</details>
+	</div>
+	<nav class="sekce" aria-label="Sekce">
+		<ul class="w">
+			{SECTIONS.map(([s, l]) => <li><a href={`/${s}/`} aria-current={path === `/${s}/` ? 'page' : undefined}>{l}</a></li>)}
+			<li><a href="/wellness-dovolena/" aria-current={path === '/wellness-dovolena/' ? 'page' : undefined}>Wellness</a></li>
+			<li><a href="/slevy/" aria-current={path === '/slevy/' ? 'page' : undefined}>Slevy</a></li>
+			<li><a href="/blog/" aria-current={path.startsWith('/blog/') ? 'page' : undefined}>Blog</a></li>
+		</ul>
+	</nav>
+</header>

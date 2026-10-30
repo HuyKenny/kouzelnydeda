@@ -1,0 +1,35 @@
+---
+// Offer card: photo, partner + city, name, old/new price and the voucher stub with the discount. The whole card links
+// to the offer page (like WordPress); the partner exit is on the detail page.
+import type { Card } from '../lib/db';
+import type { Tree } from '../lib/db';
+import { cena, decode } from '../lib/format';
+import { card } from '../lib/img';
+import { partnerColor } from '../lib/partners';
+
+interface Props { p: Card; t: Tree; idx?: number; h?: 'h2' | 'h3'; ended?: boolean }
+const { p, t, idx = 99, h = 'h3', ended = false } = Astro.props;
+const H = h;
+const name = decode(p.name);
+const img = card(p.image, 320);
+const store = t.stores.get(p.store_id);
+const save = p.price_old > p.price ? p.price_old - p.price : 0;
+---
+<li>
+	<article class={ended ? 'k k--end' : 'k'}>
+		<div class="fo">{img && <img src={img.src} srcset={img.srcset} alt="" width="320" height="213" loading={idx < 3 ? 'eager' : 'lazy'} fetchpriority={idx === 0 ? 'high' : undefined} decoding="async" />}</div>
+		<div class="k__b">
+			<p class="k__m">
+				{store && <span class="pt" style={`--c:${partnerColor(store.slug)}`}>{decode(store.name)}</span>}
+				{p.city && <span>{p.city}</span>}
+				{p.rating > 0 && p.reviews > 0 && <span>★ {String(p.rating).replace('.', ',')} ({p.reviews})</span>}
+			</p>
+			<H class="k__n"><a href={`/${p.slug}/`}>{name}</a></H>
+			{save > 0 && <p class="k__s">Ušetříte {cena(save)}</p>}
+		</div>
+		<div class="k__f">
+			<p class="k__p num">{p.price_old > p.price && <del>{cena(p.price_old)}</del>}<strong>{cena(p.price)}</strong></p>
+			{p.disc_pct > 0 && <span class="stub num">−{p.disc_pct} %</span>}
+		</div>
+	</article>
+</li>

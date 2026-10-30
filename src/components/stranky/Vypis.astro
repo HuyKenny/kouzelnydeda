@@ -1,0 +1,69 @@
+---
+// Listing page (category, category × city, city, partner): breadcrumb, H1, trust line, chips, subcategory tiles,
+// toolbar (sort, price, partner), offer grid, pagination, then the texts the child theme printed under the listing.
+import Base from '../../layouts/Base.astro';
+import Drobky from '../Drobky.astro';
+import Mrizka from '../Mrizka.astro';
+import Strankovani from '../Strankovani.astro';
+import { SORTS } from '../../lib/filters';
+import { card } from '../../lib/img';
+import type { ListingView } from '../../lib/views';
+
+interface Props { v: ListingView }
+const { v } = Astro.props;
+const first = v.page === 1 && !v.filtered;
+const stores = [...v.tree.stores.values()].filter((s) => s.count > 0);
+const lcp = v.items[0] ? card(v.items[0].image, 320) : null;
+---
+<Base meta={v.meta} pageType={v.pageType} preloadImg={lcp}>
+	<div class="w">
+		<Drobky items={v.crumbs} />
+		<header class="vh">
+			<h1>{v.h1}</h1>
+			{v.trust && <p class="trust"><span><b>{v.trust}</b></span><span>ověřené slevy</span><span>cena se u partnera nemění</span></p>}
+			{v.descriptionHtml && first && <div class="lead txt" set:html={v.descriptionHtml} />}
+		</header>
+		{v.chips.length > 0 && (
+			<ul class="chips"><li class="chips__l">{v.chipsTitle}:</li>{v.chips.map((c) => <li><a class="chip" href={c.url} aria-current={c.active ? 'page' : undefined}>{c.name}{c.count ? <span>{c.count}</span> : null}</a></li>)}</ul>
+		)}
+		{first && v.subcats.length > 0 && (
+			<ul class="tiles">{v.subcats.slice(0, 12).map((c) => { const i = card(c.image, 240); return (
+				<li><a class={i ? 'tile' : 'tile tile--txt'} href={c.url}>{i && <img src={i.src} srcset={i.srcset} alt="" width="240" height="160" loading="lazy" />}<span>{c.name}<small>{c.count} nabídek</small></span></a></li>
+			); })}</ul>
+		)}
+		<form class="tb" action={v.base} method="get">
+			<h2>{v.h2 || `${v.total.toLocaleString('cs-CZ')} nabídek`}</h2>
+			<div class="tb__f">
+				<label class="sr" for="orderby">Řazení</label>
+				<select id="orderby" name="orderby">{SORTS.map(([k, l]) => <option value={k} selected={v.f.sort === k}>{l}</option>)}</select>
+				{v.pageType !== 'store' && stores.length > 1 && (
+					<><label class="sr" for="partner">Partner</label>
+					<select id="partner" name="partner"><option value="">Všichni partneři</option>{stores.map((s) => <option value={s.slug} selected={v.f.partner === s.slug}>{s.name}</option>)}</select></>
+				)}
+				<label class="sr" for="min_price">Cena od</label><input id="min_price" name="min_price" inputmode="numeric" placeholder="Cena od" value={v.f.min ?? ''} />
+				<label class="sr" for="max_price">Cena do</label><input id="max_price" name="max_price" inputmode="numeric" placeholder="Cena do" value={v.f.max ?? ''} />
+				<button type="submit">Použít</button>
+			</div>
+		</form>
+		{v.items.length ? <Mrizka items={v.items} t={v.tree} /> : <p class="prazdne">Teď tu nejsou žádné nabídky. Zkuste jiné filtry nebo <a href="/">úvodní stránku</a>.</p>}
+		<Strankovani base={v.base} page={v.page} pages={v.pages} query={v.qs} />
+		{v.intro && (
+			<section class="sek txt">
+				{v.introTitle && <h2>{v.introTitle}</h2>}
+				<p>{v.intro}</p>
+			</section>
+		)}
+		{v.related.length > 0 && (
+			<section class="sek">
+				<h2>Mohlo by se hodit</h2>
+				<ul class="chips">{v.related.map((c) => <li><a class="chip" href={c.url}>{c.name} <span>{c.count}</span></a></li>)}</ul>
+			</section>
+		)}
+		{v.faq.length > 0 && (
+			<section class="sek faq">
+				<h2>Časté dotazy</h2>
+				{v.faq.map((f) => <details><summary>{f.q}</summary><div>{f.a}</div></details>)}
+			</section>
+		)}
+	</div>
+</Base>

@@ -1,0 +1,33 @@
+// Offer photos come straight from the partners' feeds (Slevomat CDN, Adrop, Zážitky.cz) and are resized on the fly by
+// wsrv.nl: nothing is stored on Cloudflare (Kenny, 27. 10. 2026: šetřit místo), the 70k WordPress copies are gone.
+// Article photos are own static files (/wp-content/uploads/…).
+
+/** Feeds sometimes put text or a broken host into the image field. */
+export function validImage(url: string | null | undefined): string {
+  const u = String(url ?? '').trim().replace(/^http:\/\//i, 'https://');
+  return /^https:\/\/[^\s/]+\.[^\s/]+\//i.test(u) ? u : '';
+}
+
+/** Photo cropped to w × h (cover), WebP. */
+export function crop(url: string | null | undefined, w: number, h: number): string {
+  const src = validImage(url);
+  if (!src) return '';
+  return `https://wsrv.nl/?url=${encodeURIComponent(src.replace(/^https:\/\//, ''))}&w=${w}&h=${h}&fit=cover&a=attention&output=webp&q=76`;
+}
+
+/** Card photo (3:2) shown at ~`css` px wide: src + srcset 1×/2×. */
+export function card(url: string | null | undefined, css = 320): { src: string; srcset: string } | null {
+  const one = crop(url, css, Math.round(css / 1.5));
+  if (!one) return null;
+  return { src: one, srcset: `${one} 1x, ${crop(url, css * 2, Math.round(css * 2 / 1.5))} 2x` };
+}
+
+/** Wide hero photo (2:1) with width descriptors. */
+export function hero(url: string | null | undefined): { src: string; srcset: string } | null {
+  const mid = crop(url, 960, 480);
+  if (!mid) return null;
+  return { src: mid, srcset: `${crop(url, 640, 320)} 640w, ${mid} 960w, ${crop(url, 1400, 700)} 1400w` };
+}
+
+/** Own uploads as site-relative paths, so every host (staging, workers.dev) serves its own copy. */
+export const ownUpload = (u: string | null | undefined) => String(u ?? '').replace(/^https?:\/\/(www\.)?kouzelnydeda\.cz(?=\/(wp-content|a)\/)/, '');

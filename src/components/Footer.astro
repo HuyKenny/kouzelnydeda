@@ -1,0 +1,38 @@
+---
+// Footer: sections, the popular cities (/lokalita/…), information pages, affiliate disclosure and the operator.
+import { OPERATOR } from '../lib/site';
+const year = new Date().getFullYear();
+const CITIES: Array<[string, string]> = [['praha', 'Praha'], ['brno', 'Brno'], ['ostrava', 'Ostrava'], ['plzen', 'Plzeň'], ['ceske-budejovice', 'České Budějovice'], ['hradec-kralove', 'Hradec Králové'],
+	['olomouc', 'Olomouc'], ['liberec', 'Liberec'], ['usti-nad-labem', 'Ústí nad Labem'], ['pardubice', 'Pardubice'], ['zlin', 'Zlín'], ['karlovy-vary', 'Karlovy Vary']];
+---
+<footer class="ft">
+	<div class="w ft__in">
+		<div>
+			<a class="ft__logo" href="/"><img src="/a/logo-240.webp" alt="Kouzelný děda" width="120" height="46" loading="lazy" /></a>
+			<p>Zážitky, pobyty a dovolená se slevou od ověřených partnerů na jednom místě. Nabídky obnovujeme několikrát denně.</p>
+		</div>
+		<div>
+			<h2>Kategorie</h2>
+			<ul>
+				<li><a href="/cestovani/">Cestování</a></li><li><a href="/zazitky/">Zážitky</a></li><li><a href="/restaurace-a-bary/">Restaurace a bary</a></li>
+				<li><a href="/krasa-zdravi-a-relaxace/">Krása, zdraví a relaxace</a></li><li><a href="/wellness-dovolena/">Wellness dovolená</a></li><li><a href="/slevy/">Slevy</a></li>
+			</ul>
+		</div>
+		<div>
+			<h2>Oblíbená města</h2>
+			<ul>{CITIES.map(([s, n]) => <li><a href={`/lokalita/${s}/`}>{n}</a></li>)}</ul>
+		</div>
+		<div>
+			<h2>Informace</h2>
+			<ul>
+				<li><a href="/o-nas/">O nás</a></li><li><a href="/blog/">Blog</a></li><li><a href="/podminky-pouziti/">Podmínky použití</a></li>
+				<li><a href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a></li><li><a href="/prohlaseni-o-pouzivani-cookies/">Cookies</a></li>
+				<li><a href="#" data-kd-consent-open>Nastavení cookies</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="w ft__pozn">
+		<p>Kouzelný děda je rozcestník nabídek. Za nákup přes odkaz na partnera můžeme dostat provizi — cena pro vás zůstává stejná. Nabídky, ceny a jejich platnost určuje partner.</p>
+		<p>© {year} Kouzelný děda · provozovatel {OPERATOR.name}, IČO {OPERATOR.ico} · web <a href="https://huy.cz/">Huy.cz</a></p>
+	</div>
+</footer>

@@ -1,0 +1,345 @@
+// View models for each page type: data from D1 + SEO meta (title, description, canonical, prev/next, robots, JSON-LD)
+// matching the WordPress/Rank Math + child theme output. Templates only render what these return.
+import {
+  ancestry, boxOffers, combos, latestPosts, listBy, listCategory, listPosts, loadCategory, loadPost, loadProduct, popular, postCat, search, similar, tree,
+  type Card, type Cat, type PostCard, type Tree,
+} from './db';
+import { isFiltered, parseFilters, toListQuery, toQuery, type FilterState } from './filters';
+import { BASE, COMBO_MIN, EXPIRED_KEEP_DAYS, OG_DEFAULT, PER_PAGE, POSTS_PER_PAGE, isoPrague } from './site';
+import {
+  BLOG_DESC, BLOG_TITLE, categoryDesc, categoryTitle, cityDesc, cityTitle, clamp, comboDesc, comboTitle, descFrom, offerTitle, paged, robots, withSite,
+} from './seo';
+import { categoryFaq, categoryIntro, cityIntro, comboIntro, kindOf, SERVICE_CATS, themeTarget, type Kind } from './kd';
+import { cityName } from './cities';
+import { decode, stripTags } from './format';
+import type { Info } from '../../workers/import/src/parse';
+
+export interface Meta {
+  title: string; description: string; canonical?: string | undefined; prev?: string | undefined; next?: string | undefined; robots: string[];
+  ogType?: string; ogImage?: string; graph: unknown[]; jsonLd: unknown[];
+}
+export interface Crumb { name: string; url?: string }
+export interface Chip { name: string; url: string; count?: number; active?: boolean }
+
+const abs = (p: string) => BASE + p;
+const pagePath = (base: string, n: number) => (n <= 1 ? base : `${base}page/${n}/`);
+function breadcrumbLd(items: Crumb[]) {
+  return {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: items.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: abs(c.url ?? '/') })),
+  };
+}
+function itemListLd(name: string, items: Card[]) {
+  if (!items.length) return null;
+  return {
+    '@context': 'https://schema.org', '@type': 'ItemList', name, numberOfItems: items.length,
+    itemListElement: items.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(`/${p.slug}/`), name: decode(p.name) })),
+  };
+}
+const faqLd = (faq: Array<{ q: string; a: string }>) => ({
+  '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+});
+const collection = (url: string, title: string) => ({ '@type': 'CollectionPage', '@id': url + '#webpage', url, name: title, isPartOf: { '@id': BASE + '/#website' }, inLanguage: 'cs' });
+
+function rootKind(t: Tree, id: number): Kind {
+  const chain = ancestry(t, id);
+  return kindOf(chain[0]?.slug ?? '');
+}
+/** Cities whose combo with this category is a landing (≥ COMBO_MIN offers), Czechia excluded — chips "Podle města". */
+function cityChips(cat: Cat, counts: Record<string, Record<string, number>>, current = ''): Chip[] {
+  const c = counts[String(cat.id)] ?? {};
+  const chips: Chip[] = [];
+  for (const [slug, n] of Object.entries(c)) {
+    if (slug === 'cr' || n < COMBO_MIN || !cityName(slug).known) continue;
+    chips.push({ name: cityName(slug).nom, url: `/${cat.slug}/lokalita/${slug}/`, count: n, active: slug === current });
+  }
+  chips.sort((a, b) => (b.count ?? 0) - (a.count ?? 0));
+  if (chips.length) chips.unshift({ name: 'Vše', url: `/${cat.slug}/`, active: !current });
+  return chips;
+}
+/** kd_render_related_categories: up to 8 siblings by size, else own children. */
+function related(t: Tree, cat: Cat): Chip[] {
+  const ok = (c: Cat) => c.count_total > 0 && !c.noindex && !c.canon_id;
+  let list = (t.kids.get(cat.parent) ?? []).filter((c) => ok(c) && c.id !== cat.id);
+  if (!list.length) list = (t.kids.get(cat.id) ?? []).filter(ok);
+  return list.sort((a, b) => b.count_total - a.count_total).slice(0, 8).map((c) => ({ name: decode(c.name), url: `/${c.slug}/`, count: c.count_total }));
+}
+const subcats = (t: Tree, cat: Cat) => (t.kids.get(cat.id) ?? []).filter((c) => c.count_total >= 3 && !c.noindex && !c.canon_id)
+  .sort((a, b) => b.count_total - a.count_total).map((c) => ({ name: decode(c.name), url: `/${c.slug}/`, count: c.count_total, image: c.image }));
+
+export interface ListingView {
+  meta: Meta; crumbs: Crumb[]; h1: string; h2: string; intro: string; introTitle: string; descriptionHtml: string; items: Card[]; total: number;
+  page: number; pages: number; base: string; qs: string; f: FilterState; filtered: boolean; chipsTitle: string; chips: Chip[]; related: Chip[];
+  subcats: Array<Chip & { image: string }>; faq: Array<{ q: string; a: string }>; trust: string; tree: Tree; pageType: string;
+}
+type Redirect = { redirect: string };
+
+// ---------- category / combo ----------
+export async function categoryView(db: D1Database, catId: number, page: number, sp: URLSearchParams, city = ''): Promise<ListingView | Redirect | null> {
+  const [cat, t, cc] = await Promise.all([loadCategory(db, catId), tree(db), combos(db)]);
+  if (!cat) return null;
+  const f = parseFilters(sp);
+  const filtered = isFiltered(f);
+  const lok = city ? t.lokBySlug.get(city) : undefined;
+  if (city && !lok) return { redirect: `/${cat.slug}/` };
+  const store = f.partner ? [...t.stores.values()].find((s) => s.slug === f.partner) : undefined;
+  const q = toListQuery(f, page, store?.id);
+  if (lok) q.lok = lok.id;
+  const { items, total } = await listCategory(db, cat.id, q);
+  const pages = Math.max(1, Math.ceil(total / 24));
+  const base = city ? `/${cat.slug}/lokalita/${city}/` : `/${cat.slug}/`;
+  if (page > pages && page > 1) return { redirect: base };
+  const name = decode(cat.name);
+  const kind = rootKind(t, cat.id);
+  const chain = ancestry(t, cat.id);
+  const crumbs: Crumb[] = [{ name: 'Domů', url: '/' }, ...chain.map((c) => ({ name: decode(c.name), url: `/${c.slug}/` }))];
+  const url = abs(pagePath(base, page));
+  let title: string, description: string, canonical: string | undefined, h1: string, h2: string, intro: string, introTitle: string, trust = '';
+  let noindex = cat.noindex === 1 || cat.seo_robots.includes('noindex') || cat.count_total === 0;
+  if (lok) {
+    const cn = cityName(lok.slug);
+    const n = cc[String(cat.id)]?.[lok.slug] ?? total;
+    title = comboTitle(name, cn.lok);
+    description = comboDesc(name, cn.lok, n);
+    h1 = `${name} ${cn.lok}`;
+    h2 = `${name} ${cn.lok} se slevou — ${n.toLocaleString('cs-CZ')} nabídek`;
+    introTitle = `${name} ${cn.lok}`;
+    intro = comboIntro(name, cn.lok, n, kind);
+    trust = `${n.toLocaleString('cs-CZ')}+ nabídek ${name.toLowerCase()} ${cn.lok}`;
+    // a thin combination is not a landing: canonical to the category (WordPress did the same)
+    canonical = cn.known && n >= COMBO_MIN ? url : abs(`/${cat.slug}/`);
+    if (!cn.known) title = categoryTitle(name, cat.seo_title);
+    if (total === 0) noindex = true;
+  } else {
+    title = categoryTitle(name, cat.seo_title);
+    description = cat.seo_desc || categoryDesc(name, cat.count_total);
+    h1 = name;
+    h2 = `${name} se slevou — ${cat.count_total.toLocaleString('cs-CZ')} nabídek`;
+    introTitle = `Jak vybrat v kategorii ${name}`;
+    intro = categoryIntro(name, kind);
+    // same-name duplicate categories point their canonical at the main one (kd_dup_canon_map)
+    const main = cat.canon_id ? t.byId.get(cat.canon_id) : undefined;
+    canonical = main ? abs(`/${main.slug}/`) : url;
+  }
+  if (lok) crumbs.push({ name: cityName(lok.slug).nom, url: base });
+  const faq = categoryFaq(name, kind);
+  const meta: Meta = {
+    title: paged(title, page), description, robots: filtered ? ['noindex', 'follow'] : robots(noindex, cat.seo_robots),
+    ...(noindex || filtered ? {} : { canonical }),
+    ...(page > 1 && !filtered ? { prev: abs(pagePath(base, page - 1)) } : {}),
+    ...(page < pages && !filtered ? { next: abs(pagePath(base, page + 1)) } : {}),
+    ogImage: cat.image || OG_DEFAULT,
+    graph: [collection(url, title)],
+    jsonLd: [breadcrumbLd(lok ? crumbs.slice(0, -1) : crumbs), itemListLd(name, items), faqLd(faq)].filter(Boolean),
+  };
+  return {
+    meta, crumbs, h1, h2, intro, introTitle, descriptionHtml: page === 1 && !lok && !filtered ? cat.description_html : '', items, total, page, pages, base,
+    qs: toQuery(f), f, filtered, chipsTitle: 'Podle města', chips: cityChips(cat, cc, lok?.slug), related: related(t, cat), subcats: lok ? [] : subcats(t, cat),
+    faq, trust, tree: t, pageType: lok ? 'combo' : 'category',
+  };
+}
+
+// ---------- city ----------
+export async function cityView(db: D1Database, slug: string, page: number, sp: URLSearchParams): Promise<ListingView | Redirect | null> {
+  const [t, cc] = await Promise.all([tree(db), combos(db)]);
+  const lok = t.lokBySlug.get(slug);
+  if (!lok) return null;
+  const f = parseFilters(sp);
+  const filtered = isFiltered(f);
+  const store = f.partner ? [...t.stores.values()].find((s) => s.slug === f.partner) : undefined;
+  const { items, total } = await listBy(db, { lok: lok.id, ...(store ? { store: store.id } : {}) }, toListQuery(f, page));
+  const pages = Math.max(1, Math.ceil(total / 24));
+  const base = `/lokalita/${slug}/`;
+  if (page > pages && page > 1) return { redirect: base };
+  const cn = cityName(slug);
+  const url = abs(pagePath(base, page));
+  const title = cityTitle(cn.lok);
+  const chips: Chip[] = [];
+  if (cn.known) {
+    for (const [cs, label] of SERVICE_CATS) {
+      const c = t.bySlug.get(cs);
+      const n = c ? cc[String(c.id)]?.[slug] ?? 0 : 0;
+      if (c && n >= COMBO_MIN) chips.push({ name: label, url: `/${cs}/lokalita/${slug}/`, count: n });
+    }
+  }
+  const crumbs: Crumb[] = [{ name: 'Domů', url: '/' }, { name: cn.nom, url: base }];
+  const noindex = lok.count === 0;
+  return {
+    meta: {
+      title: paged(title, page), description: cityDesc(cn.nom, lok.count), robots: filtered ? ['noindex', 'follow'] : robots(noindex),
+      ...(noindex || filtered ? {} : { canonical: url }),
+      ...(page > 1 && !filtered ? { prev: abs(pagePath(base, page - 1)) } : {}),
+      ...(page < pages && !filtered ? { next: abs(pagePath(base, page + 1)) } : {}),
+      graph: [collection(url, title)], jsonLd: [breadcrumbLd(crumbs), itemListLd(`Zážitky a pobyty ${cn.lok}`, items)].filter(Boolean),
+    },
+    crumbs, h1: `Zážitky a pobyty ${cn.lok}`, h2: '', intro: page === 1 ? cityIntro(cn.lok) : '', introTitle: '', descriptionHtml: '', items, total, page, pages, base,
+    qs: toQuery(f), f, filtered, chipsTitle: 'Podle kategorie', chips, related: [], subcats: [], faq: [], trust: `${lok.count.toLocaleString('cs-CZ')}+ nabídek ${cn.lok}`,
+    tree: t, pageType: 'city',
+  };
+}
+
+// ---------- store (/brand/<slug>/) ----------
+export async function storeView(db: D1Database, slug: string, page: number, sp: URLSearchParams): Promise<ListingView | Redirect | null> {
+  const t = await tree(db);
+  const st = [...t.stores.values()].find((s) => s.slug === slug);
+  if (!st) return null;
+  const f = parseFilters(sp);
+  f.partner = '';
+  const filtered = isFiltered(f);
+  const { items, total } = await listBy(db, { store: st.id }, toListQuery(f, page));
+  const pages = Math.max(1, Math.ceil(total / 24));
+  const base = `/brand/${slug}/`;
+  if (page > pages && page > 1) return { redirect: base };
+  const url = abs(pagePath(base, page));
+  const title = withSite(st.name);
+  const crumbs: Crumb[] = [{ name: 'Domů', url: '/' }, { name: decode(st.name), url: base }];
+  return {
+    meta: {
+      title: paged(title, page), description: clamp(stripTags(st.description_html)), robots: filtered ? ['noindex', 'follow'] : robots(false),
+      ...(filtered ? {} : { canonical: url }),
+      ...(page > 1 && !filtered ? { prev: abs(pagePath(base, page - 1)) } : {}),
+      ...(page < pages && !filtered ? { next: abs(pagePath(base, page + 1)) } : {}),
+      graph: [collection(url, title)], jsonLd: [breadcrumbLd(crumbs)],
+    },
+    crumbs, h1: decode(st.name), h2: '', intro: '', introTitle: '', descriptionHtml: page === 1 ? st.description_html : '', items, total, page, pages, base,
+    qs: toQuery(f), f, filtered, chipsTitle: '', chips: [], related: [], subcats: [], faq: [], trust: '', tree: t, pageType: 'store',
+  };
+}
+
+// ---------- offer ----------
+export async function productView(db: D1Database, id: number) {
+  const [p, t] = await Promise.all([loadProduct(db, id), tree(db)]);
+  if (!p) return null;
+  let catIds: number[] = [];
+  try { catIds = JSON.parse(p.cat_ids) as number[]; } catch { /* none */ }
+  const primary = t.byId.get(p.primary_cat) ?? t.byId.get(catIds[0] ?? 0);
+  // an offer that ended 30+ days ago: 301 to its category (kd-redirects.php did the same right away)
+  if (!p.active) {
+    const ended = Date.parse((p.expired_at || p.updated_at).replace(' ', 'T') + 'Z');
+    if (!Number.isFinite(ended) || Date.now() - ended > EXPIRED_KEEP_DAYS * 86400_000) return { redirect: primary && primary.count_total > 0 ? `/${primary.slug}/` : themeTarget(p.slug) } as const;
+  }
+  let info: Info = {};
+  try { info = JSON.parse(p.info) as Info; } catch { /* legacy */ }
+  let images: string[] = [];
+  try { images = JSON.parse(p.images) as string[]; } catch { /* none */ }
+  const chain = primary ? ancestry(t, primary.id) : [];
+  const crumbs: Crumb[] = [{ name: 'Domů', url: '/' }, ...chain.map((c) => ({ name: decode(c.name), url: `/${c.slug}/` })), { name: decode(p.name), url: `/${p.slug}/` }];
+  const more = await similar(db, primary?.id ?? 0, p.id, p.active ? 8 : 12, p.lok_id);
+  const url = abs(`/${p.slug}/`);
+  const name = decode(p.name);
+  const title = offerTitle(p.name, p.seo_title);
+  const store = t.stores.get(p.store_id);
+  const description = descFrom(p.seo_desc, p.excerpt || info.h || info.d || '', name);
+  const offer = p.active ? {
+    '@type': 'Offer', url, price: p.price, priceCurrency: 'CZK', availability: 'https://schema.org/InStock',
+    ...(info.de ? { priceValidUntil: info.de } : {}), ...(store ? { seller: { '@type': 'Organization', name: decode(store.name) } } : {}),
+  } : undefined;
+  const meta: Meta = {
+    title, description, canonical: p.active && !p.noindex ? url : undefined, robots: robots(!p.active || p.noindex === 1),
+    ogType: 'product', ogImage: p.image || OG_DEFAULT,
+    graph: [
+      { '@type': 'ItemPage', '@id': url + '#webpage', url, name: title, datePublished: isoPrague(p.created_at), dateModified: isoPrague(p.updated_at), isPartOf: { '@id': BASE + '/#website' }, inLanguage: 'cs' },
+      ...(offer ? [{
+        '@type': 'Product', '@id': url + '#product', name, description: clamp(description, 300), ...(p.image ? { image: [p.image, ...images.slice(0, 3)] } : {}),
+        ...(primary ? { category: decode(primary.name) } : {}), ...(store ? { brand: { '@type': 'Brand', name: decode(store.name) } } : {}), offers: offer, mainEntityOfPage: { '@id': url + '#webpage' },
+      }] : []),
+    ],
+    jsonLd: [breadcrumbLd(crumbs)],
+  };
+  return { meta, p, info, images, crumbs, primary, more, store, kind: rootKind(t, primary?.id ?? 0), tree: t };
+}
+
+// ---------- post / page ----------
+export async function postView(db: D1Database, id: number) {
+  const post = await loadPost(db, id);
+  if (!post) return null;
+  const t = await tree(db);
+  const url = abs(`/${post.slug}/`);
+  const title = post.seo_title || withSite(post.title);
+  let ld: { graph?: unknown[] } = {};
+  try { ld = post.ld_json ? JSON.parse(post.ld_json) : {}; } catch { /* none */ }
+  const graph = ld.graph?.length ? ld.graph : [{
+    '@type': post.type === 'post' ? 'BlogPosting' : 'WebPage', '@id': url + '#webpage', url, headline: decode(post.title), name: title,
+    datePublished: isoPrague(post.published_at), dateModified: isoPrague(post.modified_at), inLanguage: 'cs', isPartOf: { '@id': BASE + '/#website' },
+    ...(post.image ? { image: abs(post.image) } : {}), author: { '@type': 'Organization', name: 'Kouzelný děda', url: BASE },
+  }];
+  const crumbs: Crumb[] = post.type === 'post' ? [{ name: 'Domů', url: '/' }, { name: 'Blog', url: '/blog/' }, { name: decode(post.title), url: `/${post.slug}/` }] : [{ name: 'Domů', url: '/' }, { name: decode(post.title), url: `/${post.slug}/` }];
+  // offer boxes (kd_post_offers): meta kd_offers_cat, else the most linked category with ≥ 4 offers
+  let boxCat: Cat | undefined;
+  if (post.type === 'post') {
+    boxCat = post.offers_cat ? t.bySlug.get(post.offers_cat) : undefined;
+    if (!boxCat) {
+      const freq = new Map<string, number>();
+      for (const m of post.content_html.matchAll(/href="(?:https?:\/\/(?:www\.)?kouzelnydeda\.cz)?\/([a-z0-9-]+)\//g)) freq.set(m[1]!, (freq.get(m[1]!) ?? 0) + 1);
+      for (const [slug] of [...freq.entries()].sort((a, b) => b[1] - a[1])) {
+        const c = t.bySlug.get(slug);
+        if (c && c.count_total >= 4) { boxCat = c; break; }
+      }
+    }
+  }
+  const seed = `${boxCat?.id ?? 0}:${new Date().toISOString().slice(0, 10)}:${Math.floor(new Date().getUTCHours() / 6)}`;
+  const box = boxCat ? await boxOffers(db, boxCat.id, seed) : [];
+  const more = post.type === 'post' ? await latestPosts(db, 3, post.id, post.cat_id) : [];
+  const meta: Meta = {
+    title, description: post.seo_desc || clamp(stripTags(post.excerpt || post.content_html)),
+    canonical: post.noindex ? undefined : (post.canonical || url), robots: robots(post.noindex === 1, post.seo_robots),
+    ogType: 'article', ogImage: post.image ? abs(post.image) : OG_DEFAULT, graph, jsonLd: [breadcrumbLd(crumbs)],
+  };
+  return { meta, post, crumbs, box: box.length >= 2 ? box : [], boxCat, more };
+}
+
+// ---------- blog ----------
+export async function blogView(db: D1Database, page: number, catId = 0) {
+  const cat = catId ? await postCat(db, catId) : null;
+  if (catId && !cat) return null;
+  const { items, total } = await listPosts(db, page, cat?.id);
+  const pages = Math.max(1, Math.ceil(total / POSTS_PER_PAGE));
+  const base = cat ? `/${cat.slug}/` : '/blog/';
+  if (page > pages && page > 1) return { redirect: base } as const;
+  const url = abs(pagePath(base, page));
+  const title = cat ? withSite(cat.name) : BLOG_TITLE;
+  const crumbs: Crumb[] = [{ name: 'Domů', url: '/' }, { name: 'Blog', url: '/blog/' }, ...(cat ? [{ name: decode(cat.name), url: base }] : [])];
+  const cats = (await db.prepare("SELECT slug, name, count FROM post_categories WHERE count > 0 ORDER BY count DESC").all<{ slug: string; name: string; count: number }>()).results;
+  return {
+    meta: {
+      title: paged(title, page), description: cat ? clamp(cat.description) || BLOG_DESC : BLOG_DESC, canonical: url, robots: robots(false),
+      ...(page > 1 ? { prev: abs(pagePath(base, page - 1)) } : {}), ...(page < pages ? { next: abs(pagePath(base, page + 1)) } : {}),
+      graph: [collection(url, title)], jsonLd: [breadcrumbLd(crumbs)],
+    } as Meta,
+    h1: cat ? decode(cat.name) : 'Blog', items, total, page, pages, base, crumbs, cats, current: cat?.slug ?? '',
+  };
+}
+
+// ---------- home + search ----------
+export async function homeView(db: D1Database) {
+  const [t, top, posts] = await Promise.all([tree(db), popular(db, 8), latestPosts(db, 3)]);
+  const tile = (slug: string, label?: string) => { const c = t.bySlug.get(slug); return c ? { name: label ?? decode(c.name), url: `/${c.slug}/`, count: c.count_total, image: c.image } : null; };
+  const sections = [tile('cestovani'), tile('zazitky'), tile('restaurace-a-bary'), tile('krasa-zdravi-a-relaxace', 'Krása & wellness'), tile('slevy')].filter((x): x is NonNullable<typeof x> => !!x);
+  const places = [tile('wellness-dovolena'), tile('dovolena-na-horach'), tile('romanticke-pobyty'), tile('glamping'), tile('chaty-a-chalupy'), tile('lyzarske-pobyty'),
+    tile('dovolena-s-all-inclusive', 'All inclusive'), tile('last-minute-pobyty-a-dovolena', 'Last minute')].filter((x): x is NonNullable<typeof x> => !!x);
+  const total = [...t.stores.values()].reduce((n, s) => n + s.count, 0);
+  const cities = [...t.loks.values()].filter((l) => l.slug !== 'cr' && l.count > 0 && cityName(l.slug).known).sort((a, b) => b.count - a.count).slice(0, 12);
+  // the live homepage texts (Rank Math override of page 3093)
+  const title = 'Kouzelný děda - Kouzelník pro vyhledávání dovolené ✈🌴';
+  const meta: Meta = {
+    title, description: 'KouzelnýDěda.cz je vyhledávač na pobyty a dovolené. Denně tu na vás čeká přes 1000 nových dovolených u moře, pobytů v Česku i v zahraničí a poznávacích zájezdů.',
+    canonical: BASE + '/', robots: robots(false), ogType: 'website', graph: [{ '@type': 'WebPage', '@id': BASE + '/#webpage', url: BASE + '/', name: title, isPartOf: { '@id': BASE + '/#website' }, inLanguage: 'cs' }], jsonLd: [],
+  };
+  return { meta, sections, places, top, posts, total, cities, tree: t };
+}
+
+export async function searchView(db: D1Database, q: string, page: number) {
+  const { items, total } = await search(db, q, page);
+  const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+  return {
+    meta: { title: q ? `${q} – hledání${' | Kouzelný děda'}` : 'Hledání | Kouzelný děda', description: '', robots: ['noindex', 'follow'], graph: [], jsonLd: [] } as Meta,
+    q, items, total, page, pages,
+  };
+}
+
+export type ProductView = NonNullable<Exclude<Awaited<ReturnType<typeof productView>>, { redirect: string }>>;
+export type PostView = NonNullable<Awaited<ReturnType<typeof postView>>>;
+export type BlogView = Exclude<NonNullable<Awaited<ReturnType<typeof blogView>>>, { redirect: string }>;
+export type HomeView = Awaited<ReturnType<typeof homeView>>;
+export type SearchView = Awaited<ReturnType<typeof searchView>>;
+export type { PostCard };
