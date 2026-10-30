@@ -12,9 +12,10 @@ import {
 } from './seo';
 import { categoryFaq, categoryIntro, cityIntro, comboIntro, kindOf, SERVICE_CATS, themeTarget, type Kind } from './kd';
 import { cityName } from './cities';
-import { decode, stripTags } from './format';
+import { cena, datum, decode, stripTags } from './format';
 import type { Info } from '../../workers/import/src/parse';
 import { catIcon } from './ikony';
+import { partnerName } from './partners';
 import darky from '../data/darky.json';
 
 export interface Gift { slug: string; name: string; h1: string; icon: string; il?: string; cats: string[]; max?: number; title: string; desc: string; intro: string; hub?: boolean; season?: string }
@@ -79,6 +80,33 @@ export interface ListingView {
   page: number; pages: number; base: string; qs: string; f: FilterState; filtered: boolean; chipsTitle: string; chips: Chip[]; related: Chip[];
   subcats: Chip[]; faq: Array<{ q: string; a: string }>; trust: string; tree: Tree; pageType: string; icon: string; section: string;
   gifts: Gift[]; ill?: string;
+  /** left column: the section tree (groups of the section's children, the active branch opened) + cities */
+  side: Side;
+}
+export interface SideItem extends Chip { kids?: Chip[] }
+export interface Side { title: string; url: string; icon: string; groups: Array<{ g: string; items: SideItem[] }>; cities: Chip[] }
+
+/** Sidebar of a category: its section's children by group; the branch of the current category is opened. */
+function sectionSide(t: Tree, cat: Cat, cc: Record<string, Record<string, number>>, city = ''): Side {
+  const chain = ancestry(t, cat.id);
+  const root = chain[0] ?? cat;
+  const open = new Set(chain.map((c) => c.id));
+  const ok = (c: Cat) => c.count_total > 0 && !c.noindex;
+  const groups = new Map<string, SideItem[]>();
+  for (const k of (t.kids.get(root.id) ?? []).filter(ok).sort((a, b) => a.sort - b.sort)) {
+    const kids = open.has(k.id) ? (t.kids.get(k.id) ?? []).filter(ok).sort((a, b) => a.sort - b.sort)
+      .map((x) => ({ name: decode(x.name), url: `/${x.slug}/`, count: x.count_total, active: x.id === cat.id })) : undefined;
+    const item: SideItem = { name: decode(k.name), url: `/${k.slug}/`, count: k.count_total, active: k.id === cat.id, icon: catIcon(t, k.id), ...(kids?.length ? { kids } : {}) };
+    (groups.get(k.grp) ?? groups.set(k.grp, []).get(k.grp)!).push(item);
+  }
+  const cities = cityChips(cat, cc, city).filter((c) => c.name !== 'Vše').slice(0, 10);
+  return { title: root.short || decode(root.name), url: `/${root.slug}/`, icon: catIcon(t, root.id), groups: [...groups.entries()].map(([g, items]) => ({ g, items })), cities };
+}
+/** Sidebar of pages outside the tree (city, partner, gifts): the five sections. */
+function sectionsSide(t: Tree, title = 'Kategorie'): Side {
+  const items = (t.kids.get(0) ?? []).filter((c) => c.count_total > 0).sort((a, b) => a.sort - b.sort)
+    .map((c) => ({ name: c.short || decode(c.name), url: `/${c.slug}/`, count: c.count_total, icon: catIcon(t, c.id) }));
+  return { title, url: '/', icon: 'darek', groups: [{ g: '', items }], cities: [] };
 }
 type Redirect = { redirect: string };
 
@@ -142,7 +170,7 @@ export async function categoryView(db: D1Database, catId: number, page: number, 
   return {
     meta, crumbs, h1, h2, intro, introTitle, descriptionHtml: page === 1 && !lok && !filtered ? cat.description_html : '', items, total, page, pages, base,
     qs: toQuery(f), f, filtered, chipsTitle: 'Podle města', chips: cityChips(cat, cc, lok?.slug), related: related(t, cat), subcats: lok ? [] : subcats(t, cat),
-    faq, trust, tree: t, pageType: lok ? 'combo' : 'category', icon: catIcon(t, cat.id), section: chain[0]?.slug ?? '',
+    faq, trust, tree: t, pageType: lok ? 'combo' : 'category', icon: catIcon(t, cat.id), section: chain[0]?.slug ?? '', side: sectionSide(t, cat, cc, lok?.slug),
     gifts: chain[0] ? GIFTS.filter((g) => !g.hub && g.cats.some((s) => s === chain[0]!.slug || chain.some((c) => c.slug === s))).slice(0, 6) : [],
   };
 }
@@ -183,6 +211,7 @@ export async function cityView(db: D1Database, slug: string, page: number, sp: U
     crumbs, h1: `Zážitky a pobyty ${cn.lok}`, h2: '', intro: page === 1 ? cityIntro(cn.lok) : '', introTitle: '', descriptionHtml: '', items, total, page, pages, base,
     qs: toQuery(f), f, filtered, chipsTitle: 'Podle kategorie', chips, related: [], subcats: [], faq: [], trust: `${lok.count.toLocaleString('cs-CZ')}+ nabídek ${cn.lok}`,
     tree: t, pageType: 'city', icon: 'mesto', section: '', gifts: [],
+    side: chips.length ? { title: cn.nom, url: base, icon: 'mesto', groups: [{ g: 'Podle kategorie', items: chips }], cities: [] } : sectionsSide(t),
   };
 }
 
@@ -210,7 +239,7 @@ export async function storeView(db: D1Database, slug: string, page: number, sp: 
       graph: [collection(url, title)], jsonLd: [breadcrumbLd(crumbs)],
     },
     crumbs, h1: decode(st.name), h2: '', intro: '', introTitle: '', descriptionHtml: page === 1 ? st.description_html : '', items, total, page, pages, base,
-    qs: toQuery(f), f, filtered, chipsTitle: '', chips: [], related: [], subcats: [], faq: [], trust: '', tree: t, pageType: 'store', icon: '', section: '', gifts: [],
+    qs: toQuery(f), f, filtered, chipsTitle: '', chips: [], related: [], subcats: [], faq: [], trust: '', tree: t, pageType: 'store', icon: '', section: '', gifts: [], side: sectionsSide(t),
   };
 }
 
@@ -244,6 +273,7 @@ export async function giftView(db: D1Database, idx: number, page: number, sp: UR
     items, total, page, pages, base, qs: toQuery(f), f, filtered, chipsTitle: 'Další tipy na dárek',
     chips: GIFTS.filter((x) => !x.hub).map((x) => ({ name: x.name, url: `/${x.slug}/`, active: x.slug === g.slug, icon: x.icon })),
     related: [], subcats: [], faq, trust: '', tree: t, pageType: 'gift', icon: g.icon, section: 'darky', gifts: [], ...(g.il ? { ill: g.il } : {}),
+    side: { title: 'Tipy na dárek', url: `/${hub.slug}/`, icon: 'darek', groups: [{ g: '', items: GIFTS.filter((x) => !x.hub).map((x) => ({ name: x.name, url: `/${x.slug}/`, icon: x.icon, active: x.slug === g.slug })) }], cities: [] },
   };
 }
 
@@ -287,7 +317,43 @@ export async function productView(db: D1Database, id: number) {
     ],
     jsonLd: [breadcrumbLd(crumbs)],
   };
-  return { meta, p, info, images, crumbs, primary, more, store, kind: rootKind(t, primary?.id ?? 0), tree: t };
+  const partner = partnerName(store?.slug);
+  const faq = p.active ? offerFaq(name, p, info, partner) : [];
+  if (faq.length) meta.jsonLd.push(faqLd(faq));
+  return { meta, p, info, images, crumbs, primary, more, store, kind: rootKind(t, primary?.id ?? 0), tree: t, section: chain[0]?.slug ?? '', fit: offerFit(t, p, info, catIds), faq };
+}
+
+/** Slevomat TAGS → our category (a tag without a matching node, e.g. "dovolená se zárukou", is left out). */
+const TAG_CAT: Record<string, string> = {
+  'víkendový pobyt': 'vikendove-pobyty', 'wellness pobyt': 'wellness-pobyty', 'rodinná dovolená': 'rodinne-pobyty', 'romantický pobyt': 'pobyty-pro-dva',
+  'aktivní dovolená': 'aktivni-dovolena', 'lyžařský pobyt': 'lyzarske-pobyty', 'dovolená u moře': 'dovolena-u-more', 'velikonoční pobyt': 'velikonocni-pobyty',
+  'silvestrovský pobyt': 'silvestrovske-pobyty', 'vánoční pobyt': 'vanocni-pobyty', 'valentýnský pobyt': 'valentynske-pobyty',
+};
+/** "Pro koho se hodí": the offer's tags and categories as links (ours), then the gift landings it belongs to. */
+function offerFit(t: Tree, p: { price: number }, info: Info, catIds: number[]): Chip[] {
+  const out: Chip[] = [], seen = new Set<string>();
+  const add = (c: Cat | undefined, name?: string) => { if (c && c.count_total > 0 && !c.noindex && !seen.has(c.slug)) { seen.add(c.slug); out.push({ name: name ?? decode(c.name), url: `/${c.slug}/`, icon: catIcon(t, c.id) }); } };
+  for (const tag of info.tags ?? []) { const slug = TAG_CAT[tag.toLowerCase()]; if (slug) add(t.bySlug.get(slug), tag[0]!.toUpperCase() + tag.slice(1)); }
+  for (const id of catIds) { const c = t.byId.get(id); if (c && c.parent) add(c); }
+  out.splice(7);
+  const mine = new Set(catIds.flatMap((id) => ancestry(t, id).map((c) => c.slug)));
+  for (const g of GIFTS) {
+    if (g.hub || g.season) continue;
+    if (g.max ? p.price <= g.max && (g.max === 500 || p.price > g.max / 2) : g.cats.some((c) => mine.has(c))) out.push({ name: g.h1.split(':')[0]!, url: `/${g.slug}/`, icon: g.icon });
+  }
+  return out.slice(0, 10);
+}
+/** Questions a buyer asks, answered only from the feed (nothing that the offer does not state). */
+function offerFaq(name: string, p: { price: number; price_old: number; city: string }, info: Info, partner: string): Array<{ q: string; a: string }> {
+  const faq: Array<{ q: string; a: string }> = [];
+  if (info.pv?.a) faq.push({ q: 'Kde se nabídka nachází?', a: `${info.pv.t ? info.pv.t + ', ' : ''}${info.pv.a}.` });
+  if (info.ve) faq.push({ q: 'Do kdy platí voucher?', a: `Voucher můžete uplatnit ${info.vs ? `od ${datum(info.vs)} ` : ''}do ${datum(info.ve)}. Podrobné podmínky a možné termíny najdete u nabídky na ${partner}.` });
+  const inc = [...(info.in?.i ?? []), ...(info.bo ? [`strava: ${info.bo}`] : [])];
+  if (inc.length) faq.push({ q: 'Co je v ceně?', a: inc.slice(0, 8).join(', ') + '.' });
+  if (p.price > 0) faq.push({ q: 'Kolik to stojí?', a: `Teď ${cena(p.price)}${p.price_old > p.price ? ` místo ${cena(p.price_old)}, ušetříte ${cena(p.price_old - p.price)}` : ''}. Cena je stejná jako přímo u ${partner}.` });
+  faq.push({ q: 'Můžu nabídku darovat?', a: `Ano. Po zaplacení u ${partner} vám voucher přijde e-mailem — můžete ho vytisknout nebo poslat obdarovanému.` });
+  faq.push({ q: 'Jak nákup probíhá?', a: `Tlačítkem „Koupit“ přejdete na ${partner}, kde nabídku „${name}“ zaplatíte. Kouzelný děda nabídky jen vyhledává a porovnává, platba i voucher jdou přímo přes partnera.` });
+  return faq;
 }
 
 // ---------- post / page ----------

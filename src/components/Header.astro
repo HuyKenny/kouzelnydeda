@@ -15,7 +15,7 @@ const sections = (t.kids.get(0) ?? []).filter((c) => c.count_total > 0).sort((a,
 	for (const k of kids) (groups.get(k.grp) ?? groups.set(k.grp, []).get(k.grp)!).push(k);
 	return { slug: c.slug, name: c.short || decode(c.name), icon: c.icon, count: c.count_total, groups: [...groups.entries()].map(([g, ks]) => ({ g, ks: ks.slice(0, 12).map((k) => ({ slug: k.slug, name: decode(k.name), icon: k.icon })) })) };
 });
-const gifts = GIFTS.filter((g) => !g.hub).slice(0, 9);
+const gifts = GIFTS.filter((g) => !g.hub);
 ---
 <a class="skip" href="#obsah">Přeskočit na obsah</a>
 <div class="usp"><ul>
@@ -59,14 +59,22 @@ const gifts = GIFTS.filter((g) => !g.hub).slice(0, 9);
 				<li>
 					<a class="sn" href={`/${s.slug}/`} aria-current={path === `/${s.slug}/` ? 'page' : undefined}><Ik n={s.icon} />{s.name}</a>
 					<div class="mega">
-						{s.groups.map((g) => (<>{g.g && <h3>{g.g}</h3>}{g.ks.map((k) => <a href={`/${k.slug}/`}><Ik n={k.icon} />{k.name}</a>)}</>))}
-						<a class="mega__all" href={`/${s.slug}/`}>Všechny nabídky ({s.count.toLocaleString('cs-CZ')}) →</a>
+						{s.groups.map((g) => <div class="mega__g">{g.g && <h3>{g.g}</h3>}<ul>{g.ks.map((k) => <li><a href={`/${k.slug}/`}><Ik n={k.icon} />{k.name}</a></li>)}</ul></div>)}
+						<div class="mega__side">
+							<b>{s.name}</b>
+							<a class="btn btn--c" href={`/${s.slug}/`}>Všech {s.count.toLocaleString('cs-CZ')} nabídek</a>
+							<ul>{gifts.slice(0, 3).map((g) => <li><a href={`/${g.slug}/`}><Ik n={g.icon} />Dárek {g.name.toLowerCase()}</a></li>)}</ul>
+						</div>
 					</div>
 				</li>
 			))}
 			<li>
 				<a class="sn" href="/zazitkove-darky/" aria-current={path === '/zazitkove-darky/' ? 'page' : undefined}><Ik n="darek" />Dárky</a>
-				<div class="mega">{gifts.map((g) => <a href={`/${g.slug}/`}><Ik n={g.icon} />{g.name}</a>)}<a class="mega__all" href="/zazitkove-darky/">Všechny tipy na dárek →</a></div>
+				<div class="mega">
+					<div class="mega__g"><h3>Pro koho</h3><ul>{gifts.filter((g) => g.slug.startsWith('darek-pro')).map((g) => <li><a href={`/${g.slug}/`}><Ik n={g.icon} />{g.name}</a></li>)}</ul></div>
+					<div class="mega__g"><h3>Příležitost a rozpočet</h3><ul>{gifts.filter((g) => !g.slug.startsWith('darek-pro')).map((g) => <li><a href={`/${g.slug}/`}><Ik n={g.icon} />{g.name}</a></li>)}</ul></div>
+					<div class="mega__side"><img src="/a/il/kouzelnik-darek.webp" alt="" width="84" height="84" loading="lazy" /><b>Nevíte, co darovat?</b><a class="btn btn--c" href="/zazitkove-darky/">Všechny tipy na dárek</a></div>
+				</div>
 			</li>
 			<li><a class="sn" href="/blog/" aria-current={path.startsWith('/blog/') ? 'page' : undefined}><Ik n="jazyk" />Blog</a></li>
 		</ul>

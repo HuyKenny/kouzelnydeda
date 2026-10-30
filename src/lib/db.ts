@@ -10,6 +10,8 @@ export interface CatFull extends Cat { description_html: string; seo_title: stri
 export interface Card {
   id: number; slug: string; name: string; image: string; price: number; price_old: number; disc_pct: number; store_id: number; city: string;
   rating: number; reviews: number; deal_end: string | null; bought: number | null; created_at: string;
+  /** country of the offer (Slevomat COUNTRY_ID, ISO alpha-3) */
+  cc?: string | null;
 }
 export interface Product extends Card {
   source: string; active: number; images: string; lok_id: number; excerpt: string; info: string; legacy_html: string; cat_ids: string;
@@ -24,7 +26,7 @@ export type PostCard = Pick<Post, 'id' | 'slug' | 'title' | 'excerpt' | 'publish
 export interface Lok { id: number; slug: string; name: string; count: number }
 export interface Store { id: number; slug: string; name: string; description_html: string; count: number }
 
-const CARD = "p.id, p.slug, p.name, p.image, p.price, p.price_old, p.disc_pct, p.store_id, p.city, p.rating, p.reviews, json_extract(p.info, '$.de') AS deal_end, json_extract(p.info, '$.cu') AS bought, p.created_at";
+const CARD = "p.id, p.slug, p.name, p.image, p.price, p.price_old, p.disc_pct, p.store_id, p.city, p.rating, p.reviews, json_extract(p.info, '$.de') AS deal_end, json_extract(p.info, '$.cu') AS bought, p.created_at, json_extract(p.info, '$.cc') AS cc";
 
 let memo: { at: number; byId: Map<number, Cat>; bySlug: Map<string, Cat>; kids: Map<number, Cat[]>; loks: Map<number, Lok>; lokBySlug: Map<string, Lok>; stores: Map<number, Store> } | null = null;
 export async function tree(db: D1Database) {

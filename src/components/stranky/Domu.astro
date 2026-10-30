@@ -4,6 +4,7 @@
 // categories as round thumbnails, gift ideas, how it works, partners, cities, blog, SEO text.
 import Base from '../../layouts/Base.astro';
 import Mrizka from '../Mrizka.astro';
+import DarkyMrizka from '../DarkyMrizka.astro';
 import Ik from '../Ik.astro';
 import { cislo, datum, decode, excerpt } from '../../lib/format';
 import { card, crop } from '../../lib/img';
@@ -51,12 +52,12 @@ const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.imag
 		{v.season && v.seasonItems.length > 0 && (
 			<section class="sek">
 				<div class="sh"><h2><Ik n={v.season.icon} /> {v.season.h1.split(':')[0]}</h2><a href={`/${v.season.slug}/`}>Všechny tipy →</a></div>
-				<Mrizka items={v.seasonItems} t={v.tree} eager={false} ctx="sezona" />
+				<Mrizka items={v.seasonItems} t={v.tree} eager={false} ctx="home-sezona" />
 			</section>
 		)}
 		<section class="sek">
 			<div class="sh"><h2>Nejprodávanější teď</h2><a href="/zazitkove-darky/">Další tipy →</a></div>
-			<Mrizka items={v.top} t={v.tree} eager={false} ctx="top" />
+			<Mrizka items={v.top} t={v.tree} eager={false} ctx="home-top" />
 		</section>
 		<section class="sek">
 			<div class="sh"><h2>Oblíbené kategorie</h2></div>
@@ -67,17 +68,17 @@ const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.imag
 		{v.ending.length > 0 && (
 			<section class="sek">
 				<div class="sh"><h2><Ik n="hodiny" /> Končí brzy — neprošvihněte</h2></div>
-				<Mrizka items={v.ending} t={v.tree} eager={false} ctx="konci" />
+				<Mrizka items={v.ending} t={v.tree} eager={false} ctx="home-konci" />
 			</section>
 		)}
 		<section class="sek">
 			<div class="sh"><h2>Tipy na dárek</h2><a href="/zazitkove-darky/">Všechny dárky →</a></div>
-			<ul class="darky">{v.gifts.map((g) => <li><a href={`/${g.slug}/`}>{g.il ? <img src={`/a/il/${g.il}.webp`} alt="" width="72" height="72" loading="lazy" /> : <Ik n={g.icon} />}{g.h1.split(':')[0]}</a></li>)}</ul>
+			<DarkyMrizka items={v.gifts} />
 		</section>
 		{v.deals.length > 0 && (
 			<section class="sek">
 				<div class="sh"><h2>Největší slevy</h2><a href="/zazitky/?orderby=disc" rel="nofollow">Všechny slevy →</a></div>
-				<Mrizka items={v.deals} t={v.tree} eager={false} ctx="slevy" />
+				<Mrizka items={v.deals} t={v.tree} eager={false} ctx="home-slevy" />
 			</section>
 		)}
 		<section class="sek">

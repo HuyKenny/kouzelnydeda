@@ -163,7 +163,7 @@
    "title": "Dárek na Valentýna – romantické zážitky | Kouzelný děda",
    "desc": "Romantický pobyt, privátní wellness, masáž pro dva nebo degustační večeře. Valentýnské dárky se slevou.",
    "intro": "Na Valentýna platí, že nejlepší dárek je čas ve dvou. Romantické pobyty, privátní wellness, masáže pro páry a večeře, na které se nezapomíná.",
-   "il": "pro-par"
+   "il": "srdce"
   },
   {
    "slug": "darky-do-500-kc",
@@ -175,7 +175,8 @@
    "max": 500,
    "title": "Dárky do 500 Kč – zážitky a poukazy | Kouzelný děda",
    "desc": "Zážitkové dárky do 500 Kč: masáže, únikovky, degustace, kurzy a vstupenky se slevou. Malý dárek, velká radost.",
-   "intro": "I za pár stovek se dá darovat zážitek. Vybrali jsme nabídky do 500 Kč — ideální dárek pro kolegy, kamarády nebo jako pozornost k většímu dárku."
+   "intro": "I za pár stovek se dá darovat zážitek. Vybrali jsme nabídky do 500 Kč — ideální dárek pro kolegy, kamarády nebo jako pozornost k většímu dárku.",
+   "il": "cena"
   },
   {
    "slug": "darky-do-1000-kc",
@@ -187,7 +188,8 @@
    "max": 1000,
    "title": "Dárky do 1 000 Kč – zážitky a poukazy | Kouzelný děda",
    "desc": "Zážitkové dárky do 1 000 Kč se slevou: masáže, wellness, adrenalin, kurzy i degustace. Voucher přijde hned e-mailem.",
-   "intro": "Do tisícovky se vejde masáž, wellness, úniková hra, kurz i pořádná večeře. Tady jsou nejlepší zážitkové dárky do 1 000 Kč."
+   "intro": "Do tisícovky se vejde masáž, wellness, úniková hra, kurz i pořádná večeře. Tady jsou nejlepší zážitkové dárky do 1 000 Kč.",
+   "il": "cena"
   },
   {
    "slug": "darky-do-2000-kc",
@@ -199,7 +201,8 @@
    "max": 2000,
    "title": "Dárky do 2 000 Kč – zážitky a poukazy | Kouzelný děda",
    "desc": "Zážitkové dárky do 2 000 Kč se slevou: jízdy, lety, wellness, degustace i krátké pobyty. Voucher hned e-mailem.",
-   "intro": "Do dvou tisíc pořídíte jízdu ve sportovním autě, vyhlídkový let, wellness pro dva nebo degustační menu. Vybrali jsme nejoblíbenější dárky v této ceně."
+   "intro": "Do dvou tisíc pořídíte jízdu ve sportovním autě, vyhlídkový let, wellness pro dva nebo degustační menu. Vybrali jsme nejoblíbenější dárky v této ceně.",
+   "il": "cena"
   },
   {
    "slug": "darkovy-poukaz",

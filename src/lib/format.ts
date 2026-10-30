@@ -1,6 +1,17 @@
 // Formatting helpers shared by templates (Czech typography: non-breaking spaces in numbers and before "Kč").
 export const NBSP = ' ';
 
+/** Slevomat sells every trip in the sales city "ČR" (→ "Česko"); abroad the country of the offer is the real place. */
+const COUNTRY: Record<string, string> = {
+  POL: 'Polsko', SVK: 'Slovensko', AUT: 'Rakousko', HUN: 'Maďarsko', ITA: 'Itálie', DEU: 'Německo', HRV: 'Chorvatsko', SVN: 'Slovinsko',
+  ESP: 'Španělsko', ALB: 'Albánie', BRA: 'Brazílie', NLD: 'Nizozemsko', SWE: 'Švédsko', MNE: 'Černá Hora', GRC: 'Řecko', FRA: 'Francie',
+  EGY: 'Egypt', TUR: 'Turecko', BGR: 'Bulharsko', PRT: 'Portugalsko', CHE: 'Švýcarsko', GBR: 'Velká Británie', CYP: 'Kypr', MLT: 'Malta', TUN: 'Tunisko',
+};
+export function place(city: string | null | undefined, cc: string | null | undefined): string {
+  const c = city ?? '';
+  return c === 'Česko' && cc && cc !== 'CZE' ? COUNTRY[cc] ?? '' : c;
+}
+
 export function cislo(n: number | string | null | undefined): string {
   return Math.round(Number(n) || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, NBSP);
 }

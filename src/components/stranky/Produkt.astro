@@ -1,12 +1,14 @@
 ---
 // Offer detail, built to convince and send on: title + facts, big gallery with the discount sticker, a sticky voucher box
 // (price, saving, urgency, social proof, partner, one big CTA "Koupit na <partner>"), then what you get, the place,
-// how it works, similar offers. An ended offer keeps its page 30 days (noindex) and points to live alternatives.
+// "v kostce" from the feed facts, quick facts, highlights, what is in the price, amenities, who it suits, FAQ, how it
+// works, similar offers. Everything comes from the partner feed — nothing is made up. An ended offer keeps its page
+// 30 days (noindex) and points to live alternatives.
 import Base from '../../layouts/Base.astro';
 import Drobky from '../Drobky.astro';
 import Mrizka from '../Mrizka.astro';
 import Ik from '../Ik.astro';
-import { cena, datum, decode, dni, dniDo } from '../../lib/format';
+import { cena, cislo, datum, decode, dni, dniDo, place } from '../../lib/format';
 import { card, hero } from '../../lib/img';
 import { partnerColor, partnerName } from '../../lib/partners';
 import type { ProductView } from '../../lib/views';
@@ -20,13 +22,31 @@ const gallery = [p.image, ...v.images].filter(Boolean).slice(0, 6);
 const save = p.price_old > p.price ? p.price_old - p.price : 0;
 const store = v.store;
 const partner = partnerName(store?.slug);
-const go = `/go/${p.id}/?ctx=detail`;
+const go = `/go/${p.id}/?ctx=detail${v.section ? '-' + v.section : ''}`;
+const goAttrs = { target: '_blank', rel: 'nofollow sponsored noopener', 'data-partner': store?.slug ?? p.source, 'data-price': Math.round(p.price), 'data-id': p.id, 'data-name': name, 'data-section': v.section || undefined };
 const left = dniDo(info.de);
 const paras = (s?: string) => (s ?? '').split('\n').map((x) => x.trim()).filter(Boolean);
-const highlights = (info.h ?? '').split(/\.\s+|\n/).map((x) => x.replace(/\.$/, '').trim()).filter(Boolean);
+const where = place(p.city, info.cc);
+// sentences of HIGHLIGHTS (not on abbreviations like "30 min. od hranic")
+const highlights = (info.h ?? '').split(/\.\s+(?=\p{Lu})|\n/u).map((x) => x.replace(/\.$/, '').trim()).filter(Boolean);
 const map = info.pv?.lat && info.pv?.lng ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(info.pv.lat + ',' + info.pv.lng)}` : '';
 const legacy = !info.d && !info.h && p.legacy_html ? p.legacy_html.replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, '').replace(/\sstyle="[^"]*"/gi, '').replace(/\[[a-z_]+[^\]]*\]/g, '') : '';
 const sameCat = v.primary ? decode(v.primary.name) : '';
+const left2 = info.mx && info.cu !== undefined ? info.mx - info.cu : 0;
+const lastVouchers = left2 > 0 && left2 < 50 ? left2 : 0;
+const stars = p.rating > 0 && p.reviews > 0 ? String(p.rating).replace('.', ',') : '';
+const accRating = info.ar && info.arc ? String(Math.round(info.ar * 10) / 10).replace('.', ',') : '';
+const SHOW_AP = 12;
+// "v kostce": plain sentences from the facts of the feed
+const kostka = [
+  info.pv?.t && info.pv.a ? `${info.pv.t} najdete na adrese ${info.pv.a}${where && where !== 'Česko' && !info.pv.a.includes(where) ? ` (${where})` : ''}.` : where && where !== 'Česko' ? `Místo: ${where}.` : '',
+  highlights.length ? `Hlavní lákadla: ${highlights.slice(0, 3).map((h, i) => (i ? h.charAt(0).toLowerCase() + h.slice(1) : h)).join(', ')}.` : '',
+  info.bo ? `Strava: ${info.bo.toLowerCase()}.` : '',
+  ...(info.pa ?? []).filter(([k]) => /^(Doba trvání|Délka|Počet osob)$/i.test(k)).map(([k, val]) => `${k}: ${val}.`),
+  p.price > 0 ? `Teď stojí ${cena(p.price)}${p.price_old > p.price ? ` místo ${cena(p.price_old)}, tedy o ${p.disc_pct} % méně` : ''}.` : '',
+  info.ve ? `Voucher platí${info.vs ? ` od ${datum(info.vs)}` : ''} do ${datum(info.ve)}.` : '',
+  info.cu && info.cu >= 10 ? `Koupilo ji už ${cislo(info.cu)} lidí${stars ? ` a zákazníci ji hodnotí ${stars} z 5 (${cislo(p.reviews)} hodnocení)` : ''}.` : stars ? `Zákazníci ji hodnotí ${stars} z 5 (${cislo(p.reviews)} hodnocení).` : '',
+].filter(Boolean).join(' ');
 ---
 <Base meta={v.meta} pageType="product" preloadImg={main ? { ...main, sizes: '(max-width: 960px) 100vw, 720px' } : null}>
 	<div class="w">
@@ -37,7 +57,7 @@ const sameCat = v.primary ? decode(v.primary.name) : '';
 		<header>
 			<p class="of__m">
 				{store && <span class="pt" style={`--c:${partnerColor(store.slug)}`}>{decode(store.name)}</span>}
-				{p.city && <span><Ik n="mesto" /> {p.city}</span>}
+				{where && <span><Ik n="mesto" /> {where}</span>}
 				{p.rating > 0 && p.reviews > 0 && <span class="hod">{String(p.rating).replace('.', ',')} <span>({p.reviews} hodnocení u partnera)</span></span>}
 				{info.cu ? <span><Ik n="lidi" /> {info.cu.toLocaleString('cs-CZ')}× koupeno</span> : null}
 			</p>
@@ -61,13 +81,15 @@ const sameCat = v.primary ? decode(v.primary.name) : '';
 				</div>
 				<ul class="box__f">
 					{left !== null && left <= 14 && <li><Ik n="hodiny" /><span>Nabídka končí <b>{dni(left)}</b></span></li>}
-					{info.ve && <li><Ik n="kalendar" /><span>Voucher platí do <b>{datum(info.ve)}</b></span></li>}
+					{lastVouchers > 0 && <li class="box__u"><Ik n="jiskra" /><span>Zbývá posledních <b>{lastVouchers} voucherů</b></span></li>}
+					{info.ve && <li><Ik n="kalendar" /><span>Voucher platí {info.vs ? <>od {datum(info.vs)} </> : null}do <b>{datum(info.ve)}</b></span></li>}
+					{accRating && <li><Ik n="hvezda" /><span>Hodnocení ubytování <b>{accRating}/10</b> ({cislo(info.arc!)} hodnocení)</span></li>}
 					<li><Ik n="mail" /><span>Voucher přijde <b>hned e-mailem</b> — hodí se i jako dárek</span></li>
 					{info.cu ? <li><Ik n="lidi" /><span>Už koupilo <b>{info.cu.toLocaleString('cs-CZ')} lidí</b></span></li> : null}
 				</ul>
 				<div class="box__cta of__cta">
 					{p.active
-						? <a class="btn btn--c" href={go} target="_blank" rel="nofollow sponsored noopener" data-partner={store?.slug ?? p.source} data-price={Math.round(p.price)}>Koupit na {partner} <Ik n="sipka" /></a>
+						? <a class="btn btn--c" href={go} {...goAttrs}>Koupit na {partner} <Ik n="sipka" /></a>
 						: v.primary ? <a class="btn btn--o" href={`/${v.primary.slug}/`}>Podobné nabídky</a> : null}
 					<p class="box__pozn"><Ik n="stit" /><span>Platíte bezpečně přímo u {partner}. Cena je stejná jako u partnera, my za doporučení můžeme dostat provizi.</span></p>
 				</div>
@@ -75,22 +97,50 @@ const sameCat = v.primary ? decode(v.primary.name) : '';
 		</div>
 		<div class="of">
 			<div class="txt">
-				{(info.pv || info.bo || info.tr) && (
+				{kostka && <p class="kostka"><b>V kostce:</b> {kostka}</p>}
+				{(info.pv || info.bo || info.tr || info.dp || info.ve) && (
 					<ul class="fakta">
-						{info.pv?.t && <li><Ik n={info.bo ? 'pobyty' : 'hvezda'} /><span><small>{info.bo ? 'Ubytování' : 'Poskytovatel'}</small>{info.pv.t}</span></li>}
-						{info.pv?.a && <li><Ik n="mesto" /><span><small>Adresa</small>{info.pv.a}{map && <> · <a href={map} target="_blank" rel="nofollow noopener">mapa</a></>}</span></li>}
-						{info.bo && <li><Ik n="jidlo" /><span><small>Strava</small>{info.bo}</span></li>}
-						{info.tr && <li><Ik n="auto" /><span><small>Doprava</small>{info.tr}</span></li>}
+						{info.pv?.t && <li><Ik n={info.bo ? 'pobyty' : 'hvezda'} /><span><small>{info.bo ? 'Ubytování' : 'Poskytovatel'}</small>{info.pv.t}{accRating && <> · <b>{accRating}/10</b></>}</span></li>}
+						{info.pv?.a && <li><Ik n="mapa" /><span><small>Adresa</small>{info.pv.a}{map && <> · <a href={map} target="_blank" rel="nofollow noopener">mapa</a></>}</span></li>}
+						{info.bo && <li><Ik n="talir" /><span><small>Strava</small>{info.bo}</span></li>}
+						{info.tr && <li><Ik n={/autobus|bus/i.test(info.tr) ? 'bus' : /let/i.test(info.tr) ? 'let' : 'auto'} /><span><small>Doprava</small>{info.tr}</span></li>}
+						{info.dp && <li><Ik n="mesto" /><span><small>Odjezd</small>{info.dp}</span></li>}
+						{info.ve && <li><Ik n="kalendar" /><span><small>Platnost voucheru</small>{info.vs ? `${datum(info.vs)} – ` : 'do '}{datum(info.ve)}</span></li>}
+						{lastVouchers > 0 && <li><Ik n="jiskra" /><span><small>Dostupnost</small>posledních {lastVouchers} voucherů</span></li>}
 					</ul>
 				)}
 				{highlights.length > 0 && (<><h2>Proč to stojí za to</h2><ul class="vlast">{highlights.map((h) => <li>{h}</li>)}</ul></>)}
 				{info.in?.i?.length ? (<><h2>Co je v ceně</h2><ul class="vlast">{info.in.i.map((x) => <li>{x}</li>)}</ul></>) : null}
 				{info.in?.g?.map(([g, lines]) => (<><h3>{g}</h3><ul>{lines.map((l) => <li>{l}</li>)}</ul></>))}
+				{info.ap && info.ap.length > 0 && (
+					<>
+						<h2>Vybavení a služby</h2>
+						<ul class="vyb">{info.ap.slice(0, SHOW_AP).map((x) => <li><Ik n="check" />{x}</li>)}</ul>
+						{info.ap.length > SHOW_AP && <details class="vyb__d"><summary>Zobrazit vše ({info.ap.length})</summary><ul class="vyb">{info.ap.slice(SHOW_AP).map((x) => <li><Ik n="check" />{x}</li>)}</ul></details>}
+					</>
+				)}
 				{info.va && info.va.length > 1 && (<><h2>Varianty</h2><table class="varianty"><tbody>{info.va.map(([n, pr]) => <tr><td>{n}</td><td class="num">{cena(pr)}</td></tr>)}</tbody></table></>)}
-				{info.pa && info.pa.length > 0 && (<ul class="fakta">{info.pa.map(([k, val]) => <li><Ik n="check" /><span><small>{k}</small>{val}</span></li>)}</ul>)}
+				{info.pa && info.pa.length > 0 && (<><h2>Parametry</h2><ul class="fakta">{info.pa.map(([k, val]) => <li><Ik n="check" /><span><small>{k}</small>{val}</span></li>)}</ul></>)}
 				{info.d && (<><h2>Popis</h2>{paras(info.d).map((x) => <p>{x}</p>)}</>)}
 				{legacy && <div set:html={legacy} />}
-				{p.active && <p><a class="btn btn--c" href={go} target="_blank" rel="nofollow sponsored noopener" data-partner={store?.slug ?? p.source} data-price={Math.round(p.price)}>Zobrazit nabídku na {partner} <Ik n="sipka" /></a></p>}
+				{v.fit.length > 0 && (
+					<>
+						<h2>Pro koho se hodí</h2>
+						<ul class="chips">{v.fit.map((c) => <li><a class="chip" href={c.url}>{c.icon && <Ik n={c.icon} />}{c.name}</a></li>)}</ul>
+					</>
+				)}
+				{p.active && (
+					<div class="cta2">
+						<div><b>{name}</b><span class="num">{p.price_old > p.price && <del>{cena(p.price_old)}</del>} <strong>{cena(p.price)}</strong></span></div>
+						<a class="btn btn--c" href={go} {...goAttrs}>Zobrazit nabídku na {partner} <Ik n="sipka" /></a>
+					</div>
+				)}
+				{v.faq.length > 0 && (
+					<section class="faq">
+						<h2>Časté dotazy</h2>
+						{v.faq.map((f) => <details><summary>{f.q}</summary><div>{f.a}</div></details>)}
+					</section>
+				)}
 			</div>
 			<aside>
 				<h2>Jak to funguje</h2>
@@ -104,11 +154,11 @@ const sameCat = v.primary ? decode(v.primary.name) : '';
 		{v.more.length > 0 && (
 			<section class="sek">
 				<div class="sh"><h2>{p.active ? 'Mohlo by se vám líbit' : 'Tyto nabídky teď platí'}</h2>{v.primary && <a href={`/${v.primary.slug}/`}>Vše: {sameCat} →</a>}</div>
-				<Mrizka items={v.more} t={v.tree} eager={false} ctx="podobne" />
+				<Mrizka items={v.more} t={v.tree} eager={false} ctx="podobne" sec={v.section} />
 			</section>
 		)}
 	</div>
 	{p.active && (
-		<div class="lista"><span><strong class="num">{cena(p.price)}</strong>{p.disc_pct >= 5 && <> <span class="sleva num">−{p.disc_pct} %</span></>}</span><a class="btn btn--c" href={go} target="_blank" rel="nofollow sponsored noopener" data-partner={store?.slug ?? p.source} data-price={Math.round(p.price)}>Koupit <Ik n="sipka" /></a></div>
+		<div class="lista"><span><strong class="num">{cena(p.price)}</strong>{p.disc_pct >= 5 && <> <span class="sleva num">−{p.disc_pct} %</span></>}</span><a class="btn btn--c" href={go} {...goAttrs}>Koupit <Ik n="sipka" /></a></div>
 	)}
 </Base>

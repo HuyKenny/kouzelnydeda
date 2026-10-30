@@ -12,6 +12,39 @@ if (menu) {
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') menu.open = false; });
 }
 
+// mega menu on touch screens (tablets ≥ 861 px): the first tap opens the panel, the second follows the link
+const megaLis = $$('.sek-nav > ul > li').filter((li) => li.querySelector('.mega'));
+const closeMega = (except?: Element) => megaLis.forEach((li) => li !== except && li.classList.remove('je-otevreno'));
+for (const li of megaLis) {
+  const a = li.querySelector('a.sn');
+  let touch = false;
+  a?.addEventListener('pointerdown', (e) => { touch = (e as PointerEvent).pointerType !== 'mouse'; });
+  a?.addEventListener('click', (e) => {
+    if (!touch || li.classList.contains('je-otevreno')) return;
+    e.preventDefault(); closeMega(li); li.classList.add('je-otevreno');
+  });
+}
+document.addEventListener('click', (e) => { if (!(e.target as Element).closest('.sek-nav')) closeMega(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeMega(); (document.activeElement as HTMLElement | null)?.closest('.mega') && (document.activeElement as HTMLElement).blur(); } });
+
+// listing intro clamped to two lines → "Zobrazit více" when it is longer
+for (const lead of $$('[data-vice]')) {
+  if (lead.scrollHeight <= lead.clientHeight + 4) continue;
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'vice'; b.textContent = 'Zobrazit více';
+  b.addEventListener('click', () => { const open = lead.classList.toggle('je-cele'); b.textContent = open ? 'Zobrazit méně' : 'Zobrazit více'; });
+  lead.insertAdjacentElement('afterend', b);
+}
+
+// filters bottom sheet (phones): the "Filtry" link opens the sidebar, the backdrop / cross / Escape closes it
+const sb = $('.sb'), sbBg = $('.sb__bg');
+if (sb && sbBg) {
+  const setSheet = (open: boolean) => { sb.classList.toggle('je-otevreno', open); sbBg.hidden = !open; document.body.classList.toggle('bez-scroll', open); };
+  $('[data-filtry]')?.addEventListener('click', (e) => { e.preventDefault(); setSheet(true); });
+  for (const x of $$('[data-filtry-zavrit]')) x.addEventListener('click', () => setSheet(false));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setSheet(false); });
+}
+
 // listing toolbar: sort and partner apply at once, empty price fields are not sent
 const tb = $<HTMLFormElement>('form.tb');
 if (tb) {
@@ -42,8 +75,15 @@ if (bar && cta && 'IntersectionObserver' in window) {
 
 // a partner photo that no longer exists → the drawn placeholder instead of a broken image
 const broken = (img: HTMLImageElement) => { img.closest('.fo')?.classList.add('fo--bez'); img.remove(); };
-document.addEventListener('error', (e) => { const t = e.target as HTMLElement; if (t.tagName === 'IMG' && t.closest('.fo')) broken(t as HTMLImageElement); }, true);
+// a gallery thumbnail whose photo is gone is dropped (the strip with it when none is left)
+const brokenThumb = (img: HTMLImageElement) => { const strip = img.closest('.ga__t'); img.closest('button')?.remove(); if (strip && !strip.querySelector('button')) strip.remove(); };
+document.addEventListener('error', (e) => {
+  const t = e.target as HTMLElement;
+  if (t.tagName !== 'IMG') return;
+  if (t.closest('.ga__t')) brokenThumb(t as HTMLImageElement); else if (t.closest('.fo')) broken(t as HTMLImageElement);
+}, true);
 for (const img of $$<HTMLImageElement>('.fo img')) if (img.complete && img.naturalWidth === 0 && img.src) broken(img);
+for (const img of $$<HTMLImageElement>('.ga__t img')) if (img.complete && img.naturalWidth === 0 && img.src) brokenThumb(img);
 
 // search suggestions
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
