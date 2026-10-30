@@ -41,3 +41,20 @@ Worker "kouzelnydeda-import" (cron */20): další feed na řadě → po 3:00 UTC
 Bílá, inkoustově fialová, jedna barva z kouzelníkova klobouku (`#4b1fb0`), zlatá jen na úsporu. Karta nabídky =
 poukázka s perforovaným útržkem se slevou. Systémové písmo, jeden CSS (`src/styles/app.css`), fotky partnerů přes
 wsrv.nl (nic se neukládá na Cloudflare), fotky článků v `public/wp-content/uploads/` (83 MB, stejné URL jako WP).
+
+## Redesign v2 „Kouzelná poukázka“ (31. 10. 2026)
+- **Strom kategorií** = `src/data/taxonomie.json` (81 uzlů, 6 sekcí: Pobyty, Zážitky, Wellness a krása, Jídlo a pití, Kurzy +
+  Dárky). Starý strom Slevomatu (249 kategorií, 58 duplicit) nahradil `scripts/taxonomie-apply.py <env>` (migrace 0002): nová ID
+  od 300000, 301 ze všech starých kategorií (+ `page/N` a `/<stará>/lokalita/<město>/` řeší dispatch), členství nabídek přepočtené.
+  Slugy podle hledanosti MM (glamping 28k, sushi 37k, kosmetika 40k, wellness pobyty 6,8k). Změna stromu = upravit JSON + nová
+  migrace/skript, ne ruční SQL.
+- **Import** zařazuje přes `cat_alias` („kořen|název“ z feedu → kategorie). Nový název z feedu se NEzaloží — jde do sekce
+  a do `site_cache 'cat:unmapped'` (`GET /status` import Workeru) → doplnit do `taxonomie.json` (`from`) a znovu aplikovat alias.
+  Goods-like deals Slevomatu (Jídlo s sebou, Rozvoz, Delikatesy) se neimportují.
+- **Dárkové landingy** `src/data/darky.json` (slugs kind `gift`): výběr z kategorií + cenový strop, vlastní title/desc/intro.
+- **Identita z Canvy:** překreslený kouzelník (`public/a/kouzelnik-*.webp`, `kouzelnik-darek-*`), logo = kouzelník + nápis
+  Gabarito (`public/a/logo-264|528.webp`, `logo-512.png`), favicony, `og.jpg`, 10 ilustrací `public/a/il/*.webp`. Zdroj:
+  Canva design „Blank square illustration holder“ (DAHXx6BooKA) strany 3–12, export PNG → ořez `tmp/alkoholicky/canva/cut.py`.
+- **Ikony** = vlastní linkový sprite `public/a/i2.svg` (73 symbolů, `<Ik n=…>`); při změně přejmenovat soubor (immutable cache).
+- **Konverze:** karta má vedle odkazu na detail tlačítko „K nabídce“ přímo na `/go/` (`ctx` karta/detail/sezona/…), detail má
+  lepicí box „Koupit na <partner>“ + na mobilu stálou lištu s cenou. GA4 `affiliate_click.context` = ctx.
