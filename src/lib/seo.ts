@@ -26,21 +26,64 @@ export function clamp(text: string, max = 160): string {
   return (i > max * 0.6 ? cutAt.slice(0, i) : t.slice(0, max)).replace(/[\s,;:–(-]+$/, '') + '…';
 }
 
-/** Category (redesign v2): "{name} – ušetřete až {max} % | Kouzelný děda" while it fits in the SERP (≤ 62), else shorter. */
-export function categoryTitle(name: string, maxDisc = 0): string {
+/** First title that fits the SERP (about 62 characters). */
+const fit = (cands: string[], max = 62) => cands.find((t) => t.length <= max) ?? cands[cands.length - 1]!;
+const kc = (n: number) => `${Math.round(n).toLocaleString('cs-CZ')} Kč`;
+const YEAR = () => new Date().getFullYear();
+
+/** Category: the keyword first, then what the searcher gets (count, from-price), the year for freshness, the brand last. */
+export function categoryTitle(name: string, count = 0, min = 0): string {
   const n = decode(name);
-  for (const t of [maxDisc >= 20 ? `${n} – ušetřete až ${maxDisc} %${SEP}${SITE}` : '', `${n} – vouchery a dárky${SEP}${SITE}`, `${n}${SEP}${SITE}`]) {
-    if (t && t.length <= 62) return t;
+  return fit([
+    count && min ? `${n} ${YEAR()} – ${cislo(count)} nabídek od ${kc(min)}${SEP}${SITE}` : '',
+    count && min ? `${n} – ${cislo(count)} nabídek od ${kc(min)}${SEP}${SITE}` : '',
+    min ? `${n} od ${kc(min)}${SEP}${SITE}` : '',
+    `${n} – nabídky a vouchery${SEP}${SITE}`,
+    `${n}${SEP}${SITE}`,
+  ].filter(Boolean));
+}
+export function categoryDesc(name: string, count: number, min = 0): string {
+  const n = decode(name);
+  return cut160(`${n}: ${cislo(count)} ověřených nabídek${min ? ` od ${kc(min)}` : ''}. Porovnejte ceny a hodnocení, voucher hned e-mailem – ideální i jako dárek.`);
+}
+export const cityTitle = (lok: string) => fit([`Zážitky a pobyty ${lok} – vouchery a dárky${SEP}${SITE}`, `Zážitky a pobyty ${lok}${SEP}${SITE}`]);
+export const cityDesc = (nom: string, count: number) => cut160(`${nom}: ${cislo(count)} ověřených nabídek na zážitky, pobyty a wellness. Porovnejte ceny a vyberte tu pravou, voucher přijde hned e-mailem.`);
+export const comboTitle = (cat: string, lok: string, count = 0) => fit([count ? `${decode(cat)} ${lok} – ${cislo(count)} nabídek${SEP}${SITE}` : '', `${decode(cat)} ${lok}${SEP}${SITE}`].filter(Boolean));
+export const comboDesc = (cat: string, lok: string, count: number) => cut160(`${decode(cat)} ${lok}: ${cislo(count)} ověřených nabídek. Porovnejte ceny i hodnocení a vyberte tu pravou, voucher přijde hned e-mailem.`);
+
+/** Cuts a long offer name at the last natural break (" – ", ": ", ", ", then a word) within `max` characters. */
+function shorten(name: string, max: number): string {
+  const t = decode(name).replace(/\s+/g, ' ').trim();
+  if (t.length <= max) return t;
+  const head = t.slice(0, max + 1);
+  const br = Math.max(head.lastIndexOf(' – '), head.lastIndexOf(': '), head.lastIndexOf(', '), head.lastIndexOf(' - '));
+  const i = br > max * 0.55 ? br : head.lastIndexOf(' ');
+  return t.slice(0, i > 0 ? i : max).replace(/[\s,;:–-]+$/, '');
+}
+/** Offer: "{short name}, {place} – od 1 990 Kč | Kouzelný děda" (the custom Rank Math title of an old WordPress page wins). */
+export function productTitle(name: string, short: string, where: string, price: number, custom = '', from = false): string {
+  if (custom) return rmVars(custom, name);
+  const base = decode(short || name);
+  const place = where && where !== 'Česko' && !base.toLowerCase().includes(where.toLowerCase()) ? `, ${where}` : '';
+  const pr = price > 0 ? ` – ${from ? 'od ' : ''}${kc(price)}` : '';
+  for (const b of [base + place, base]) {
+    const t = `${b}${pr}${SEP}${SITE}`;
+    if (t.length <= 62) return t;
+    if (`${b}${pr}`.length <= 62) return `${b}${pr}`;
   }
-  return `${n}${SEP}${SITE}`;
+  return `${shorten(base, 62 - pr.length)}${pr}`;
 }
-export function categoryDesc(name: string, count: number, maxDisc = 0): string {
-  return cut160(`${decode(name)}: ${cislo(count)} ověřených nabídek${maxDisc >= 20 ? `, ušetříte až ${maxDisc} %` : ''}. Ideální i jako dárek, voucher přijde hned e-mailem.`);
+/** Offer description ≤ ~158 characters: what it is, where, the price, why now. */
+export function productDesc(custom: string, name: string, lead: string, where: string, price: number, voucher = true): string {
+  if (custom) return custom;
+  const first = stripTags(lead.split('\n').map((x) => x.trim().replace(/\.$/, '')).filter(Boolean).slice(0, 3).join(', ')).replace(/\s+/g, ' ').trim();
+  const tail = voucher ? 'Voucher ihned e-mailem.' : 'Rezervace online.';
+  const head = `${shorten(name, 70)}${where && where !== 'Česko' && !name.toLowerCase().includes(where.toLowerCase()) ? ` (${where})` : ''}.`;
+  const pr = price > 0 ? ` Cena od ${kc(price)}.` : '';
+  const room = 158 - head.length - pr.length - tail.length - 2;
+  const lead2 = first && room > 30 ? ` ${shorten(first, room - 1)}.` : '';
+  return `${head}${lead2}${pr} ${tail}`.replace(/\s+/g, ' ').trim();
 }
-export const cityTitle = (lok: string) => `Zážitky a pobyty ${lok}${SEP}${SITE}`;
-export const cityDesc = (nom: string, count: number) => cut160(`${nom}: ${cislo(count)} ověřených nabídek na zážitky, pobyty a dovolenou. Porovnejte ceny a vyberte tu pravou.`);
-export const comboTitle = (cat: string, lok: string) => `${decode(cat)} ${lok}${SEP}${SITE}`;
-export const comboDesc = (cat: string, lok: string, count: number) => cut160(`${decode(cat)} ${lok}: ${cislo(count)} ověřených nabídek. Porovnejte ceny i hodnocení a vyberte tu pravou.`);
 export const BLOG_TITLE = `Blog: tipy na cestování, zážitky a dovolenou${SEP}${SITE}`;
 export const BLOG_DESC = 'Inspirace a praktické tipy na cestování, zážitky, wellness a dovolenou. Nápady na dárky i rady, jak vybrat ten správný pobyt nebo zážitek.';
 

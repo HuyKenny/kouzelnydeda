@@ -1,18 +1,18 @@
 // View models for each page type: data from D1 + SEO meta (title, description, canonical, prev/next, robots, JSON-LD)
 // matching the WordPress/Rank Math + child theme output. Templates only render what these return.
 import {
-  ancestry, biggestDiscounts, boxOffers, combos, endingSoon, latestPosts, listBy, listCategory, listGift, listPosts, loadCategory, loadPost, loadProduct, maxDiscount, popular,
+  ancestry, biggestDiscounts, boxOffers, combos, endingSoon, latestPosts, listBy, listCategory, listGift, listPosts, loadCategory, loadPost, loadProduct, minPrice, popular,
   postCat, search, similar, tree,
   type Card, type Cat, type PostCard, type Tree,
 } from './db';
 import { isFiltered, parseFilters, toListQuery, toQuery, type FilterState } from './filters';
 import { BASE, COMBO_MIN, EXPIRED_KEEP_DAYS, OG_DEFAULT, PER_PAGE, POSTS_PER_PAGE, isoPrague } from './site';
 import {
-  BLOG_DESC, BLOG_TITLE, rmVars, categoryDesc, categoryTitle, cityDesc, cityTitle, clamp, comboDesc, comboTitle, descFrom, offerTitle, paged, robots, withSite,
+  BLOG_DESC, BLOG_TITLE, rmVars, categoryDesc, categoryTitle, cityDesc, cityTitle, clamp, comboDesc, comboTitle, productDesc, productTitle, paged, robots, withSite,
 } from './seo';
 import { categoryFaq, categoryIntro, cityIntro, comboIntro, kindOf, SERVICE_CATS, themeTarget, type Kind } from './kd';
 import { cityName } from './cities';
-import { cena, datum, decode, stripTags } from './format';
+import { cena, datum, decode, place, stripTags } from './format';
 import type { Info } from '../../workers/import/src/parse';
 import { catIcon } from './ikony';
 import { partnerName } from './partners';
@@ -112,7 +112,7 @@ type Redirect = { redirect: string };
 
 // ---------- category / combo ----------
 export async function categoryView(db: D1Database, catId: number, page: number, sp: URLSearchParams, city = ''): Promise<ListingView | Redirect | null> {
-  const [cat, t, cc, maxD] = await Promise.all([loadCategory(db, catId), tree(db), combos(db), maxDiscount(db, catId)]);
+  const [cat, t, cc, minP] = await Promise.all([loadCategory(db, catId), tree(db), combos(db), minPrice(db, catId)]);
   if (!cat) return null;
   const f = parseFilters(sp);
   const filtered = isFiltered(f);
@@ -135,7 +135,7 @@ export async function categoryView(db: D1Database, catId: number, page: number, 
   if (lok) {
     const cn = cityName(lok.slug);
     const n = cc[String(cat.id)]?.[lok.slug] ?? total;
-    title = comboTitle(name, cn.lok);
+    title = comboTitle(name, cn.lok, n);
     description = comboDesc(name, cn.lok, n);
     h1 = `${name} ${cn.lok}`;
     h2 = `${name} ${cn.lok} — ${n.toLocaleString('cs-CZ')} nabídek`;
@@ -144,10 +144,10 @@ export async function categoryView(db: D1Database, catId: number, page: number, 
     trust = `${n.toLocaleString('cs-CZ')}+ nabídek ${name.toLowerCase()} ${cn.lok}`;
     // a thin combination is not a landing: canonical to the category (WordPress did the same)
     canonical = cn.known && n >= COMBO_MIN ? url : abs(`/${cat.slug}/`);
-    if (!cn.known) title = categoryTitle(name, maxD);
+    if (!cn.known) title = categoryTitle(name, cat.count_total, minP);
   } else {
-    title = categoryTitle(name, maxD);
-    description = categoryDesc(name, cat.count_total, maxD);
+    title = categoryTitle(name, cat.count_total, minP);
+    description = categoryDesc(name, cat.count_total, minP);
     h1 = name;
     h2 = `${name} — ${cat.count_total.toLocaleString('cs-CZ')} nabídek`;
     introTitle = `Jak vybrat v kategorii ${name}`;
@@ -298,9 +298,10 @@ export async function productView(db: D1Database, id: number) {
   const more = await similar(db, primary?.id ?? 0, p.id, p.active ? 8 : 12, p.lok_id);
   const url = abs(`/${p.slug}/`);
   const name = decode(p.name);
-  const title = offerTitle(p.name, p.seo_title);
+  const where0 = place(p.city, info.cc);
+  const title = productTitle(p.name, info.ts ?? '', where0, p.price, p.seo_title, (info.va?.length ?? 0) > 1);
   const store = t.stores.get(p.store_id);
-  const description = descFrom(p.seo_desc, p.excerpt || info.h || info.d || '', name);
+  const description = productDesc(p.seo_desc, name, info.h || p.excerpt || info.d || '', where0, p.price, store?.slug !== 'skvele-cesko' && store?.slug !== 'ceske-kormidlo');
   const offer = p.active ? {
     '@type': 'Offer', url, price: p.price, priceCurrency: 'CZK', availability: 'https://schema.org/InStock',
     ...(info.de ? { priceValidUntil: info.de } : {}), ...(store ? { seller: { '@type': 'Organization', name: decode(store.name) } } : {}),
@@ -351,7 +352,7 @@ function offerFaq(name: string, p: { price: number; price_old: number; city: str
   const inc = [...(info.in?.i ?? []), ...(info.bo ? [`strava: ${info.bo}`] : [])];
   if (inc.length) faq.push({ q: 'Co je v ceně?', a: inc.slice(0, 8).join(', ') + '.' });
   if (p.price > 0) faq.push({ q: 'Kolik to stojí?', a: `Teď ${cena(p.price)}${p.price_old > p.price ? ` místo ${cena(p.price_old)}, ušetříte ${cena(p.price_old - p.price)}` : ''}. Cena je stejná jako přímo u ${partner}.` });
-  faq.push({ q: 'Můžu nabídku darovat?', a: `Ano. Po zaplacení u ${partner} vám voucher nebo vstupenka přijde e-mailem — můžete ji vytisknout nebo poslat obdarovanému.` });
+  if (partner !== 'České kormidlo') faq.push({ q: 'Můžu nabídku darovat?', a: `Ano. Po zaplacení u ${partner} vám voucher nebo vstupenka přijde e-mailem — můžete ji vytisknout nebo poslat obdarovanému.` });
   faq.push({ q: 'Jak nákup probíhá?', a: `Tlačítkem „Objednat“ přejdete na ${partner}, kde nabídku „${name}“ zaplatíte. Kouzelný děda nabídky jen vyhledává a porovnává, platba i voucher jdou přímo přes partnera.` });
   return faq;
 }
@@ -442,9 +443,9 @@ export async function homeView(db: D1Database) {
   const season = month >= 11 ? GIFTS.find((g) => g.slug === 'vanocni-darek') : month <= 2 ? GIFTS.find((g) => g.slug === 'darek-na-valentyna') : undefined;
   const seasonItems = season ? (await listGift(db, season.cats.map((s) => t.bySlug.get(s)?.id).filter((x): x is number => !!x), { page: 1, sort: 'pop' })).items.slice(0, 8) : [];
   // the live homepage texts (Rank Math override of page 3093)
-  const title = 'Kouzelný děda - Kouzelník pro vyhledávání dovolené ✈🌴';
+  const title = 'Zážitkové dárky a pobyty – vouchery online | Kouzelný děda';
   const meta: Meta = {
-    title, description: 'KouzelnýDěda.cz je vyhledávač na pobyty a dovolené. Denně tu na vás čeká přes 1000 nových dovolených u moře, pobytů v Česku i v zahraničí a poznávacích zájezdů.',
+    title, description: `Darujte zážitek: wellness pobyty, glamping, masáže, jízdy v supercarech i kurzy. ${total.toLocaleString('cs-CZ')} nabídek od ověřených partnerů, voucher hned e-mailem.`,
     canonical: BASE + '/', robots: robots(false), ogType: 'website', graph: [{ '@type': 'WebPage', '@id': BASE + '/#webpage', url: BASE + '/', name: title, isPartOf: { '@id': BASE + '/#website' }, inLanguage: 'cs' }], jsonLd: [],
   };
   return { meta, sections, popularCats, top, posts, total, cities, ending, deals, season, seasonItems, gifts: GIFTS.filter((g) => !g.hub), tree: t };

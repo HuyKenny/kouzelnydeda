@@ -1,11 +1,11 @@
 // The three partner feeds that WP All Import read on WordPress (imports 25–28, 30. 10. 2026). URLs live in secrets
 // (FEED_URL_SLEVOMAT carries an auth token): scripts/set-feed-secrets.py <env>.
-export type Source = 'slevomat' | 'adrop' | 'zazitky' | 'skvelecesko';
+export type Source = 'slevomat' | 'adrop' | 'zazitky' | 'skvelecesko' | 'kormidlo';
 
 export interface FeedDef {
   key: Source;
   /** XML element of one offer */
-  item: 'DEAL' | 'SHOPITEM' | 'entry';
+  item: 'DEAL' | 'SHOPITEM' | 'entry' | 'tour';
   /** stores.slug (WordPress taxonomy "store") */
   store: string;
   secret: string;
@@ -17,6 +17,8 @@ export const FEEDS: FeedDef[] = [
   { key: 'slevomat', item: 'DEAL', store: 'slevomat-cz', secret: 'FEED_URL_SLEVOMAT', everyH: 6 },
   { key: 'zazitky', item: 'SHOPITEM', store: 'zazitky-cz', secret: 'FEED_URL_ZAZITKY', everyH: 12 },
   { key: 'adrop', item: 'SHOPITEM', store: 'adrop-cz', secret: 'FEED_URL_ADROP', everyH: 12 },
+  // České kormidlo (CK, SDovolena format: tours with every term and price; ~150 MB, no compression)
+  { key: 'kormidlo', item: 'tour', store: 'ceske-kormidlo', secret: 'FEED_URL_KORMIDLO', everyH: 24 },
   { key: 'skvelecesko', item: 'entry', store: 'skvele-cesko', secret: 'FEED_URL_SKVELECESKO', everyH: 12 },
 ];
 
@@ -29,11 +31,11 @@ export function affiliateUrl(src: Source, id: string, url: string): string {
   }
   // Dognet (SkvěléČesko.cz): the partner URL goes in raw after url= (Kenny's document, 30. 10. 2026)
   if (src === 'skvelecesko') return `https://go.dognet.com/?chid=0ahgy2Fx&url=${url}`;
-  return ehubUrl(src === 'adrop' ? 'adrop' : 'zazitky', id, url);
+  return ehubUrl(src === 'adrop' ? 'adrop' : src === 'kormidlo' ? 'kormidlo' : 'zazitky', id, url);
 }
 /** eHub: desturl is appended raw (that is how every live Adrop/Zážitky link looks and is tracked). Also used per variant. */
-export function ehubUrl(src: 'adrop' | 'zazitky', id: string, url: string): string {
-  const bid = src === 'adrop' ? '0001595B' : 'c22fc1d9';
+export function ehubUrl(src: 'adrop' | 'zazitky' | 'kormidlo', id: string, url: string): string {
+  const bid = src === 'adrop' ? '0001595B' : src === 'kormidlo' ? 'b880f187' : 'c22fc1d9';
   return `https://ehub.cz/system/scripts/click.php?a_aid=052443b7&a_bid=${bid}&data1=${id}&desturl=${url}`;
 }
 

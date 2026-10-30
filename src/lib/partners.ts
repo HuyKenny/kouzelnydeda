@@ -30,6 +30,11 @@ const P: Record<string, Partner> = {
     perks: ['Elektronická vstupenka s QR kódem do e-mailu během pár minut', 'Zrušení nebo přerezervování zdarma do 1 dne před začátkem', 'Garance vrácení peněz za neposkytnutou službu', 'Platba i benefity Up, Pluxee a Edenred'],
     trust: 'Rezervace a platba u SkvěléČesko.cz · cena je stejná jako u partnera',
   },
+  'ceske-kormidlo': {
+    name: 'České kormidlo', color: '#0B6FB3', verb: 'Rezervovat zájezd',
+    perks: ['Zájezd zajišťuje cestovní kancelář ČESKÉ KORMIDLO', 'Vyberete si konkrétní termín a délku pobytu', 'U zájezdů s dopravou je v nabídce nástupní místo', 'Cena platí pro vybraný termín'],
+    trust: 'Rezervace u České kormidlo · cena je stejná jako u cestovní kanceláře',
+  },
 };
 const FALLBACK: Partner = { name: 'partnera', color: '#f0443a', verb: 'Objednat', perks: ['Voucher přijde e-mailem'], trust: 'Platba u partnera · cena je stejná' };
 export const partner = (slug: string | undefined): Partner => P[slug ?? ''] ?? FALLBACK;

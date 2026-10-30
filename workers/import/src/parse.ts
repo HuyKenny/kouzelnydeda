@@ -12,7 +12,7 @@ export interface Info {
   /** short title (Slevomat) */
   ts?: string | undefined;
   /** provider or accommodation: title, address, GPS, own web */
-  pv?: { t?: string | undefined; a?: string | undefined; lat?: string | undefined; lng?: string } | undefined;
+  pv?: { t?: string | undefined; a?: string | undefined; lat?: string | undefined; lng?: string | undefined } | undefined;
   /** board / transport (Slevomat travel) */
   bo?: string | undefined; tr?: string | undefined;
   /** what the price includes: short items + groups of lines */
@@ -46,6 +46,8 @@ export interface Item {
   priceOld: number;
   /** pa_lokalita slug ('' = none) */
   lok: string;
+  /** city as the feed spells it (diacritics); the importer falls back to the known-city table */
+  city?: string | undefined;
   /** category path: [root, child, child …] — children hang directly under the root, like the WPAI manual hierarchy */
   cats: string[];
   excerpt: string;
@@ -250,6 +252,74 @@ function zazitky(n: XmlNode): Item | null {
   };
 }
 
+
+const BOARD: Record<string, string> = { '1': 'bez stravy', '2': 'snídaně', '4': 'polopenze', '5': 'plná penze', '6': 'all inclusive' };
+const TRANSPORT: Record<string, string> = { '1': 'vlastní doprava', '4': 'autobus' };
+const csDate = (iso: string) => { const [y, m, d] = iso.split('-'); return `${Number(d)}. ${Number(m)}. ${y}`; };
+const listItems = (html: string) => [...html.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)].map((m) => plain(m[1]!)).filter(Boolean);
+
+/** České kormidlo (SDovolena format): one tour = one offer; the cheapest term is the price, the cheapest term of each month a variant. */
+function kormidlo(n: XmlNode): Item | null {
+  const id = txt(n, 'tour_id');
+  const title = plain(txt(n, 'tour_title'));
+  if (!id || !title) return null;
+  interface Term { price: number; start: string; id: string; days: number; nights: number; board: string; tr: string; dep: string[] }
+  const terms: Term[] = [];
+  for (const g of kids(kid(n, 'term_groups') ?? n, 'term_group')) {
+    const board = txt(g, 'board', 'id'), tr = txt(g, 'transport', 'id');
+    const dep = texts(kid(g, 'dept_places'), 'place');
+    for (const t of kids(kid(g, 'terms') ?? g, 'term')) {
+      const prices = kids(kid(t, 'prices') ?? t, 'price');
+      const adult = prices.find((p) => txt(p, 'age_from') === '0' && txt(p, 'age_to') === '0') ?? prices[0];
+      const price = num(txt(adult, 'final_price'));
+      const start = date(txt(t, 'start'));
+      if (price > 0 && start && txt(t, 'id')) terms.push({ price, start, id: txt(t, 'id'), days: num(txt(t, 'day_count')), nights: num(txt(t, 'night_count')), board, tr, dep });
+    }
+  }
+  if (!terms.length) return null;
+  terms.sort((a, b) => a.price - b.price || a.start.localeCompare(b.start));
+  const best = terms[0]!;
+  const target = (t: Term) => affiliateUrl('kormidlo', t.id, `https://ceskekormidlo.cz/Termin/?ID=${t.id}`);
+  // variants: the cheapest term of each month (up to 12), labelled by date, length and what differs (board, transport)
+  const byMonth = new Map<string, Term>();
+  for (const t of terms) { const k = t.start.slice(0, 7); if (!byMonth.has(k)) byMonth.set(k, t); }
+  const picked = [...byMonth.values()].sort((a, b) => a.price - b.price || a.start.localeCompare(b.start)).slice(0, 12);
+  const boards = new Set(terms.map((t) => t.board)), trs = new Set(terms.map((t) => t.tr));
+  const va: Array<[string, number, string]> = picked.map((t) => [
+    [csDate(t.start), t.nights ? `${t.nights} ${t.nights === 1 ? 'noc' : t.nights < 5 ? 'noci' : 'nocí'}` : `${t.days} ${t.days === 1 ? 'den' : 'dny'}`, boards.size > 1 ? BOARD[t.board] : '', trs.size > 1 ? TRANSPORT[t.tr] : ''].filter(Boolean).join(' · '),
+    t.price, target(t)]);
+  const loc = kid(kid(n, 'locations') ?? n, 'location');
+  const country = txt(loc, 'country_id'), area = txt(loc, 'area_title'), place = txt(loc, 'place_title');
+  const acc = kid(n, 'accommodation');
+  const html = txt(n, 'tour_desc');
+  const imgs = texts(kid(n, 'photos'), 'photo', 'url').map(https).filter(okUrl);
+  const kind = txt(n, 'tour_type');
+  const stay = kind !== '200';
+  const info: Info = {
+    d: plain(html.replace(/<\/(li|h[1-6]|div|ul|ol|p)>/gi, '\n').replace(/<br\s*\/?>/gi, '\n')) || undefined,
+    pv: { t: txt(acc, 'title') || undefined, a: [place, area].filter(Boolean).join(', ') || undefined, lat: txt(acc, 'gps', 'lat').slice(0, 9) || undefined, lng: txt(acc, 'gps', 'lon').slice(0, 9) || undefined },
+    bo: stay ? BOARD[best.board] : undefined,
+    tr: TRANSPORT[best.tr],
+    dp: [...new Set(best.dep)].slice(0, 6).join(', ') || undefined,
+    cc: country || undefined,
+    va: va.length > 1 ? va : undefined,
+    tags: [txt(acc, 'type')].filter(Boolean),
+  };
+  const inc = /<h\d[^>]*>\s*Cena zahrnuje\s*<\/h\d>\s*<ul[^>]*>([\s\S]*?)<\/ul>/i.exec(html);
+  const arg = /<div id="argumenty">\s*<ul[^>]*>([\s\S]*?)<\/ul>/i.exec(html);
+  if (inc) { const i = listItems(inc[1]!); if (i.length) info.in = { i }; }
+  if (arg) info.h = listItems(arg[1]!).slice(0, 6).join('\n') || undefined;
+  // info.ve stays empty: a tour has many terms
+  const where = place && !title.toLowerCase().includes(place.toLowerCase()) ? `${title}, ${place}` : title;
+  const cats = kind === '200' ? ['@poznavaci-zajezdy', ...(/advent|vanoc|vánoč/i.test(title) ? ['@vanocni-pobyty'] : /silvestr|nov(y|ý) rok|novoro/i.test(title) ? ['@silvestrovske-pobyty'] : [])]
+    : country && country !== 'CZE' ? ['@dovolena-u-more', ...classify(`${title} ${info.d ?? ''}`.slice(0, 600), true).filter((c) => c !== '@pobyty').slice(0, 1)]
+    : classify(`${title} ${(info.d ?? '').slice(0, 300)}`, true);
+  return {
+    ext: id, name: where, target: target(best), image: imgs[0] ?? '', images: imgs.slice(1, 7), price: best.price, priceOld: 0,
+    lok: country === 'CZE' ? citySlug(place) : '', city: country === 'CZE' ? place : '', cats, excerpt: '', rating: 0, reviews: 0, info,
+  };
+}
+
 /** SkvěléČesko.cz (Google Merchant Atom feed, deep links through Dognet): one entry = one bookable activity. */
 function skvelecesko(n: XmlNode): Item | null {
   const id = txt(n, 'id');
@@ -270,6 +340,7 @@ function skvelecesko(n: XmlNode): Item | null {
     price,
     priceOld: 0,
     lok: citySlug(city),
+    city,
     cats: classify(`${title} ${type}`, false),
     excerpt: '',
     rating: 0,
@@ -279,7 +350,7 @@ function skvelecesko(n: XmlNode): Item | null {
 }
 
 export function parseItem(src: Source, n: XmlNode): Item | null {
-  const it = src === 'slevomat' ? slevomat(n) : src === 'adrop' ? adrop(n) : src === 'skvelecesko' ? skvelecesko(n) : zazitky(n);
+  const it = src === 'slevomat' ? slevomat(n) : src === 'adrop' ? adrop(n) : src === 'skvelecesko' ? skvelecesko(n) : src === 'kormidlo' ? kormidlo(n) : zazitky(n);
   if (!it || !it.name) return null;
   if (!it.excerpt) it.excerpt = (it.info.d ?? '').split('\n')[0]!.slice(0, 300);
   return it;
@@ -287,7 +358,7 @@ export function parseItem(src: Source, n: XmlNode): Item | null {
 
 /** FNV-1a over everything that is stored (a changed hash = one UPDATE). */
 export function itemHash(i: Item): string {
-  const s = JSON.stringify([i.name, i.target, i.image, i.images, i.price, i.priceOld, i.lok, i.cats, i.excerpt, i.rating, i.reviews, i.info]);
+  const s = JSON.stringify([i.name, i.target, i.image, i.images, i.price, i.priceOld, i.lok, i.cats, i.excerpt, i.rating, i.reviews, i.info, ...(i.city ? [i.city] : [])]);
   let h = 0x811c9dc5;
   for (let k = 0; k < s.length; k++) { h ^= s.charCodeAt(k); h = Math.imul(h, 0x01000193); }
   return (h >>> 0).toString(16).padStart(8, '0');

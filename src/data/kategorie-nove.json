@@ -70,5 +70,11 @@
   "name": "Zimní sporty",
   "parent": "sport-a-pohyb",
   "icon": "hory"
+ },
+ {
+  "slug": "poznavaci-zajezdy",
+  "name": "Poznávací zájezdy",
+  "parent": "pobyty",
+  "icon": "bus"
  }
 ]

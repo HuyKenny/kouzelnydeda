@@ -220,7 +220,7 @@ export async function runFeed(env: Env, f: FeedDef, opts: { force?: boolean } = 
     const feedCats = resolveCats(ctx, it.cats);
     const disc = it.priceOld > it.price ? Math.round((it.priceOld - it.price) / it.priceOld * 100) : 0;
     const lok = lokId(ctx, it.lok);
-    const city = it.lok ? cityName(it.lok).nom : '';
+    const city = it.lok ? (it.city || cityName(it.lok).nom) : '';
     const info = JSON.stringify(it.info);
     if (ex) {
       // keep categories added on WordPress by hand (WPAI only ever added terms)

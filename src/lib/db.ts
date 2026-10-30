@@ -137,9 +137,9 @@ export async function listGift(db: D1Database, catIds: number[], q: ListQuery & 
   return { items: a!.results as Card[], total: Number((c!.results[0] as { n: number }).n) };
 }
 
-/** Highest discount among active offers of a category (titles "ušetřete až X %"). */
-export async function maxDiscount(db: D1Database, catId: number): Promise<number> {
-  return (await db.prepare('SELECT MAX(disc) AS d FROM cat_products WHERE cat_id = ?').bind(catId).first<{ d: number | null }>())?.d ?? 0;
+/** Lowest price among active offers of a category (titles "od X Kč"). */
+export async function minPrice(db: D1Database, catId: number): Promise<number> {
+  return (await db.prepare('SELECT MIN(price) AS m FROM cat_products WHERE cat_id = ? AND price >= 49').bind(catId).first<{ m: number | null }>())?.m ?? 0;
 }
 
 /** Offers ending soonest (Slevomat deal_end within 10 days). */
