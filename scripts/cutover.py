@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Switch alkoholicky.cz between WordPress (WEDOS origin) and the Worker "alkoholicky".
+"""Switch kouzelnydeda.cz between WordPress (WEDOS origin) and the Worker "kouzelnydeda".
 
-    ALK_PRODUCTION_APPROVED=yes scripts/cutover.py apply      # Worker live on alkoholicky.cz + www
-    ALK_PRODUCTION_APPROVED=yes scripts/cutover.py rollback   # back to WordPress (origin untouched meanwhile)
+    KD_PRODUCTION_APPROVED=yes scripts/cutover.py apply      # Worker live on kouzelnydeda.cz + www
+    KD_PRODUCTION_APPROVED=yes scripts/cutover.py rollback   # back to WordPress (origin untouched meanwhile)
     scripts/cutover.py status
 
-apply:    back up the zone cache ruleset (backups/alkoholicky-cf-zone-<date>/), drop the WordPress-era Cache Rules (they turn
-          off the Worker's Cache API), browser cache TTL 0 (= respect headers), routes alkoholicky.cz/* + www.alkoholicky.cz/*,
+apply:    back up the zone cache ruleset (backups/kouzelnydeda-cf-zone-<date>/), drop the WordPress-era Cache Rules (they turn
+          off the Worker's Cache API), browser cache TTL 0 (= respect headers), routes kouzelnydeda.cz/* + www.kouzelnydeda.cz/*,
           purge everything.
 rollback: delete the routes, restore the Cache Rules + browser TTL from the backup given by --from (default: newest),
           purge everything.
@@ -19,9 +19,9 @@ import sys
 import urllib.request
 
 ROOT = "/home/kenny/ai"
-SCRIPT = "alkoholicky"
-PATTERNS = ["alkoholicky.cz/*", "www.alkoholicky.cz/*"]
-WP_BROWSER_TTL = 31536000  # zone value before the cutover (27. 10. 2026)
+SCRIPT = "kouzelnydeda"
+PATTERNS = ["kouzelnydeda.cz/*", "www.kouzelnydeda.cz/*"]
+WP_BROWSER_TTL = 31536000  # zone value before the cutover (checked 30. 10. 2026)
 
 
 def env(name):
@@ -34,8 +34,8 @@ def env(name):
     return out
 
 
-cf, er = env(".cloudflare-credentials.env"), env(".alkoholicky-credentials.env")
-ZONE = er["CF_ZONE_ID"]
+cf, er = env(".cloudflare-credentials.env"), env(".kouzelnydeda-credentials.env")
+ZONE = er.get("CF_ZONE_ID") or er["CF_ZONE"]
 
 
 def api(method, path, body=None):
@@ -73,7 +73,7 @@ def status():
 
 
 def apply():
-    d = f"{ROOT}/backups/alkoholicky-cf-zone-{datetime.date.today().isoformat()}"
+    d = f"{ROOT}/backups/kouzelnydeda-cf-zone-{datetime.date.today().isoformat()}"
     os.makedirs(d, exist_ok=True)
     rs = cache_ruleset()
     json.dump(rs, open(f"{d}/cache-ruleset.json", "w"), ensure_ascii=False, indent=1)
@@ -95,7 +95,7 @@ def rollback():
     for r in routes():
         api("DELETE", f"/workers/routes/{r['id']}")
         print(f"route {r['pattern']}: deleted")
-    src = sys.argv[sys.argv.index("--from") + 1] if "--from" in sys.argv else sorted(glob.glob(f"{ROOT}/backups/alkoholicky-cf-zone-*/cache-ruleset.json"))[-1]
+    src = sys.argv[sys.argv.index("--from") + 1] if "--from" in sys.argv else sorted(glob.glob(f"{ROOT}/backups/kouzelnydeda-cf-zone-*/cache-ruleset.json"))[-1]
     saved = json.load(open(src))
     keep = [{k: v for k, v in x.items() if k in ("action", "action_parameters", "description", "enabled", "expression")} for x in saved.get("rules", [])]
     if keep:
@@ -112,6 +112,6 @@ def rollback():
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
-    if cmd in ("apply", "rollback") and os.environ.get("ALK_PRODUCTION_APPROVED") != "yes":
-        sys.exit(f"{cmd} needs ALK_PRODUCTION_APPROVED=yes")
+    if cmd in ("apply", "rollback") and os.environ.get("KD_PRODUCTION_APPROVED") != "yes":
+        sys.exit(f"{cmd} needs KD_PRODUCTION_APPROVED=yes")
     {"apply": apply, "rollback": rollback, "status": status}.get(cmd, lambda: sys.exit(__doc__))()

@@ -1,28 +1,20 @@
 # Deploy a přepnutí
 
-## Worker eroka-img (fotky)
-Jeden kód, dvě instance: `npx wrangler deploy -c workers/img/wrangler.jsonc` = produkce (routa `alkoholicky.cz/img/*`,
-service binding webu) a `--env staging` = `eroka-img-staging` bez routy (binding stagingu). Musí existovat dřív než web.
-Secret `IMG_SECRET` (HMAC podpis `/img/` URL, `credentials/.alkoholicky-credentials.env`) musí být stejný na webu
-(`deploy.ts --secrets` ho nahraje) i na img Workeru: `wrangler secret put IMG_SECRET -c workers/img/wrangler.jsonc [--env staging]`.
-Při první změně formátu URL (27. 10. 2026) běžel img Worker chvíli s `--var IMG_LEGACY:1` (přijímal i staré nepodepsané URL).
+## Staging (hotovo 30. 10. 2026)
+`npx tsx scripts/deploy.ts --env staging [--secrets]` — záložka D1 Time Travel, migrace, import Worker, build, kontrola
+tajemství, deploy, smoke test (servisní token Access). Data: `scripts/load-d1.sh staging <sql>`, pak
+`POST /run/<slevomat|adrop|zazitky>` (Slevomat 3× kvůli limitu zápisů) a `POST /finalize?force=1` na import Workeru
+(Bearer `IMPORT_SHARED_SECRET_STAGING`).
 
-## Staging
-`npx tsx scripts/deploy.ts --env staging [--secrets] [--no-import]` — záložka D1 Time Travel (do `backups/`),
-migrace, import Worker, build (`CLOUDFLARE_ENV=staging`, `BUILD_ID=<git sha>`), kontrola tajemství, deploy, smoke test
-se servisním tokenem Access. Data poprvé: `scripts/load-d1.sh staging <sql-dir>`, pak `POST /run/<n>` pro každý feed
-a `POST /finalize`.
-
-D1 `export` neumí databáze s FTS5 → zálohou je Time Travel: `wrangler d1 time-travel restore DB --env <env> --bookmark <b>`.
-
-## Produkce — živě na alkoholicky.cz od 27. 10. 2026 (jen se souhlasem Kennyho, `ALK_PRODUCTION_APPROVED=yes`)
-**WordPress smazán 27. 10. 2026** (`bin/eroka-wp-smazat.py`, zálohy `backups/eroka-wp-final-*`, DNS Worker-only).
-Skripty migrace z WP (`export-from-wp.py`, `migrate-from-wp.py`, `load-d1.sh`, `cutover.py`) jsou v
-`backups/eroka-wp-migrace-skripty-2026-10-27.zip`. Postup, který proběhl:
-1. `scripts/load-d1.sh production <sql>` (čerstvý export z WP), `set-feed-secrets.py production`, deploy → test na
-   `https://alkoholicky.huy-kenny.workers.dev` (SEO parita, vizuál, `/go/` každého partnera, výkon).
-2. Zóna alkoholicky.cz: zálohovat a smazat Cache Rules z doby WP (vypínají Cache API Workeru), browser TTL = respektovat.
-3. Routy `alkoholicky.cz/*` a `www.alkoholicky.cz/*` → Worker `eroka` přes CF API (smazání rout = okamžitý návrat na WP).
-4. Purge zóny, kontrola `X-Alk-Page-Cache: HIT`, GSC (property `https://alkoholicky.cz/`) + odeslat sitemapu.
-5. Po přepnutí: vypnout eroka v `bin/all-wp-cron.sh` a `bin/wp-udrzba.py`, hlídač `/api/health` (cron-job.org),
-   týden GSC; WP smazat až po týdnu s finální zálohou a schválením.
+## Produkce — AŽ NA KENNYHO POKYN
+1. Čerstvý export: `python3 scripts/export-from-wp.py backups/kouzelnydeda-wp-export-<datum>` + `live-meta-snapshot.py`
+   + `migrate-from-wp.py` → `KD_PRODUCTION_APPROVED=yes scripts/load-d1.sh production <sql>` (po `wrangler d1 migrations apply --env production --remote`).
+2. `python3 scripts/set-feed-secrets.py production`, `KD_PRODUCTION_APPROVED=yes npx tsx scripts/deploy.ts --env production --secrets`,
+   importy + finalize na `kouzelnydeda-import` (stejně jako staging), kontrola na https://kouzelnydeda.huy-kenny.workers.dev/api/health.
+3. **Hned po spuštění importu Workeru vypnout WP All Import** (12 úloh „kouzelnydeda WPAI“ v `bin/cronjob-org.py`), jinak
+   by WEDOS dál zbytečně importoval.
+4. `KD_PRODUCTION_APPROVED=yes python3 scripts/cutover.py apply` — záloha a smazání Cache Rules z doby WP (vypínají Cache
+   API Workeru), browser TTL 0, routy `kouzelnydeda.cz/*` + `www`, purge. Návrat: `… cutover.py rollback`.
+5. Ověřit `X-Kd-Page-Cache: HIT`, GSC (property `https://kouzelnydeda.cz/`) odeslat sitemapu, IndexNow, hlídač
+   `/api/health` (cron-job.org, **GET**), vypnout kouzelnydeda v `bin/all-wp-cron.sh` a `bin/wp-udrzba.py`.
+6. WordPress smazat nejdřív za týden, s finální zálohou (`scripts/kouzelnydeda/wp-db.py db|files`) a jen se souhlasem.

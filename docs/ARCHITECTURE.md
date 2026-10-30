@@ -1,63 +1,43 @@
 # Architektura
 
 ```
-alkoholicky.cz/*, www → Worker "eroka" (Astro SSR, @astrojs/cloudflare 14.3.4)
-  middleware.ts: host allow-list → Access (staging celý host) → www→apex → lomítko 301 → LEGACY 301
-                 → D1 redirects → Cache API (klíč /__kc/<data_version>/<BUILD_ID>/<path>, TTL 600 s) → bezpečnostní hlavičky
-  [...path].astro → lib/dispatch.ts: tabulka slugs (produkt > kategorie > článek > stránka > rubrika), /page/N/,
-                    jinak odhad slugu (redirect_guess_404_permalink) → 404
-  /znacka/<slug>/(page/N/)  /go/<slug>/ (302 z D1, allow-list hostů, boti 204, klik do D1)
-  sitemap_index.xml + <rankmath-jméno>.xml ze site_cache, robots.txt, /feed/, /api/health
-Worker "alkoholicky-import" (cron */10 1–5 UTC): 1 feed za běh → finalizace dne (stale feedy, historie cen, sitemapy, data_version)
-D1 alkoholicky-production / alkoholicky-staging (schéma migrations/0001, 0002)
+kouzelnydeda.cz/*, www → Worker "kouzelnydeda" (Astro SSR)
+  middleware.ts: host allow-list → Access (staging) → jeden 301 (www, velká písmena, WP báze, lomítko, tabulka redirects
+                 vč. Pretty Links 307) → Cache API (klíč data_version + BUILD_ID, 600 s) → bezpečnostní hlavičky + CSP s nonce
+  [...path].astro → lib/dispatch.ts: slugs (nabídka | kategorie | článek | stránka | rubrika blogu), /<kat>/lokalita/<mesto>/,
+                    /lokalita/<mesto>/, /brand/<partner>/, /blog/; neznámý slug → jednoznačné pokračování, /<nabídka>-2/,
+                    tematická sekce (kd_theme_target), jinak 404
+  /go/<id>/ → 302 na partnera (allow-list hostů, boti 204, klik do D1 = oblíbenost)
+Worker "kouzelnydeda-import" (cron */20): další feed na řadě → po 3:00 UTC jednou denně finalizace
 ```
 
-## Datový model (D1)
-- `slugs` — jeden lookup pro všechny URL v kořeni; kolize řeší migrace (`/pouta-na-ruce/` = produkt jako na WP).
-- `products` — katalog 1:1 s WordPressem (ID a slugy zachované), denormalizované ceny (min/max/počet nabídek/
-  nejlepší nabídka), přepočítává importér (`recomputeProducts`).
-- `offers` — nabídky obchodů; `target_url` = finální affiliate URL vracená `/go/` byte po bytu, `go_slug` = starý
-  slug Content Egg (staré odkazy fungují), `content_hash` = zápis jen při změně.
-- `cat_products` — členství v kategorii rozbalené na všechny předky (WooCommerce archivy zahrnují podkategorie),
-  klíč `(cat_id, created_at, product_id)` = výpis „od nejnovějších“ je jeden rozsah indexu.
-- `posts` (články + stránky, HTML z `content.rendered`), `post_categories`, `comments` (jen čtení), `redirects`,
-  `price_history` (denní minimum, jen změny), `clicks`, `site_cache` (sitemapy, `data_version`), `product_fts` (FTS5).
+## Data (D1)
+- `products` = nabídky (WP ID a slugy zachované). `source` + `ext_id` = klíč feedu (Slevomat ID, Adrop ITEMGROUP_ID,
+  Zážitky ID). `info` = strukturovaná data feedu pro detail (popis, highlights, poskytovatel, platnost, varianty…).
+- `cat_products` = členství AKTIVNÍCH nabídek rozbalené na předky + řadicí klíče (cena, sleva, oblíbenost, město).
+- `categories` (product_cat, `canon_id` = stejnojmenný duplikát → hlavní), `lokality` (pa_lokalita), `stores`, `posts`,
+  `post_categories`, `redirects`, `clicks`, `site_cache` (sitemapy, `combos`, `data_version`), `product_fts`.
 
-## Proč takhle
-- Katalog je pevný (Kenny 26. 10.: 1:1 jako dnes) — feedy jen přidávají a obnovují nabídky existujících produktů.
-- Obrázky produktů se hotlinkují jako na WP: proxy wsrv.nl erotické domény odmítá; Růžový slon má variantu
-  `/product/detail/` (≤1000 px). Další krok by byly Cloudflare Image Transformations (placené).
-- Uploads článků (497 souborů, 58 MB) jsou statické assety ve `public/wp-content/uploads/` (stejné URL jako na WP).
+## Import (náhrada WP All Import)
+- Filtry a mapování 1:1 s importy 25/26/27/28 (`workers/import/src/feeds.ts`, `parse.ts`): Slevomat bez Zboží/Fotodárků/
+  Potravin/Praktických/kurzů, cestování pod „Cestování“; Adrop bez hmotných dárků/triček/poukazů, varianta = nejlevnější
+  položka ITEMGROUP_ID; Zážitky vše. Affiliate URL přesně jako WPAI (Slevomat UTM, eHub desturl nekódované).
+- Kategorie: kořen + děti z CATEGORIES (hierarchie WPAI), neznámé se založí. Ručně přidané kategorie z WP zůstávají.
+- Slug nové nabídky = WordPress `sanitize_title`, při změně názvu se NEMĚNÍ (WP slug měnil → 2 800 starých slugů v redirects).
+- Pojistky: zápis jen změn (`content_hash`), > 40 % zmizelých = `suspicious` a nic se nevypne, max 2 500 zápisů na běh
+  (`partial`, další běh hned pokračuje).
+- **Skončená nabídka** (zmizí z feedu): `active = 0`, z výpisů pryč, stránka 30 dní 200 + „Tato nabídka už skončila“ +
+  podobné nabídky, `noindex`; pak 301 na kategorii. Vrátí-li se do feedu, ožije pod stejnou URL.
 
-## Redesign „srovnávač“ (27. 10. 2026)
-- **Vzhled:** bílá + neutrální šedé, jediná barva višňová `#B0103A`, systémové písmo (žádné webfonty), styl v jednom
-  souboru `src/styles/app.css`, logo = monolinkový wordmark `src/data/logo.svg`, ikony v externím sprite `public/a/i1.svg`
-  (při změně ikon přejmenovat soubor, cache je immutable), favicony a OG obrázek v `public/a/`.
-- **Fotky (nic se neukládá):** `src/lib/img.ts` → wsrv.nl pro obchody, které přijímá; pro Růžového slona, ErosStar,
-  Vibratory.net a Sexshop.cz (wsrv.nl je blokuje) Worker `eroka-img` (`workers/img`, WASM jsquash, `/img/<w>/<base64url>.webp`,
-  jen edge cache + prohlížeč). Web ho volá přes service binding `IMG`, produkce navíc routou `alkoholicky.cz/img/*`.
-  Seznam blokovaných hostů je ve dvou souborech (`img.ts` OWN a `workers/img` HOSTS) — držet stejný.
-- **Data z feedů (migrace 0004):** `offers.delivery_price`, `offers.extra` (kanonické parametry + až 3 fotky),
-  `product_params` (8 klíčů, `workers/import/src/params.ts`), `products.images/disc_pct/in_stock/pop`, řadicí klíče
-  v `cat_products` (`min_price`, `pop`, `disc` + indexy). Sleva = jen stará cena obchodu (historie cen dávala falešné −80 %).
-- **Noční předpočet** (`workers/import/src/facets.ts`, ve `finalizeDay`): fasety `f:<kategorie>` / `fb:<značka>`,
-  bloky homepage `home`, fotka ke kategorii `cats:img`. Ručně: `POST /facets`, doplnění produktů `POST /recompute?offset=&limit=`.
-- **Filtry** (`src/lib/filters.ts`): `?orderby= &min_price= &max_price= &znacka= &obchod= &skladem=1 &sleva=1 &kat= &p_<klíč>=`;
-  filtrovaná/přeřazená stránka = `noindex, follow` bez canonicalu. Výchozí řazení = oblíbenost.
-- **Našeptávač** `GET /api/suggest?q=` (kategorie a značky z paměti, produkty z FTS5), cache 10 min.
+## SEO 1:1 s WordPressem
+- Titulky/popisky: šablony child theme (`src/lib/seo.ts`, `src/lib/kd.ts` — FAQ, intro, kombinace města, texty doslova);
+  články a stránky = otisk živého webu (`live-meta.json`). Nabídky `{název} | Kouzelný děda`, popis = excerpt.
+- Záměrné rozdíly: stránkování má „– strana N“, rubriky blogu mají H1 a popis, popisky Adropu/Zážitků bez emoji nadpisu.
+- Parita 30. 10. 2026 (1 347 URL ze snapshotu): ~90 % shodných tvrdých polí, zbytek viz výše + čísla nabídek v popiscích.
+- Externí odkazy v článcích se NEMĚNÍ (prodané odkazy zůstávají dofollow); affiliate odchody `rel="nofollow sponsored"`.
+- robots.txt pouští AhrefsBot/SemrushBot/MJ12bot (kupci odkazů si jimi ověřují dofollow), blokuje Baidu/Dot/Petal/BLEX.
 
-## Technický audit 27. 10. 2026 (shrnutí změn)
-- Fotky: všechny přes `eroka-img` (wsrv.nl zrušen — cold p90 9 s), podepsané URL (`src/lib/sign.ts`, HMAC), seznam hostů
-  `src/lib/image-hosts.ts` (sdílí web i img Worker), limit pixelů/bajtů, ruční redirecty, rate limit `RL_IMG`.
-- Middleware: jeden 301 (www, velká písmena, legacy, lomítko, tabulka redirects), production workers.dev → 301 na alkoholicky.cz
-  (kromě `/api/health`), cache klíč z normalizovaných filtrů, rate limit `RL_SEARCH` na každý cache MISS s parametry,
-  HEAD se neukládá, CSP `script-src` s nonce (HTMLRewriter), `_headers` s nosniff/HSTS i pro statiku.
-- SEO: nové šablony title/description (`src/lib/seo.ts`), noindex produktů bez nabídky a značek < 3 produkty, 21 zdvojených
-  kategorií sloučeno (301), `guessSlug` jen pro jednoznačné pokračování, nový robots.txt, sitemapy bez kolizí a noindex.
-
-## Kategorie (27. 10. 2026)
-- Členství: `cat_products.direct` 1 = hlavní kategorie produktu, 0 = předek, **2 = pravidlo** (`workers/import/src/category-rules.ts`,
-  noční diff v `facets.ts applyCategoryRules`, ručně `POST /rules`). Pravidlo = cíl + `within` (podstrom) + název/parametr/značka.
-- Kategorie pod 5 produktů = noindex a mimo sitemapu; dlaždice podkategorií od 3 produktů (`views.ts`, `Dlazdice.astro`).
-- Rozcestníky Pro muže/ženy/páry nemají potomky — dlaždice berou ze skupiny v `src/data/menu.json` se stejnou URL.
-- Menu `src/data/menu.json`: skupina s `url: ''` je jen nadpis (např. Oblíbené značky).
+## Vzhled „Poukázka“
+Bílá, inkoustově fialová, jedna barva z kouzelníkova klobouku (`#4b1fb0`), zlatá jen na úsporu. Karta nabídky =
+poukázka s perforovaným útržkem se slevou. Systémové písmo, jeden CSS (`src/styles/app.css`), fotky partnerů přes
+wsrv.nl (nic se neukládá na Cloudflare), fotky článků v `public/wp-content/uploads/` (83 MB, stejné URL jako WP).

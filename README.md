@@ -1,26 +1,23 @@
-# alkoholicky.cz — Astro + Cloudflare
+# kouzelnydeda.cz — Astro + Cloudflare
 
-Srovnávač cen alkoholu. 27. 10. 2026 převeden z WordPressu (Rehub + WooCommerce + Content Egg + Rank Math na WEDOS)
-na Astro SSR Worker + D1 — kód je fork `apps/eroka` (stejný stack, stejný den). Podrobnosti v [`docs/`](docs/)
-(převzaté z eroky, platí i tady).
+Katalog zážitků, pobytů a slev od partnerů (Slevomat, Adrop, Zážitky.cz). 30. 10. 2026 převeden z WordPressu
+(ReHub + WooCommerce external + WP All Import + Rank Math na WEDOS) na Astro SSR Worker + D1. Kód vychází z
+`apps/alkoholicky`, datový model je jiný: **1 nabídka partnera = 1 stránka**, nabídky denně vznikají a končí.
 
 | Co | Kde |
 |---|---|
-| Web (Astro 7.3.8 SSR, Worker `alkoholicky` / `alkoholicky-staging`) | `src/`, `wrangler.jsonc` |
-| Import nabídek z 19 feedů (Worker `alkoholicky-import`, cron 01–06 UTC) | `workers/import/` (`src/feeds.ts` = obchody a affiliate odkazy) |
-| D1 schéma | `migrations/` (`0005_alkoholicky.sql` = průvodce/FAQ kategorií, texty značek, JSON-LD článků) |
-| Převod z WordPressu | `scripts/export-from-wp.py` + `scripts/alkoholicky/wp-db.py extract` + `scripts/live-meta-snapshot.py --ld` → `scripts/migrate-from-wp.py` → `scripts/load-d1.sh` |
-| Deploy | `npx tsx scripts/deploy.ts --env staging [--secrets]` (produkce jen s `ALK_PRODUCTION_APPROVED=yes`) |
-| Přepnutí domény / návrat | `scripts/cutover.py apply\|rollback\|status` |
-| SEO parita | `python3 scripts/seo-parity.py <base> [--ref origin]` |
-| Lokální náhled | `scripts/dev-preview.sh` → http://localhost:8796 |
+| Web (Astro 7.3.8 SSR, Worker `kouzelnydeda` / `kouzelnydeda-staging`) | `src/`, `wrangler.jsonc` |
+| Import feedů (Worker `kouzelnydeda-import`, cron */20, Slevomat po 6 h, Adrop + Zážitky po 12 h) | `workers/import/` (`src/feeds.ts` = feedy, affiliate odkazy, mapování kategorií z WPAI) |
+| D1 schéma | `migrations/0001_init.sql` |
+| Převod z WordPressu | `scripts/export-from-wp.py` → `scripts/live-meta-snapshot.py` → `scripts/migrate-from-wp.py` → `scripts/load-d1.sh` |
+| Deploy | `npx tsx scripts/deploy.ts --env staging [--secrets] [--no-import]` (produkce jen s `KD_PRODUCTION_APPROVED=yes`) |
+| Tajné klíče importu | `python3 scripts/set-feed-secrets.py <staging\|production>` |
+| Přepnutí domény / návrat | `scripts/cutover.py status\|apply\|rollback` |
+| SEO parita | `python3 scripts/seo-parity.py <base> <export>/live-meta.json` |
+| Lokální náhled | `scripts/dev-preview.sh` → http://localhost:8797 |
 
-Co je jinak než na eroce:
-- titulky/popisky/robots/H1 článků, stránek a kategorií = otisk živého WordPressu (`live-meta.json` z exportu), JSON-LD
-  článků 1:1 (`posts.ld_json`); značky mají šablonu z mu-pluginu (`views.ts brandSeo`);
-- externí odkazy dostávají `rel="nofollow noopener"` v middlewaru, výjimky schvaluje Kenny v `src/data/dofollow.json`;
-- fotky produktů přes wsrv.nl (alkohol neblokuje), žádný vlastní img Worker;
-- kalkulačka promile: formulář je v obsahu článku 13410, výpočet v `src/scripts/ui.ts`.
+Staging: https://kouzelnydeda-staging.huy-kenny.workers.dev (Cloudflare Access, Kennyho e-mail + servisní token).
+Podrobnosti: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), postup přepnutí [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
-Přístupy: `credentials/.alkoholicky-credentials.env` (účet, D1, Access AUD, soli, import secret),
-`credentials/.alkoholicky-feeds.json` (URL feedů s tokeny, CJ). Nic z toho nepatří do repa.
+Přístupy: `credentials/.kouzelnydeda-credentials.env` (účet, Access, soli, import secret), `credentials/.kouzelnydeda-feeds.json`
+(URL feedů; Slevomat s tokenem). Nic z toho nepatří do repa.
