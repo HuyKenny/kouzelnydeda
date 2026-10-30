@@ -52,7 +52,7 @@ export default {
       if (!Array.isArray(raw) || raw.length < 50) return json({ error: 'expected an array of at least 50 items' }, 400);
       const items = new Map<string, Item>();
       for (const r of raw) {
-        if (!r.ext || !r.name || !(r.price > 0) || !/^https:\/\/www\.jdoqocy\.com\//.test(r.target)) continue;
+        if (!r.ext || !r.name || !(r.price > 0) || !/^https:\/\/www\.(jdoqocy\.com|anrdoezrs\.net|kqzyfj\.com|tkqlhce\.com|dpbolvw\.net)\//.test(r.target)) continue;
         const { catText, ...it } = r;
         it.cats = classify(catText || it.name, false);
         items.set(it.ext, { ...it, priceOld: 0, rating: 0, reviews: 0, images: it.images ?? [], lok: it.lok ?? '', info: it.info ?? {}, excerpt: it.excerpt ?? '' });

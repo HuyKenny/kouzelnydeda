@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Firmanazazitky.cz (CJ) has no product feed: reads its sitemap, scrapes the product pages (og:product + the page text)
-and POSTs the items to the import Worker (/ingest/firmanazazitky), which classifies them and applies them like a feed run.
+"""Firmanazazitky.cz (CJ): reads the CJ Product Feed (GraphQL API, ~1 000 products with the official tracking links), adds the full text
+from the product pages and POSTs the items to the import Worker (/ingest/firmanazazitky), which classifies them and applies them like a feed run.
 
     python3 scripts/firmanazazitky-import.py <staging|production> [--limit N]
 Run daily from cron (bin/kouzelnydeda-firmanazazitky.sh). Be polite: 4 parallel requests, ~0.2 s apart.
@@ -22,47 +22,60 @@ def get(url, tries=3):
             time.sleep(1.5 * (i + 1))
     return ''
 
-urls = [u for u in re.findall(r'<loc>([^<]+)</loc>', get(BASE + '/sitemap.xml')) if not u.endswith('/') and '/blog/' not in u and u.count('/') == 3]
-if limit: urls = urls[:limit]
-print(len(urls), 'candidate pages')
+def cj_token():
+    for line in open('/home/kenny/ai/credentials/.kakapo-credentials.env'):
+        if line.startswith('CJ_API_TOKEN='): return line.strip().split('=', 1)[1].strip('"\'')
+    sys.exit('CJ_API_TOKEN missing')
+
+def cj_products():
+    """The CJ Product Feed (GraphQL, advertiser 7918457, our PID 100738307): price, link, photos, categories and the official tracking URL."""
+    out, off = [], 0
+    while True:
+        q = ('{ shoppingProducts(companyId: "4867607", partnerIds: ["7918457"], limit: 1000, offset: %d) { totalCount count resultList { id title description price { amount } link imageLink '
+             'additionalImageLink productType availability linkCode(pid: "100738307") { clickUrl } } } }' % off)
+        r = urllib.request.urlopen(urllib.request.Request('https://ads.api.cj.com/query', data=json.dumps({'query': q}).encode(), method='POST',
+                                   headers={'Authorization': 'Bearer ' + cj_token(), 'Content-Type': 'application/json'}), timeout=120)
+        d = json.loads(r.read())['data']['shoppingProducts']
+        out += d['resultList']; off += d['count']
+        if not d['count'] or off >= d['totalCount']: return out
+
+products = cj_products()
+if limit: products = products[:limit]
+print(len(products), 'products from CJ')
 
 def clean(s): return re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', ' ', s))).strip()
 
-def scrape(u):
+def scrape(pr):
+    """CJ gives a 200-character teaser: the page adds the full text, the voucher validity and the term."""
     time.sleep(0.2)
-    s = get(u)
-    if 'og:product' not in s: return None
-    og = lambda k: (re.search(r'<meta property="og:%s" content="([^"]*)"' % k, s) or [None, ''])[1]
-    price = float(og('price:amount') or 0)
-    name = html.unescape(og('title')).strip()
-    if not name or price <= 0: return None
-    body = re.sub(r'<(script|style|noscript|nav|header|footer)[\s\S]*?</\1>', ' ', s)
-    txt = clean(body)
-    i = txt.find('Na co se budete těšit'); i = i if i >= 0 else txt.find('Na co se budete tesit')
-    desc = txt[i + 22:i + 22 + 2600] if i >= 0 else html.unescape(og('description'))
+    u = pr['link']
+    page = get(u)
+    txt = clean(re.sub(r'<(script|style|noscript|nav|header|footer)[\s\S]*?</\1>', ' ', page)) if page else ''
+    i = txt.find('Na co se budete těšit')
+    desc = txt[i + 22:i + 22 + 2600] if i >= 0 else ''
     for stop in (' Co se bude dít', ' Zobrazit všechna hodnocení', ' Podobné zážitky', ' Další zážitky', ' Často kladené'):
         k = desc.find(stop, 400)
         if k > 0: desc = desc[:k]
-    desc = re.sub(r'(?<=[.!?]) ', '\n', desc.strip())
-    lead = html.unescape(og('description')).rstrip('.').rstrip('…').strip()
+    lead = html.unescape(pr.get('description') or '').strip()
+    desc = re.sub(r'(?<=[.!?]) ', '\n', (desc or lead).strip())
     valid = re.search(r'Platnost poukazu do (\d{1,2})\.(\d{1,2})\.(\d{4})', txt)
     meta = re.search(r'(Celoročně|Sezónně)[^.]*\.[^A-Z]*', txt)
+    price = float(pr['price']['amount'] or 0)
+    click = (pr.get('linkCode') or {}).get('clickUrl') or ''
+    if not click or price <= 0 or not pr.get('title'): return None
     imgs, seen = [], set()
-    for m in re.findall(r'(?:src|href)="((?:https://www\.firmanazazitky\.cz)?/obrazek/[^"]+?\.(?:jpg|jpeg|png))"', s):
-        m = m if m.startswith('http') else BASE + m
-        key = re.sub(r'_\d+x\d+', '', m).split('-')[-1][:12] + m.split('/')[-1][:10]
+    for m in [pr.get('imageLink')] + (pr.get('additionalImageLink') or []):
+        if not m: continue
         base = re.sub(r'_\d+x\d+(?=\.\w+$)', '', m.rsplit('.', 1)[0]).lower()
         if base not in seen: seen.add(base); imgs.append(urllib.parse.quote(m, safe=':/%'))
-    crumbs = re.findall(r'"name":\s*"([^"]+)"', s)
-    cat = crumbs[1] if len(crumbs) > 2 else ''
     info = {'d': desc or lead, 'h': lead or None}
     if valid: info['ve'] = '%s-%02d-%02d' % (valid[3], int(valid[2]), int(valid[1]))
     if meta: info['pa'] = [['Termín a rozsah', meta.group(0).strip(' .')]]
-    return {'ext': u.rstrip('/').split('/')[-1], 'name': name, 'target': CJ + '?sid=' + u.rstrip('/').split('/')[-1][:40] + '&url=' + urllib.parse.quote(u, safe=''),
-            'image': imgs[0] if imgs else (og('image') or ''), 'images': imgs[1:7], 'price': price, 'excerpt': lead[:300],
-            'catText': f'{name} {cat} {lead}', 'info': {k: v for k, v in info.items() if v}}
+    types = pr.get('productType') or []
+    return {'ext': u.rstrip('/').split('/')[-1], 'name': pr['title'].strip(), 'target': click, 'image': imgs[0] if imgs else '', 'images': imgs[1:7], 'price': price,
+            'excerpt': lead[:300], 'catText': f"{pr['title']} {' '.join(types)} {lead}", 'info': {k: v for k, v in info.items() if v}}
 
-with ThreadPoolExecutor(4) as ex: items = [x for x in ex.map(scrape, urls) if x]
+with ThreadPoolExecutor(4) as ex: items = [x for x in ex.map(scrape, products) if x]
 print(len(items), 'products scraped')
 if len(items) < 50: sys.exit('too few products — page layout changed?')
 creds = {}

@@ -7,7 +7,7 @@
 import { sha256Hex } from './http';
 import { isLocal, type AppEnv } from './env';
 
-const ALLOWED = ['slevomat.cz', 'ehub.cz', 'adrop.cz', 'zazitky.cz', 'dognet.com', 'jdoqocy.com'];
+const ALLOWED = ['slevomat.cz', 'ehub.cz', 'adrop.cz', 'zazitky.cz', 'dognet.com', 'jdoqocy.com', 'anrdoezrs.net', 'kqzyfj.com', 'tkqlhce.com', 'dpbolvw.net'];
 
 function isSafeTarget(url: unknown): url is string {
   if (typeof url !== 'string' || url.length === 0 || url.length > 8192) return false;
