@@ -44,11 +44,13 @@ export async function handleGo(id: string | undefined, request: Request, env: Ap
     if (row.active) console.log(JSON.stringify({ level: 'error', event: 'go_unsafe_target', id: row.id }));
     return new Response(null, { status: 302, headers: { ...NO_STORE, location: `/${row.slug}/` } });
   }
-  const ctx = (new URL(request.url).searchParams.get('ctx') ?? 'go').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 30) || 'go';
+  const ctx = (new URL(request.url).searchParams.get('ctx') ?? 'go').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 48) || 'go';
+  // Slevomat reports utm_content per campaign ("Report kanálů") → the placement of the click; nothing else is touched
+  const target = row.source === 'slevomat' ? row.target_url.replace(/([?&]utm_content=)[^&]*/, `$1${ctx}`) : row.target_url;
   const log = (async () => {
     await env.DB.prepare('INSERT INTO clicks (product_id, source, context, ip_hash, clicked_at) VALUES (?, ?, ?, ?, ?)')
       .bind(row.id, row.source, ctx, await ipHash(ip, env), new Date().toISOString()).run();
   })().catch((e) => console.log(JSON.stringify({ level: 'warn', event: 'click_log_failed', message: String(e) })));
   waitUntil?.(log);
-  return new Response(null, { status: 302, headers: { ...NO_STORE, location: row.target_url } });
+  return new Response(null, { status: 302, headers: { ...NO_STORE, location: target } });
 }

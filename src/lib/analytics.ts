@@ -76,12 +76,17 @@ export function ga4Footer(id: string, pageType: string): string {
 		var viaGo=same&&/^\\/go\\//.test(u.pathname);
 		if(!viaGo&&same){return;}
 		if(!window.gtag){return;}
+		var ctx=u.searchParams.get('ctx')||'';
 		gtag('event','affiliate_click',{
 			page_type:PT,
 			link_kind:viaGo?'go':'direct',
 			partner:a.getAttribute('data-partner')||(viaGo?'':u.host),
+			placement:ctx.split('-')[0]||'',
+			context:ctx,
+			section:a.getAttribute('data-section')||'',
+			item_id:a.getAttribute('data-id')||'',
+			item_name:(a.getAttribute('data-name')||'').slice(0,100),
 			destination:viaGo?u.pathname:u.host,
-			context:u.searchParams.get('ctx')||'',
 			value:parseInt(a.getAttribute('data-price')||'0',10)||0,
 			currency:'CZK'
 		});

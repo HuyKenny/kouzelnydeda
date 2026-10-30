@@ -25,6 +25,14 @@ export interface Info {
   pa?: Array<[string, string]> | undefined;
   /** variants: name, price (Zážitky.cz) */
   va?: Array<[string, number]> | undefined;
+  /** accommodation amenities (Slevomat TRAVEL/ACCOMMODATION_PARAMS) */
+  ap?: string[] | undefined;
+  /** accommodation rating /10 and its review count */
+  ar?: number | undefined; arc?: number | undefined;
+  /** departure place (tours), country code */
+  dp?: string | undefined; cc?: string | undefined;
+  /** vouchers on sale in total (remaining = mx − cu), voucher valid from */
+  mx?: number | undefined; vs?: string | undefined;
 }
 
 export interface Item {
@@ -115,7 +123,15 @@ function slevomat(n: XmlNode): Item | null {
   if (travelNode) {
     info.bo = txt(travelNode, 'BOARD') || undefined;
     info.tr = txt(travelNode, 'TRANSPORT') || undefined;
+    info.dp = txt(travelNode, 'DEPARTURE_PLACE') || undefined;
+    const ap = texts(travelNode, 'ACCOMMODATION_PARAMS', 'PARAM', 'NAME');
+    if (ap.length) info.ap = [...new Set(ap)].slice(0, 40);
+    const rv = kid(travelNode, 'ACCOMMODATION_REVIEWS');
+    if (rv) { info.ar = num(txt(rv, 'TOTAL_RATING')) || undefined; info.arc = num(txt(rv, 'REVIEW_COUNT')) || undefined; }
   }
+  info.cc = txt(n, 'COUNTRY_ID') || undefined;
+  info.mx = num(txt(n, 'MAX_CUSTOMERS')) || undefined;
+  info.vs = date(txt(n, 'VOUCHER_START')) || undefined;
   if (incl) {
     const items = texts(incl, 'ITEMS', 'ITEM');
     const groups: Array<[string, string[]]> = kids(kid(incl, 'DESCS') ?? { name: '', attrs: {}, children: [], text: '' }, 'GROUP')

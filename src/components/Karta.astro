@@ -3,17 +3,20 @@
 // name, price. The card opens the offer page; the small "K nabídce" button goes straight to the partner (/go/, decided buyers).
 import Ik from './Ik.astro';
 import type { Card, Tree } from '../lib/db';
-import { cena, decode, dni, dniDo } from '../lib/format';
+import { cena, decode, dni, dniDo, place } from '../lib/format';
 import { card } from '../lib/img';
 import { partnerColor } from '../lib/partners';
 
-interface Props { p: Card; t: Tree; idx?: number; h?: 'h2' | 'h3'; ended?: boolean; ctx?: string }
-const { p, t, idx = 99, h = 'h3', ended = false, ctx = 'karta' } = Astro.props;
+interface Props { p: Card; t: Tree; idx?: number; h?: 'h2' | 'h3'; ended?: boolean; ctx?: string; sec?: string }
+const { p, t, idx = 99, h = 'h3', ended = false, ctx = 'karta', sec = '' } = Astro.props;
+// ctx = placement-section (utm_content at Slevomat, "placement"/"context" in GA4)
+const ctxFull = sec ? `${ctx}-${sec}` : ctx;
 const H = h;
 const name = decode(p.name);
 const img = card(p.image, 360);
 const store = t.stores.get(p.store_id);
 const left = dniDo(p.deal_end);
+const where = place(p.city, p.cc);
 const fresh = Date.now() - Date.parse(String(p.created_at).replace(' ', 'T') + 'Z') < 3 * 86400_000;
 const badge = left !== null && left <= 7 ? { ik: 'hodiny', t: `Končí ${dni(left)}` }
 	: p.bought && p.bought >= 50 ? { ik: 'lidi', t: `${p.bought.toLocaleString('cs-CZ')}× koupeno` }
@@ -29,14 +32,14 @@ const badge = left !== null && left <= 7 ? { ik: 'hodiny', t: `Končí ${dni(lef
 		<div class="k__b">
 			<p class="k__m">
 				{store && <span class="pt" style={`--c:${partnerColor(store.slug)}`}>{decode(store.name)}</span>}
-				{p.city && <span>{p.city}</span>}
+				{where && <span>{where}</span>}
 				{p.rating > 0 && p.reviews > 0 && <span class="hod">{String(p.rating).replace('.', ',')}</span>}
 			</p>
 			<H class="k__n"><a href={`/${p.slug}/`}>{name}</a></H>
 		</div>
 		<div class="k__f">
 			<p class="k__p num">{p.price_old > p.price && <del>{cena(p.price_old)}</del>}<strong>{cena(p.price)}</strong></p>
-			{!ended && <a class="k__go" href={`/go/${p.id}/?ctx=${ctx}`} target="_blank" rel="nofollow sponsored noopener" data-partner={store?.slug ?? ''} data-price={Math.round(p.price)} aria-label={`${name} – k nabídce u partnera`}>K nabídce <Ik n="sipka" /></a>}
+			{!ended && <a class="k__go" href={`/go/${p.id}/?ctx=${ctxFull}`} target="_blank" rel="nofollow sponsored noopener" data-partner={store?.slug ?? ''} data-id={p.id} data-name={name} data-section={sec || undefined} data-price={Math.round(p.price)} aria-label={`${name} – k nabídce u partnera`}>K nabídce <Ik n="sipka" /></a>}
 		</div>
 	</article>
 </li>

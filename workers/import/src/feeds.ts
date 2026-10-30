@@ -19,10 +19,12 @@ export const FEEDS: FeedDef[] = [
   { key: 'adrop', item: 'SHOPITEM', store: 'adrop-cz', secret: 'FEED_URL_ADROP', everyH: 12 },
 ];
 
-/** Affiliate links exactly as WP All Import built them (single_product_url of each import). */
+/** Slevomat affiliate UTM in the documented shape (Kenny 30. 10. 2026; WP All Import used "svk…kouzelnydedaCZ").
+ *  utm_content is the placement of the click — /go/ rewrites it per click (detail-pobyty, karta-darek-pro-muze …). */
+export const SLEVOMAT_CAMPAIGN = 'dis_akv_gen_cze_all_buy_q6q55khb_kouzelnydeda.cz';
 export function affiliateUrl(src: Source, id: string, url: string): string {
   if (src === 'slevomat') {
-    return `${url}?utm_source=affiliate&utm_medium=cpc&utm_campaign=dis_akv_gen_svk_all_buy_q6q55khb_kouzelnydedaCZ&utm_content=${id}&utm_term=q6q55khb`;
+    return `${url}?utm_source=affiliate&utm_medium=cpc&utm_campaign=${SLEVOMAT_CAMPAIGN}&utm_content=${id}&utm_term=q6q55khb`;
   }
   // eHub: desturl is appended raw (that is how every live Adrop/Zážitky link looks and is tracked)
   const bid = src === 'adrop' ? '0001595B' : 'c22fc1d9';
