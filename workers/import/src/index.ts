@@ -49,12 +49,12 @@ export default {
       const f = FEEDS.find((x) => x.key === parts[1] && !x.secret);
       if (!f) return json({ error: 'unknown feed' }, 404);
       const raw = await request.json().catch(() => null) as Array<Item & { catText?: string }> | null;
-      if (!Array.isArray(raw) || raw.length < 50) return json({ error: 'expected an array of at least 50 items' }, 400);
+      if (!Array.isArray(raw) || raw.length < (f.key === 'excursia' ? 15 : 50)) return json({ error: 'expected an array of enough items' }, 400);
       const items = new Map<string, Item>();
       for (const r of raw) {
-        if (!r.ext || !r.name || !(r.price > 0) || !/^https:\/\/www\.(jdoqocy\.com|anrdoezrs\.net|kqzyfj\.com|tkqlhce\.com|dpbolvw\.net)\//.test(r.target)) continue;
+        if (!r.ext || !r.name || !(r.price > 0) || !(f.key === 'excursia' ? /^https:\/\/tracking\.affiliateport\.eu\/click\?o=1919&a=5453&/ : /^https:\/\/www\.(jdoqocy\.com|anrdoezrs\.net|kqzyfj\.com|tkqlhce\.com|dpbolvw\.net)\//).test(r.target)) continue;
         const { catText, ...it } = r;
-        it.cats = classify(catText || it.name, false);
+        it.cats = f.key === 'excursia' ? ['@poznavaci-zajezdy'] : classify(catText || it.name, false);
         items.set(it.ext, { ...it, priceOld: 0, rating: 0, reviews: 0, images: it.images ?? [], lok: it.lok ?? '', info: it.info ?? {}, excerpt: it.excerpt ?? '' });
       }
       return json(await runFeed(env, f, { force, items }));

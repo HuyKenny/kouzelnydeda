@@ -35,6 +35,11 @@ const P: Record<string, Partner> = {
     perks: ['Výměna zážitku zdarma', 'Rychlé doručení – e-mailem ihned, 24/7', 'Dárkově zabaleno na přání', 'Garance ceny'],
     trust: 'Platba u Firmanazazitky.cz · cena je stejná jako u partnera',
   },
+  excursia: {
+    name: 'Excursia.cz', color: '#FD7014', verb: 'Rezervovat zájezd',
+    perks: ['Poznávací zájezd s českým průvodcem', 'Malá skupina (8–15 lidí)', 'Termín a cenu vybíráte přímo u cestovní kanceláře', 'Zájezd zajišťuje CK Excursia'],
+    trust: 'Rezervace u CK Excursia · cena je stejná jako u cestovní kanceláře',
+  },
   'ceske-kormidlo': {
     name: 'České kormidlo', color: '#0B6FB3', verb: 'Rezervovat zájezd',
     perks: ['Zájezd zajišťuje cestovní kancelář ČESKÉ KORMIDLO', 'Vyberete si konkrétní termín a délku pobytu', 'U zájezdů s dopravou je v nabídce nástupní místo', 'Cena platí pro vybraný termín'],
