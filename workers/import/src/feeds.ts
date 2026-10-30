@@ -1,6 +1,6 @@
 // The three partner feeds that WP All Import read on WordPress (imports 25–28, 30. 10. 2026). URLs live in secrets
 // (FEED_URL_SLEVOMAT carries an auth token): scripts/set-feed-secrets.py <env>.
-export type Source = 'slevomat' | 'adrop' | 'zazitky' | 'skvelecesko' | 'kormidlo' | 'firmanazazitky' | 'excursia';
+export type Source = 'slevomat' | 'adrop' | 'zazitky' | 'skvelecesko' | 'kormidlo' | 'firmanazazitky' | 'excursia' | 'radynacestu' | 'amazingplaces';
 
 export interface FeedDef {
   key: Source;
@@ -23,6 +23,10 @@ export const FEEDS: FeedDef[] = [
   { key: 'firmanazazitky', item: 'entry', store: 'firma-na-zazitky', secret: '', everyH: 24 },
   // Excursia.cz (CK, poznávací zájezdy; tracking AffiliatePort/Scaleo): no feed reachable → scripts/excursia-import.py → /ingest/excursia
   { key: 'excursia', item: 'entry', store: 'excursia', secret: '', everyH: 24 },
+  // Rady na cestu (CK, SDovolena format, one tour listed once per variant A/B/C → merged by detail URL); own tracking ?a_box=
+  { key: 'radynacestu', item: 'tour', store: 'rady-na-cestu', secret: 'FEED_URL_RADYNACESTU', everyH: 24 },
+  // Amazing Places (hotels, chalets, wineries; Post Affiliate Pro ?a_box=&a_cam=): scripts/amazingplaces-import.py → /ingest/amazingplaces
+  { key: 'amazingplaces', item: 'entry', store: 'amazing-places', secret: '', everyH: 168 },
   { key: 'skvelecesko', item: 'entry', store: 'skvele-cesko', secret: 'FEED_URL_SKVELECESKO', everyH: 12 },
 ];
 
@@ -33,6 +37,8 @@ export function affiliateUrl(src: Source, id: string, url: string): string {
   if (src === 'slevomat') {
     return `${url}?utm_source=affiliate&utm_medium=cpc&utm_campaign=${SLEVOMAT_CAMPAIGN}&utm_content=${id}&utm_term=q6q55khb`;
   }
+  if (src === 'radynacestu') return url.replace(/^([^#?]*)(\?[^#]*)?(#.*)?$/, (_m, base: string, q: string | undefined, hash: string | undefined) => `${base}${q ? q + '&' : '?'}a_box=uyvpbj5j${hash ?? ''}`);
+  if (src === 'amazingplaces') return `${url}?a_box=33bnvjub&a_cam=9`;
   if (src === 'excursia') return `https://tracking.affiliateport.eu/click?o=1919&a=5453&deep_link=${encodeURIComponent(url)}`;
   // CJ deep link (Firmanazazitky.cz): the product URL is the encoded url= parameter of the partner's tracking link
   if (src === 'firmanazazitky') return `https://www.jdoqocy.com/click-100738307-17346622?sid=${id}&url=${encodeURIComponent(url)}`;

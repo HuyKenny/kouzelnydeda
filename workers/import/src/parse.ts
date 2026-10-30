@@ -200,13 +200,22 @@ function adrop(n: XmlNode): Item | null {
 export function mergeVariants(a: Item, b: Item): Item {
   const best = b.price < a.price ? b : a;
   best.info.va = [...(a.info.va ?? []), ...(b.info.va ?? [])];
-  best.vparts = [...(a.vparts ?? []), ...(b.vparts ?? [])];
+  const vp = [...(a.vparts ?? []), ...(b.vparts ?? [])];
+  if (vp.length) best.vparts = vp; else delete best.vparts;
   return best;
 }
 export function finishVariants(it: Item): void {
   const parts = it.vparts;
   delete it.vparts;
   const va = it.info.va;
+  if (!parts && va && va.length > 1) {
+    // merged tours without dimensions (Rady na cestu terms): one row per label, cheapest first
+    const seenL = new Set<string>();
+    const uniq = va.filter(([l, pr]) => { const k = l + '|' + pr; if (seenL.has(k)) return false; seenL.add(k); return true; }).sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0], 'cs'));
+    it.info.va = uniq.length > 1 ? uniq.slice(0, 14) : undefined;
+    if (!it.info.va) delete it.info.va;
+    return;
+  }
   if (!parts || !va || va.length < 2) { if (it.info.va && !parts) return; delete it.info.va; return; }
   const dims = [0, 1, 2, 3, 4].filter((d) => new Set(parts.map((p) => p[d])).size > 1);
   const seen = new Set<string>();
@@ -321,6 +330,62 @@ function kormidlo(n: XmlNode): Item | null {
   };
 }
 
+/** Rady na cestu (SDovolena format, no namespace): tours with the same detail page (variants A, B, C…) are one offer; the terms are its variants. */
+function radynacestu(n: XmlNode): Item | null {
+  const detail = https(txt(n, 'tour_detail_url'));
+  const title = plain(txt(n, 'tour_title'));
+  const slug = detail.replace(/\/+$/, '').split('/').pop() ?? '';
+  if (!slug || !okUrl(detail) || !title) return null;
+  // the same tour has a page per transport / departure (…-letecky-z-prahy, …-autobusem): one offer per title
+  const group = title.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 110);
+  const RTR: Record<string, string> = { '2': 'letecky', '0': 'letecky', '4': 'autobusem' };
+  const kind = txt(n, 'tour_type');
+  interface T { price: number; start: string; days: number; nights: number; url: string; tr: string; board: string; dep: string[] }
+  const terms: T[] = [];
+  const incl: string[] = [], excl: string[] = [];
+  for (const g of kids(kid(n, 'term_groups') ?? n, 'term_group')) {
+    const board = txt(g, 'board', 'id'), tr = txt(g, 'transport', 'id');
+    const dep = texts(kid(g, 'dept_places'), 'place');
+    incl.push(...texts(kid(g, 'price_incl'), 'item', 'desc').map(plain));
+    excl.push(...texts(kid(g, 'price_excl'), 'item', 'desc').map(plain));
+    for (const t of kids(kid(g, 'terms') ?? g, 'term')) {
+      const prices = kids(kid(t, 'prices') ?? t, 'price');
+      const adult = prices.find((p) => txt(p, 'age_from') === '0' && txt(p, 'age_to') === '0') ?? prices[0];
+      const price = num(txt(adult, 'final_price')), start = date(txt(t, 'start')), url = https(txt(t, 'purchase_url')) || detail;
+      if (price > 0 && start) terms.push({ price, start, days: num(txt(t, 'day_count')), nights: num(txt(t, 'night_count')), url, tr, board, dep });
+    }
+  }
+  if (!terms.length) return null;
+  terms.sort((a, b) => a.price - b.price || a.start.localeCompare(b.start));
+  const best = terms[0]!;
+  const target = (t: T) => affiliateUrl('radynacestu', slug, t.url);
+  const byMonth = new Map<string, T>();
+  for (const t of terms) { const k = t.start.slice(0, 7) + t.tr + t.url.split('/').slice(-3)[0]; if (!byMonth.has(k)) byMonth.set(k, t); }
+  const va: Array<[string, number, string]> = [...byMonth.values()].map((t) => [
+    [csDate(t.start), t.nights ? `${t.nights} ${t.nights === 1 ? 'noc' : t.nights < 5 ? 'noci' : 'nocí'}` : `${t.days} ${t.days === 1 ? 'den' : 'dny'}`, RTR[t.tr] ?? ''].filter(Boolean).join(' · '),
+    t.price, target(t)]);
+  const countries = [...new Set(texts(kid(n, 'locations'), 'location', 'country_id'))];
+  const cc = countries[0] ?? '';
+  const imgs = texts(kid(n, 'photos'), 'photo', 'url').map(https).filter(okUrl);
+  const acc = kid(n, 'accommodation');
+  const days: Array<[string, string[]]> = [];
+  const prog = kids(kid(kid(n, 'program') ?? n, 'tour_program') ?? n, 'day');
+  if (prog.length) days.push(['Program zájezdu', prog.slice(0, 14).map((d) => `${plain(txt(d, 'title'))}: ${plain(txt(d, 'desc').replace(/<\/(p|li|div)>/gi, ' ')).replace(/\n+/g, ' ').slice(0, 380)}`)]);
+  if (excl.length) days.push(['Cena nezahrnuje', [...new Set(excl)].slice(0, 10)]);
+  const lead = plain(txt(n, 'tour_desc'));
+  const info: Info = {
+    d: lead || undefined, h: lead ? lead.split(/(?<=[.!?])\s/)[0] : undefined,
+    pv: { t: txt(acc, 'title') || undefined },
+    tr: best.tr === '4' ? 'autobus' : best.tr === '2' || best.tr === '0' ? 'letecky' : undefined,
+    bo: BOARD[best.board], dp: [...new Set(best.dep)].slice(0, 6).join(', ') || undefined, cc: cc || undefined,
+    in: { ...([...new Set(incl)].length ? { i: [...new Set(incl)].slice(0, 14) } : {}), ...(days.length ? { g: days } : {}) },
+    va, tags: countries.slice(0, 4),
+  };
+  if (!info.in?.i && !info.in?.g) delete info.in;
+  const cats = kind === '200' || kind === '500' ? ['@poznavaci-zajezdy', ...holidayCats(cc && cc !== 'CZE' ? cc : undefined)] : ['@dovolena-u-more', ...holidayCats(cc && cc !== 'CZE' ? cc : undefined)];
+  return { ext: group || slug, name: title.replace(/\s+/g, ' '), target: target(best), image: imgs[0] ?? '', images: imgs.slice(1, 7), price: best.price, priceOld: 0, lok: '', cats, excerpt: '', rating: 0, reviews: 0, info };
+}
+
 /** SkvěléČesko.cz (Google Merchant Atom feed, deep links through Dognet): one entry = one bookable activity. */
 function skvelecesko(n: XmlNode): Item | null {
   const id = txt(n, 'id');
@@ -355,7 +420,7 @@ function skvelecesko(n: XmlNode): Item | null {
 }
 
 export function parseItem(src: Source, n: XmlNode): Item | null {
-  const it = src === 'slevomat' ? slevomat(n) : src === 'adrop' ? adrop(n) : src === 'skvelecesko' ? skvelecesko(n) : src === 'kormidlo' ? kormidlo(n) : zazitky(n);
+  const it = src === 'slevomat' ? slevomat(n) : src === 'adrop' ? adrop(n) : src === 'skvelecesko' ? skvelecesko(n) : src === 'kormidlo' ? kormidlo(n) : src === 'radynacestu' ? radynacestu(n) : zazitky(n);
   if (!it || !it.name || !it.image) return null; // no photo = nothing to show (dead tours, empty entries)
   if (!it.excerpt) it.excerpt = (it.info.d ?? '').split('\n')[0]!.slice(0, 300);
   return it;

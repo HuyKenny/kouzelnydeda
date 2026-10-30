@@ -87,7 +87,7 @@ const kostka = [
 				</div>
 				{va.length > 0 && (
 					<fieldset class="vyber" data-var data-go={go}>
-						<legend>{store?.slug === 'ceske-kormidlo' ? 'Vyberte termín' : store?.slug === 'skvele-cesko' ? 'Vyberte místo' : 'Vyberte variantu'}</legend>
+						<legend>{store?.slug === 'ceske-kormidlo' || store?.slug === 'rady-na-cestu' ? 'Vyberte termín' : store?.slug === 'skvele-cesko' ? 'Vyberte místo' : 'Vyberte variantu'}</legend>
 						{asRadio
 							? va.map(([l, pr, t], i) => <label class="vyber__r"><input type="radio" name="var" value={i} data-price={pr} data-link={t ? '1' : undefined} checked={i === 0} /><span>{l || `Varianta ${i + 1}`}</span><b class="num">{cena(pr)}</b></label>)
 							: <select name="var" aria-label="Varianta">{va.map(([l, pr, t], i) => <option value={i} data-price={pr} data-link={t ? '1' : undefined}>{l || `Varianta ${i + 1}`} — {cena(pr)}</option>)}</select>}

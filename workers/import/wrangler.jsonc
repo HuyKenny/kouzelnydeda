@@ -12,7 +12,7 @@
   "limits": { "cpu_ms": 300000 },
   "d1_databases": [{ "binding": "DB", "database_name": "kouzelnydeda-local", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "../../migrations" }],
   "triggers": { "crons": [] },
-  "vars": { "ALLOWED_FEED_HOSTS": "www.slevomat.cz,feeds.mergado.com,alis.zazitky.cz,www.skvelecesko.cz,export.ceskekormidlo.cz", "MAX_DROP_PCT": "40", "MAX_WRITES": "2500" },
+  "vars": { "ALLOWED_FEED_HOSTS": "www.slevomat.cz,feeds.mergado.com,alis.zazitky.cz,www.skvelecesko.cz,export.ceskekormidlo.cz,xml.radynacestu.cz", "MAX_DROP_PCT": "40", "MAX_WRITES": "2500" },
   "observability": { "enabled": true, "head_sampling_rate": 1 },
   "env": {
     "staging": {
@@ -23,7 +23,7 @@
       "triggers": { "crons": [] },
       "limits": { "cpu_ms": 300000 },
       "d1_databases": [{ "binding": "DB", "database_name": "kouzelnydeda-staging", "database_id": "f8ddc3d1-1107-4581-92d3-4c15ceb4da85", "migrations_dir": "../../migrations" }],
-      "vars": { "ALLOWED_FEED_HOSTS": "www.slevomat.cz,feeds.mergado.com,alis.zazitky.cz,www.skvelecesko.cz,export.ceskekormidlo.cz", "MAX_DROP_PCT": "40", "MAX_WRITES": "2500" }
+      "vars": { "ALLOWED_FEED_HOSTS": "www.slevomat.cz,feeds.mergado.com,alis.zazitky.cz,www.skvelecesko.cz,export.ceskekormidlo.cz,xml.radynacestu.cz", "MAX_DROP_PCT": "40", "MAX_WRITES": "2500" }
     },
     "production": {
       "name": "kouzelnydeda-import",
@@ -33,7 +33,7 @@
       "triggers": { "crons": ["*/20 * * * *"] },
       "limits": { "cpu_ms": 300000 },
       "d1_databases": [{ "binding": "DB", "database_name": "kouzelnydeda-production", "database_id": "87b9cf42-57ee-4800-afa2-9134b8f857eb", "migrations_dir": "../../migrations" }],
-      "vars": { "ALLOWED_FEED_HOSTS": "www.slevomat.cz,feeds.mergado.com,alis.zazitky.cz,www.skvelecesko.cz,export.ceskekormidlo.cz", "MAX_DROP_PCT": "40", "MAX_WRITES": "2500" }
+      "vars": { "ALLOWED_FEED_HOSTS": "www.slevomat.cz,feeds.mergado.com,alis.zazitky.cz,www.skvelecesko.cz,export.ceskekormidlo.cz,xml.radynacestu.cz", "MAX_DROP_PCT": "40", "MAX_WRITES": "2500" }
     }
   }
 }
