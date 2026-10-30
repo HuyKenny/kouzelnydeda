@@ -76,5 +76,175 @@
   "name": "Poznávací zájezdy",
   "parent": "dovolena-u-more",
   "icon": "bus"
+ },
+ {
+  "slug": "dovolena-italie",
+  "name": "Dovolená v Itálii",
+  "short": "Itálie",
+  "parent": "dovolena-u-more",
+  "icon": "more",
+  "group": "Stát"
+ },
+ {
+  "slug": "dovolena-chorvatsko",
+  "name": "Dovolená v Chorvatsku",
+  "short": "Chorvatsko",
+  "parent": "dovolena-u-more",
+  "icon": "more",
+  "group": "Stát"
+ },
+ {
+  "slug": "dovolena-polsko",
+  "name": "Dovolená v Polsku",
+  "short": "Polsko",
+  "parent": "dovolena-u-more",
+  "icon": "more",
+  "group": "Stát"
+ },
+ {
+  "slug": "dovolena-rakousko",
+  "name": "Dovolená v Rakousku",
+  "short": "Rakousko",
+  "parent": "dovolena-u-more",
+  "icon": "more",
+  "group": "Stát"
+ },
+ {
+  "slug": "dovolena-slovensko",
+  "name": "Dovolená na Slovensku",
+  "short": "Slovensko",
+  "parent": "dovolena-u-more",
+  "icon": "more",
+  "group": "Stát"
+ },
+ {
+  "slug": "dovolena-madarsko",
+  "name": "Dovolená v Maďarsku",
+  "short": "Maďarsko",
+  "parent": "dovolena-u-more",
+  "icon": "more",
+  "group": "Stát"
+ },
+ {
+  "slug": "dovolena-slovinsko",
+  "name": "Dovolená ve Slovinsku",
+  "short": "Slovinsko",
+  "parent": "dovolena-u-more",
+  "icon": "more",
+  "group": "Stát"
+ },
+ {
+  "slug": "dovolena-nemecko",
+  "name": "Dovolená v Německu",
+  "short": "Německo",
+  "parent": "dovolena-u-more",
+  "icon": "more",
+  "group": "Stát"
+ },
+ {
+  "slug": "dovolena-v-cesku",
+  "name": "Dovolená v Česku",
+  "short": "Dovolená v Česku",
+  "parent": "pobyty",
+  "icon": "pobyty",
+  "group": "Typ pobytu"
+ },
+ {
+  "slug": "dovolena-praha",
+  "name": "Dovolená v Praze",
+  "short": "Praha",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
+ },
+ {
+  "slug": "dovolena-stredocesky-kraj",
+  "name": "Dovolená ve Středočeském kraji",
+  "short": "Středočeský kraj",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
+ },
+ {
+  "slug": "dovolena-jihocesky-kraj",
+  "name": "Dovolená v Jihočeském kraji",
+  "short": "Jihočeský kraj",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
+ },
+ {
+  "slug": "dovolena-plzensky-kraj",
+  "name": "Dovolená v Plzeňském kraji",
+  "short": "Plzeňský kraj",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
+ },
+ {
+  "slug": "dovolena-karlovarsky-kraj",
+  "name": "Dovolená v Karlovarském kraji",
+  "short": "Karlovarský kraj",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
+ },
+ {
+  "slug": "dovolena-ustecky-kraj",
+  "name": "Dovolená v Ústeckém kraji",
+  "short": "Ústecký kraj",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
+ },
+ {
+  "slug": "dovolena-liberecky-kraj",
+  "name": "Dovolená v Libereckém kraji",
+  "short": "Liberecký kraj",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
+ },
+ {
+  "slug": "dovolena-hradecky-kraj",
+  "name": "Dovolená v Královéhradeckém kraji",
+  "short": "Královéhradecký kraj",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
+ },
+ {
+  "slug": "dovolena-pardubicky-kraj",
+  "name": "Dovolená v Pardubickém kraji",
+  "short": "Pardubický kraj",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
+ },
+ {
+  "slug": "dovolena-vysocina",
+  "name": "Dovolená na Vysočině",
+  "short": "Vysočina",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
+ },
+ {
+  "slug": "dovolena-jihomoravsky-kraj",
+  "name": "Dovolená v Jihomoravském kraji",
+  "short": "Jihomoravský kraj",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
+ },
+ {
+  "slug": "dovolena-olomoucky-kraj",
+  "name": "Dovolená v Olomouckém kraji",
+  "short": "Olomoucký kraj",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
+ },
+ {
+  "slug": "dovolena-zlinsky-kraj",
+  "name": "Dovolená ve Zlínském kraji",
+  "short": "Zlínský kraj",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
+ },
+ {
+  "slug": "dovolena-moravskoslezsky-kraj",
+  "name": "Dovolená v Moravskoslezském kraji",
+  "short": "Moravskoslezský kraj",
+  "parent": "dovolena-v-cesku",
+  "icon": "mapa"
  }
 ]

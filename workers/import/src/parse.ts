@@ -3,6 +3,7 @@
 import type { XmlNode } from './xml/stream';
 import { ADROP_SKIP, SLEVOMAT_GOODS, SLEVOMAT_MAP, SLEVOMAT_SKIP, SLEVOMAT_TRAVEL_MAP, affiliateUrl, type Source } from './feeds';
 import { classify } from './classify';
+import { holidayCats } from './geo';
 
 export interface Info {
   /** description (plain text, paragraphs separated by \n) */
@@ -152,7 +153,7 @@ function slevomat(n: XmlNode): Item | null {
     price,
     priceOld: old > price ? old : 0,
     lok: citySlug(txt(n, 'CITIES', 'CITY')),
-    cats: path.map((c) => map[c] ?? c),
+    cats: [...path.map((c) => map[c] ?? c), ...(travel ? holidayCats(txt(n, 'COUNTRY_ID') || undefined, info.pv?.a ?? '') : [])],
     // excerpt = HIGHLIGHTS (import 25) / DESCRIPTION (import 26), the Rank Math %excerpt% description
     excerpt: plain(travel ? txt(n, 'DESCRIPTION') : txt(n, 'HIGHLIGHTS')),
     rating: num(txt(n, 'REVIEWS_AVERAGE')),
@@ -311,9 +312,9 @@ function kormidlo(n: XmlNode): Item | null {
   if (arg) info.h = listItems(arg[1]!).slice(0, 6).join('\n') || undefined;
   // info.ve stays empty: a tour has many terms
   const where = place && !title.toLowerCase().includes(place.toLowerCase()) ? `${title}, ${place}` : title;
-  const cats = kind === '200' ? ['@poznavaci-zajezdy', ...(/advent|vanoc|vánoč/i.test(title) ? ['@vanocni-pobyty'] : /silvestr|nov(y|ý) rok|novoro/i.test(title) ? ['@silvestrovske-pobyty'] : [])]
-    : country && country !== 'CZE' ? ['@dovolena-u-more', ...classify(`${title} ${info.d ?? ''}`.slice(0, 600), true).filter((c) => c !== '@pobyty').slice(0, 1)]
-    : classify(`${title} ${(info.d ?? '').slice(0, 300)}`, true);
+  const cats = kind === '200' ? ['@poznavaci-zajezdy', ...holidayCats(country && country !== 'CZE' ? country : undefined), ...(/advent|vanoc|vánoč/i.test(title) ? ['@vanocni-pobyty'] : /silvestr|nov(y|ý) rok|novoro/i.test(title) ? ['@silvestrovske-pobyty'] : [])]
+    : country && country !== 'CZE' ? ['@dovolena-u-more', ...holidayCats(country), ...classify(`${title} ${info.d ?? ''}`.slice(0, 600), true).filter((c) => c !== '@pobyty').slice(0, 1)]
+    : [...holidayCats(country || 'CZE', area), ...classify(`${title} ${(info.d ?? '').slice(0, 300)}`, true)];
   return {
     ext: id, name: where, target: target(best), image: imgs[0] ?? '', images: imgs.slice(1, 7), price: best.price, priceOld: 0,
     lok: country === 'CZE' ? citySlug(place) : '', city: country === 'CZE' ? place : '', cats, excerpt: '', rating: 0, reviews: 0, info,

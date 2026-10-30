@@ -78,11 +78,12 @@ function uniqueSlug(ctx: Ctx, base: string): string {
  *  site_cache 'cat:unmapped') — new public categories are no longer created automatically. */
 function resolveCats(ctx: Ctx, path: string[]): number[] {
   const out: number[] = [];
-  // classifier output ("@slug"): categories of the tree by slug
-  if (path[0]?.startsWith('@')) {
-    for (const s of path) { const id = ctx.bySlug.get(s.slice(1)); if (id) out.push(id); else ctx.unmapped.add(s); }
-    return out;
-  }
+  // "@slug" entries (classifier, geography): categories of the tree by slug — alone or next to feed category names
+  const slugs = path.filter((x) => x.startsWith('@'));
+  const named = path.filter((x) => !x.startsWith('@'));
+  const bySlug = () => { for (const s of slugs) { const id = ctx.bySlug.get(s.slice(1)); if (id && !out.includes(id)) out.push(id); else if (!id) ctx.unmapped.add(s); } };
+  if (!named.length) { bySlug(); return out; }
+  path = named;
   const rootName = (path[0] ?? '').trim().toLowerCase();
   const root = ctx.alias.get('|' + rootName);
   if (!root) { if (rootName) ctx.unmapped.add('|' + rootName); return out; }
@@ -92,6 +93,7 @@ function resolveCats(ctx: Ctx, path: string[]): number[] {
     const id = ctx.alias.get(key);
     if (id) { if (!out.includes(id)) out.push(id); } else if (raw.trim()) ctx.unmapped.add(key);
   }
+  bySlug();
   // the section alone when a more specific category exists adds nothing (it is an ancestor anyway)
   return out.length > 1 ? out.filter((id) => !(id === root && out.some((o) => o !== root && ancestors(ctx, o).includes(root)))) : out;
 }

@@ -34,7 +34,7 @@ for n in nodes:
     sort = max([r['sort'] for r in cats.values() if r['parent'] == par['id']] + [par['sort']]) + 1
     cats[n['slug']] = {'id': nid, 'slug': n['slug'], 'parent': par['id'], 'sort': sort}
     esc = lambda s: s.replace("'", "''")
-    stmts.append(f"INSERT INTO categories (id, slug, name, parent, icon, sort, created_at) VALUES ({nid}, '{n['slug']}', '{esc(n['name'])}', {par['id']}, '{n['icon']}', {sort}, datetime('now'))")
+    stmts.append(f"INSERT INTO categories (id, slug, name, parent, icon, grp, short, sort, created_at) VALUES ({nid}, '{n['slug']}', '{esc(n['name'])}', {par['id']}, '{n['icon']}', '{esc(n.get('group', ''))}', '{esc(n.get('short', ''))}', {sort}, datetime('now'))")
     stmts.append(f"INSERT INTO slugs (slug, kind, ref_id) VALUES ('{n['slug']}', 'category', {nid})")
     nid += 1
 print(len(stmts) // 2, 'new categories')
