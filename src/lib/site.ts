@@ -5,8 +5,8 @@ export const SITE_NAME = 'Kouzelný děda';
 export const SITE_DESC = 'Vyhledávač pobytů a dovolené';
 export const GA4_ID = 'G-6SEWKKB1YH';
 export const INDEXNOW_KEY = 'b44e9e81085a8e09ad851279ee1b8ce8';
-export const LOGO_URL = BASE + '/wp-content/uploads/2022/08/Kouzelny-deda-512.png';
-export const OG_DEFAULT = LOGO_URL;
+export const LOGO_URL = BASE + '/a/logo-512.png';
+export const OG_DEFAULT = BASE + '/a/og.jpg';
 export const PER_PAGE = 24;
 export const POSTS_PER_PAGE = 10;
 /** kd_combo: a category × city listing with at least this many offers is its own landing page (canonical to itself). */
@@ -20,7 +20,7 @@ export function orgGraph(searchAction = false): unknown[] {
   return [
     {
       '@type': 'Organization', '@id': BASE + '/#organization', name: SITE_NAME, url: BASE,
-      logo: { '@type': 'ImageObject', '@id': BASE + '/#logo', url: LOGO_URL, contentUrl: LOGO_URL, caption: SITE_NAME, inLanguage: 'cs', width: '512', height: '233' },
+      logo: { '@type': 'ImageObject', '@id': BASE + '/#logo', url: LOGO_URL, contentUrl: LOGO_URL, caption: SITE_NAME, inLanguage: 'cs', width: '512', height: '168' },
     },
     {
       '@type': 'WebSite', '@id': BASE + '/#website', url: BASE, name: SITE_NAME, description: SITE_DESC, publisher: { '@id': BASE + '/#organization' }, inLanguage: 'cs',

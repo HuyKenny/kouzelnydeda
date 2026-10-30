@@ -51,7 +51,8 @@ export async function collect(db: D1Database): Promise<Record<string, U[]>> {
       for (const [city, n] of Object.entries(cities)) if (n >= COMBO_MIN && city !== 'cr' && CITY[city]) comboUrls.push({ loc: `${BASE}/${c.slug}/lokalita/${city}/`, mod: '' });
     }
   } catch { /* no combos yet */ }
-  chunk('product_cat-sitemap', [...map(cats), ...comboUrls]);
+  const gifts = await all<{ slug: string; m: string | null }>("SELECT slug, '' AS m FROM slugs WHERE kind = 'gift'").catch(() => []);
+  chunk('product_cat-sitemap', [...map(cats), ...map(gifts), ...comboUrls]);
   out['store-sitemap'] = map(stores, '/brand/');
   out['pa_lokalita-sitemap'] = map(loks, '/lokalita/');
   return out;

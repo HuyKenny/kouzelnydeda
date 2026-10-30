@@ -55,3 +55,7 @@ export const SLEVOMAT_TRAVEL_MAP: Record<string, string> = {
 export const SLEVOMAT_SKIP = ['Zboží', 'Fotodárky', 'Potraviny', 'Praktické', 'Autoškola a škola smyku', 'Ostatní kurzy'];
 /** Adrop items WP All Import skipped (XPath of import 27): physical gifts, T-shirts, vouchers. */
 export const ADROP_SKIP = ['Hmotné', 'tričk', 'poukaz'];
+
+/** Slevomat categories of goods (redesign v2, Kenny: no physical products) — a deal whose categories are only these is
+ *  not imported (taxonomie.json "skip" did the same to the catalogue). */
+export const SLEVOMAT_GOODS = ['Jídlo s sebou', 'Rozvoz jídla', 'Delikatesy'];

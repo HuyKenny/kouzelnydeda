@@ -1,7 +1,7 @@
 // One feed element → a normalised offer, with the same filters, fields and categories as the WP All Import templates
 // (imports 25/26 Slevomat, 27 Adrop, 28 Zážitky.cz). Everything the detail page shows goes into `info` (compact JSON).
 import type { XmlNode } from './xml/stream';
-import { ADROP_SKIP, SLEVOMAT_MAP, SLEVOMAT_SKIP, SLEVOMAT_TRAVEL_MAP, affiliateUrl, type Source } from './feeds';
+import { ADROP_SKIP, SLEVOMAT_GOODS, SLEVOMAT_MAP, SLEVOMAT_SKIP, SLEVOMAT_TRAVEL_MAP, affiliateUrl, type Source } from './feeds';
 
 export interface Info {
   /** description (plain text, paragraphs separated by \n) */
@@ -93,6 +93,7 @@ function slevomat(n: XmlNode): Item | null {
   // import 26: root "Cestování" + CATEGORY[2..24]; import 25: CATEGORY[1] as the root + CATEGORY[2..20]
   const map = travel ? SLEVOMAT_TRAVEL_MAP : SLEVOMAT_MAP;
   const path = travel ? ['Cestování', ...cats.slice(1, 24)] : cats.slice(0, 20);
+  if (path.length > 1 && path.slice(1).every((c) => SLEVOMAT_GOODS.includes(c))) return null;
   const pv = kid(n, 'PROVIDER') ?? kid(n, 'TRAVEL');
   const pre = kid(n, 'PROVIDER') ? 'PROVIDER_' : 'TRAVEL_';
   const travelNode = kid(n, 'TRAVEL');

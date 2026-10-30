@@ -38,6 +38,7 @@ const ld = (o: unknown) => JSON.stringify(o).replace(/</g, '\\u003c');
 	<meta property="og:site_name" content={SITE_NAME} />
 	<meta property="og:image" content={ogImage} />
 	<meta name="twitter:card" content="summary_large_image" />
+	<link rel="preload" href="/fonts/gabarito-800-1.woff2" as="font" type="font/woff2" crossorigin />
 	<link rel="preconnect" href="https://wsrv.nl" crossorigin />
 	{preloadImg && <link rel="preload" as="image" href={preloadImg.src} imagesrcset={preloadImg.srcset} imagesizes={preloadImg.sizes} fetchpriority="high" />}
 	<link rel="icon" href="/a/favicon-32.png" sizes="32x32" type="image/png" />

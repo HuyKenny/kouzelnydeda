@@ -8,7 +8,7 @@ const $$ = <T extends Element = HTMLElement>(s: string, r: Root = document) => [
 const menu = $<HTMLDetailsElement>('.nav');
 if (menu) {
   menu.addEventListener('toggle', () => document.body.classList.toggle('bez-scroll', menu.open && !matchMedia('(min-width: 960px)').matches));
-  document.addEventListener('click', (e) => { if (menu.open && !(e.target as Element).closest('.nav')) menu.open = false; });
+  document.addEventListener('click', (e) => { const t = e.target as Element; if (menu.open && (t.closest('[data-zavrit]') || !t.closest('.nav'))) menu.open = false; });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') menu.open = false; });
 }
 

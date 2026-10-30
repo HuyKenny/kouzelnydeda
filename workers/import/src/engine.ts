@@ -40,28 +40,28 @@ interface CatRow { id: number; slug: string; name: string; parent: number; count
 interface Ctx {
   db: D1Database;
   cats: Map<number, CatRow>;
-  byKey: Map<string, number>;
+  /** feed category path "<root>|<child>" (lower case) → category (cat_alias, scripts/taxonomie-apply.py) */
+  alias: Map<string, number>;
+  unmapped: Set<string>;
   slugs: Set<string>;
-  nextCat: number;
   newStmts: D1PreparedStatement[];
   loks: Map<string, number>;
   nextLok: number;
 }
 
 async function context(db: D1Database): Promise<Ctx> {
-  const [c, s, l, mx] = await db.batch([
+  const [c, s, l, mx, al] = await db.batch([
     db.prepare('SELECT id, slug, name, parent, count_total FROM categories'),
     db.prepare('SELECT slug FROM slugs'),
     db.prepare('SELECT id, slug FROM lokality'),
     db.prepare('SELECT COALESCE(MAX(id), 0) AS c, (SELECT COALESCE(MAX(id), 0) FROM lokality) AS l FROM categories'),
+    db.prepare('SELECT feed_key, cat_id FROM cat_alias'),
   ]);
   const cats = new Map((c!.results as CatRow[]).map((r) => [r.id, r]));
-  const byKey = new Map<string, number>();
-  for (const r of cats.values()) byKey.set(`${r.parent}|${r.name.trim().toLowerCase()}`, r.id);
   const m = mx!.results[0] as { c: number; l: number };
   return {
-    db, cats, byKey, slugs: new Set((s!.results as Array<{ slug: string }>).map((r) => r.slug)),
-    nextCat: Math.max(m.c, 100000) + 1, newStmts: [], loks: new Map((l!.results as Array<{ id: number; slug: string }>).map((r) => [r.slug, r.id])), nextLok: m.l + 1,
+    db, cats, slugs: new Set((s!.results as Array<{ slug: string }>).map((r) => r.slug)), unmapped: new Set(),
+    alias: new Map((al!.results as Array<{ feed_key: string; cat_id: number }>).map((r) => [r.feed_key, r.cat_id])), newStmts: [], loks: new Map((l!.results as Array<{ id: number; slug: string }>).map((r) => [r.slug, r.id])), nextLok: m.l + 1,
   };
 }
 
@@ -72,33 +72,22 @@ function uniqueSlug(ctx: Ctx, base: string): string {
   return s;
 }
 
-/** WPAI hierarchical mapping: the root by name (parent 0), the other names as its children; unknown ones are created
- *  (WordPress did the same — a new category is noindex until it has 5 offers, see views). */
+/** Feed category path → categories of the new tree (redesign v2): the root by "|<name>", each child by "<root>|<name>"
+ *  through cat_alias. A name the tree does not know yet goes to the root's section and is reported (GET /status,
+ *  site_cache 'cat:unmapped') — new public categories are no longer created automatically. */
 function resolveCats(ctx: Ctx, path: string[]): number[] {
   const out: number[] = [];
-  let root = 0;
-  path.forEach((raw, i) => {
-    const name = raw.trim();
-    if (!name) return;
-    const parent = i === 0 ? 0 : root;
-    if (i > 0 && !root) return;
-    const key = `${parent}|${name.toLowerCase()}`;
-    let id = ctx.byKey.get(key);
-    if (!id) {
-      id = ctx.nextCat++;
-      const slug = uniqueSlug(ctx, wpSlug(name));
-      ctx.byKey.set(key, id);
-      ctx.cats.set(id, { id, slug, name, parent, count_total: 0 });
-      ctx.newStmts.push(
-        ctx.db.prepare('INSERT INTO categories (id, slug, name, parent, created_at) VALUES (?, ?, ?, ?, ?)').bind(id, slug, name, parent, now()),
-        ctx.db.prepare("INSERT OR IGNORE INTO slugs (slug, kind, ref_id) VALUES (?, 'category', ?)").bind(slug, id),
-      );
-      log('category.created', { id, slug, parent });
-    }
-    if (i === 0) root = id;
-    if (!out.includes(id)) out.push(id);
-  });
-  return out;
+  const rootName = (path[0] ?? '').trim().toLowerCase();
+  const root = ctx.alias.get('|' + rootName);
+  if (!root) { if (rootName) ctx.unmapped.add('|' + rootName); return out; }
+  out.push(root);
+  for (const raw of path.slice(1)) {
+    const key = rootName + '|' + raw.trim().toLowerCase();
+    const id = ctx.alias.get(key);
+    if (id) { if (!out.includes(id)) out.push(id); } else if (raw.trim()) ctx.unmapped.add(key);
+  }
+  // the section alone when a more specific category exists adds nothing (it is an ancestor anyway)
+  return out.length > 1 ? out.filter((id) => !(id === root && out.some((o) => o !== root && ancestors(ctx, o).includes(root)))) : out;
 }
 
 function lokId(ctx: Ctx, slug: string): number {
@@ -262,6 +251,12 @@ export async function runFeed(env: Env, f: FeedDef, opts: { force?: boolean } = 
   await db.prepare('UPDATE products SET seen_at = ? WHERE source = ? AND active = 1').bind(stamp, f.key).run();
   await recount(db);
   await bumpVersion(db);
+  if (ctx.unmapped.size) {
+    const prev = await db.prepare("SELECT value FROM site_cache WHERE key = 'cat:unmapped'").first<{ value: string }>();
+    const all = [...new Set([...(prev ? JSON.parse(prev.value) as string[] : []), ...ctx.unmapped])].slice(0, 300);
+    await db.prepare("INSERT INTO site_cache (key, value, updated_at) VALUES ('cat:unmapped', ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").bind(JSON.stringify(all), stamp).run();
+    log('categories.unmapped', { feed: f.key, keys: [...ctx.unmapped].slice(0, 20) });
+  }
   return finish(capped ? 'partial' : 'ok', capped ? `write cap ${maxWrites} reached — continues next run` : '', capped ? undefined : meta);
 }
 

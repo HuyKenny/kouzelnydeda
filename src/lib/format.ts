@@ -69,3 +69,13 @@ export function safeCommentHtml(html: string): string {
       return '';
     });
 }
+
+/** Days left until a YYYY-MM-DD date (deal end), null when unknown or past. */
+export function dniDo(date: string | null | undefined): number | null {
+  if (!date || !/^\d{4}-\d{2}-\d{2}/.test(date)) return null;
+  const d = Math.ceil((Date.parse(date.slice(0, 10) + 'T23:59:59Z') - Date.now()) / 86400_000);
+  return d >= 0 ? d : null;
+}
+export function dni(n: number): string {
+  return n === 0 ? 'dnes' : n === 1 ? 'zítra' : n <= 4 ? `za ${n} dny` : `za ${n} dní`;
+}

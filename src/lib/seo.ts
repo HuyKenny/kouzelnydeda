@@ -26,14 +26,16 @@ export function clamp(text: string, max = 160): string {
   return (i > max * 0.6 ? cutAt.slice(0, i) : t.slice(0, max)).replace(/[\s,;:–(-]+$/, '') + '…';
 }
 
-/** The child theme overrode every category title (also the Rank Math per-term ones) with this template. */
-export function categoryTitle(name: string): string {
+/** Category (redesign v2): "{name} se slevou až −{max} % | Kouzelný děda" while it fits in the SERP (≤ 62), else shorter. */
+export function categoryTitle(name: string, maxDisc = 0): string {
   const n = decode(name);
-  const long = `${n} se slevou – ověřené nabídky${SEP}${SITE}`;
-  return long.length <= 62 ? long : `${n} se slevou${SEP}${SITE}`;
+  for (const t of [maxDisc >= 20 ? `${n} se slevou až −${maxDisc} %${SEP}${SITE}` : '', `${n} se slevou – vouchery a dárky${SEP}${SITE}`, `${n} se slevou${SEP}${SITE}`]) {
+    if (t && t.length <= 62) return t;
+  }
+  return `${n}${SEP}${SITE}`;
 }
-export function categoryDesc(name: string, count: number): string {
-  return cut160(`${decode(name)} se slevou — ${cislo(count)} ověřených nabídek na jednom místě. Porovnejte ceny i hodnocení a vyberte tu nejvýhodnější. Denně nové akce.`);
+export function categoryDesc(name: string, count: number, maxDisc = 0): string {
+  return cut160(`${decode(name)} se slevou${maxDisc >= 20 ? ` až ${maxDisc} %` : ''}: ${cislo(count)} ověřených nabídek od Slevomatu, Zážitky.cz a Adropu. Ideální i jako dárek, voucher přijde hned e-mailem.`);
 }
 export const cityTitle = (lok: string) => `Zážitky a pobyty ${lok} se slevou${SEP}${SITE}`;
 export const cityDesc = (nom: string, count: number) => cut160(`${nom}: ${cislo(count)} ověřených nabídek na zážitky, pobyty a dovolenou se slevou. Porovnejte ceny a vyberte tu pravou.`);

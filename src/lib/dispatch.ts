@@ -10,7 +10,7 @@ import { themeTarget } from './kd';
 const JUNK = /\.[a-z0-9]{2,5}$|^\/(\.|wp-|cgi-bin|admin|administrator|phpmyadmin|xmlrpc|vendor|api\/|_)/i;
 
 export type Route =
-  | { kind: 'product' | 'category' | 'post' | 'page'; id: number; page: number }
+  | { kind: 'product' | 'category' | 'post' | 'page' | 'gift'; id: number; page: number }
   | { kind: 'combo'; cat: number; city: string; page: number }
   | { kind: 'city'; city: string; page: number }
   | { kind: 'store'; store: string; page: number }
@@ -45,18 +45,24 @@ export async function dispatch(db: D1Database, pathname: string): Promise<Route>
   if (s.length === 3 && s[1] === 'lokalita') {
     const c = await resolveSlug(db, s[0]!);
     if (c?.kind === 'category') return { kind: 'combo', cat: c.ref_id, city: s[2]!, page };
+    // an old (Slevomat tree) category: its 301 target keeps the city
+    const old = await db.prepare('SELECT to_path FROM redirects WHERE from_path = ?').bind(`/${s[0]}/`).first<{ to_path: string }>();
+    if (old && /^\/[a-z0-9-]+\/$/.test(old.to_path)) return { kind: 'redirect', to: `${old.to_path}lokalita/${enc(s[2]!)}/` };
     return { kind: 'notfound' };
   }
   if (s.length === 1) {
     // WordPress kept non-ASCII slugs percent-encoded in lower case (Slevomat titles with U+2060 word joiners)
     const r = (await resolveSlug(db, s[0]!)) ?? (/[^\x00-\x7f]/.test(s[0]!) ? await resolveSlug(db, enc(s[0]!).toLowerCase()) : null);
     if (r) {
-      if (page > 1 && r.kind !== 'category' && r.kind !== 'postcat') return { kind: 'redirect', to: `/${enc(s[0]!)}/` };
+      if (page > 1 && r.kind !== 'category' && r.kind !== 'postcat' && r.kind !== 'gift') return { kind: 'redirect', to: `/${enc(s[0]!)}/` };
       return { kind: r.kind as 'product', id: r.ref_id, page };
     }
     if (JUNK.test(path)) return { kind: 'notfound' };
-    // kd-redirects.php: /<gone listing>/page/N/ → its base; an offer-like slug → the section it belongs to
-    if (page > 1) return { kind: 'notfound' };
+    // /<old category>/page/N/ → the new category's page N (the 301 table holds the base paths only)
+    if (page > 1) {
+      const old = await db.prepare('SELECT to_path FROM redirects WHERE from_path = ?').bind(`/${s[0]}/`).first<{ to_path: string }>();
+      return old && old.to_path.startsWith('/') ? { kind: 'redirect', to: pg(old.to_path, page) } : { kind: 'notfound' };
+    }
     const g = await guessSlug(db, s[0]!);
     if (g) return { kind: 'redirect', to: `/${g}/` };
     // /<offer>-2/ = an older copy of the same offer (WordPress guessed it the same way)

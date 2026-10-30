@@ -1,7 +1,7 @@
 ---
 import Karta from './Karta.astro';
 import type { Card, Tree } from '../lib/db';
-interface Props { items: Card[]; t: Tree; h?: 'h2' | 'h3'; eager?: boolean }
-const { items, t, h = 'h3', eager = true } = Astro.props;
+interface Props { items: Card[]; t: Tree; h?: 'h2' | 'h3'; eager?: boolean; ctx?: string }
+const { items, t, h = 'h3', eager = true, ctx = 'karta' } = Astro.props;
 ---
-<ul class="grid">{items.map((p, i) => <Karta p={p} t={t} idx={eager ? i : 99} h={h} />)}</ul>
+<ul class="grid">{items.map((p, i) => <Karta p={p} t={t} idx={eager ? i : 99} h={h} ctx={ctx} />)}</ul>

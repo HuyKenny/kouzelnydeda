@@ -2,8 +2,9 @@
 // ported verbatim: category FAQ and intros by section, city × category intros, the 404 → category heuristic.
 import { cislo } from './format';
 
-export type Kind = 'pobyt' | 'zazitek' | 'restaurace' | 'krasa' | 'obecne';
-const ROOT_KIND: Record<string, Kind> = { cestovani: 'pobyt', zazitky: 'zazitek', 'restaurace-a-bary': 'restaurace', 'krasa-zdravi-a-relaxace': 'krasa' };
+export type Kind = 'pobyt' | 'zazitek' | 'restaurace' | 'krasa' | 'kurz' | 'obecne';
+// sections of the redesign v2 tree (src/data/taxonomie.json)
+const ROOT_KIND: Record<string, Kind> = { pobyty: 'pobyt', zazitky: 'zazitek', 'jidlo-a-piti': 'restaurace', 'wellness-a-krasa': 'krasa', kurzy: 'kurz' };
 /** kd_category_kind(): by the slug of the root category. */
 export const kindOf = (rootSlug: string): Kind => ROOT_KIND[rootSlug] ?? 'obecne';
 
@@ -36,6 +37,12 @@ export function categoryFaq(name: string, kind: Kind): Array<{ q: string; a: str
       { q: 'Jak nákup probíhá a je bezpečný?', a: SAFE },
       { q: 'Dá se procedura darovat?', a: 'Ano, většinu procedur lze pořídit jako dárkový voucher s delší platností. Skvěle se hodí jako dárek – obdarovaný si termín vybere sám.' },
     ];
+    case 'kurz': return [
+      { q: `Jak vybrat kurz v kategorii ${n}?`, a: 'Porovnejte délku kurzu, počet účastníků, místo konání a co je v ceně (materiál, ochutnávka, certifikát). U každé nabídky vidíte původní i zvýhodněnou cenu a úsporu v korunách.' },
+      { q: 'Je kurz vhodný pro začátečníky?', a: 'Většina kurzů je určená začátečníkům i mírně pokročilým — lektor vás vším provede. Úroveň a požadavky najdete v detailu nabídky u partnera.' },
+      { q: 'Jak nákup probíhá a je bezpečný?', a: SAFE },
+      { q: 'Dá se kurz darovat?', a: 'Ano, kurzy jsou oblíbený zážitkový dárek. Pořídíte je jako voucher s delší platností a obdarovaný si termín vybere sám.' },
+    ];
     default: return [
       { q: `Jak vybrat tu správnou nabídku v kategorii ${n}?`, a: 'Seřaďte nabídky podle ceny, obliby nebo nejnovějších a využijte filtr ceny. U každé nabídky vidíte původní i zvýhodněnou cenu, výši slevy i úsporu v korunách. Nabídky denně doplňujeme.' },
       { q: 'Kolik nabídky stojí a jak fungují slevy?', a: 'Ceny se liší podle typu nabídky a termínu. Sbíráme zvýhodněné nabídky a dárkové vouchery od prověřených partnerů, takže u většiny vidíte slevu i spočítanou úsporu.' },
@@ -50,6 +57,7 @@ export function categoryIntro(name: string, kind: Kind): string {
     case 'pobyt': return `Vybíráte v kategorii ${name}? Porovnejte lokalitu, co je v ceně i hodnocení a sledujte výši slevy a úsporu v korunách. Nejvýhodnější pobyty mizí rychle, vyplatí se proto rezervovat včas. Po kliknutí přejdete k ověřenému partnerovi, cena se nemění.`;
     case 'zazitek': return `Hledáte v kategorii ${name} ten pravý zážitek? Vyberte podle ceny, lokality i toho, pro koho zážitek je. U každé nabídky vidíte slevu i úsporu a většinu zážitků pořídíte jako dárkový voucher s otevřenou platností. Po kliknutí přejdete k ověřenému partnerovi, cena zůstává stejná.`;
     case 'restaurace': return `Vybíráte v kategorii ${name}? Porovnejte typ kuchyně, lokalitu a co je ve voucheru zahrnuto. U každé nabídky vidíte zvýhodněnou cenu i úsporu. Po kliknutí přejdete k ověřenému partnerovi, kde objednávku dokončíte – cena se nemění.`;
+    case 'kurz': return `Chcete se naučit něco nového nebo darovat kurz? V kategorii ${name} porovnáte lektory, délku i to, co je v ceně, a hned vidíte slevu i úsporu. Většinu kurzů pořídíte jako dárkový voucher s otevřeným termínem. Po kliknutí přejdete k ověřenému partnerovi, cena se nemění.`;
     case 'krasa': return `Hledáte v kategorii ${name} tu pravou péči? Porovnejte salony, rozsah procedury i hodnocení a sledujte slevu a úsporu v korunách. Skvělý tip i na dárek. Po kliknutí přejdete k ověřenému partnerovi, cena pro vás zůstává stejná.`;
     default: return `Vybíráte v kategorii ${name}? Porovnejte ceny i hodnocení a sledujte výši slevy a úsporu v korunách. Nabídky denně doplňujeme. Po kliknutí přejdete k ověřenému partnerovi, cena pro vás zůstává stejná.`;
   }

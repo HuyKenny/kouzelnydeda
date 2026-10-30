@@ -33,7 +33,8 @@ export default {
     if (request.method === 'GET' && parts[0] === 'status') {
       const feeds = (await env.DB.prepare('SELECT * FROM feed_state ORDER BY feed').all()).results;
       const runs = (await env.DB.prepare('SELECT * FROM import_runs ORDER BY id DESC LIMIT 30').all()).results;
-      return json({ feeds, runs });
+      const unmapped = await env.DB.prepare("SELECT value, updated_at FROM site_cache WHERE key = 'cat:unmapped'").first();
+      return json({ feeds, runs, unmapped });
     }
     if (request.method === 'POST' && parts[0] === 'run' && parts[1]) {
       const f = FEEDS.find((x) => x.key === parts[1]);

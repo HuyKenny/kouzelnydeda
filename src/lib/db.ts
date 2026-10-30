@@ -4,15 +4,16 @@ import { PER_PAGE, POSTS_PER_PAGE } from './site';
 
 export interface Cat {
   id: number; slug: string; name: string; parent: number; count_total: number; count_direct: number; noindex: number; canon_id: number; image: string;
+  icon: string; grp: string; short: string; sort: number;
 }
 export interface CatFull extends Cat { description_html: string; seo_title: string; seo_desc: string; seo_robots: string }
 export interface Card {
   id: number; slug: string; name: string; image: string; price: number; price_old: number; disc_pct: number; store_id: number; city: string;
-  rating: number; reviews: number;
+  rating: number; reviews: number; deal_end: string | null; bought: number | null; created_at: string;
 }
 export interface Product extends Card {
   source: string; active: number; images: string; lok_id: number; excerpt: string; info: string; legacy_html: string; cat_ids: string;
-  primary_cat: number; created_at: string; updated_at: string; expired_at: string; noindex: number; seo_title: string; seo_desc: string; target_url: string;
+  primary_cat: number; updated_at: string; expired_at: string; noindex: number; seo_title: string; seo_desc: string; target_url: string;
 }
 export interface Post {
   id: number; type: 'post' | 'page'; slug: string; title: string; content_html: string; excerpt: string; published_at: string; modified_at: string;
@@ -23,13 +24,13 @@ export type PostCard = Pick<Post, 'id' | 'slug' | 'title' | 'excerpt' | 'publish
 export interface Lok { id: number; slug: string; name: string; count: number }
 export interface Store { id: number; slug: string; name: string; description_html: string; count: number }
 
-const CARD = 'p.id, p.slug, p.name, p.image, p.price, p.price_old, p.disc_pct, p.store_id, p.city, p.rating, p.reviews';
+const CARD = "p.id, p.slug, p.name, p.image, p.price, p.price_old, p.disc_pct, p.store_id, p.city, p.rating, p.reviews, json_extract(p.info, '$.de') AS deal_end, json_extract(p.info, '$.cu') AS bought, p.created_at";
 
 let memo: { at: number; byId: Map<number, Cat>; bySlug: Map<string, Cat>; kids: Map<number, Cat[]>; loks: Map<number, Lok>; lokBySlug: Map<string, Lok>; stores: Map<number, Store> } | null = null;
 export async function tree(db: D1Database) {
   if (memo && Date.now() - memo.at < 60_000) return memo;
   const [c, l, s] = await db.batch([
-    db.prepare('SELECT id, slug, name, parent, count_total, count_direct, noindex, canon_id, image FROM categories'),
+    db.prepare('SELECT id, slug, name, parent, count_total, count_direct, noindex, canon_id, image, icon, grp, short, sort FROM categories ORDER BY sort'),
     db.prepare('SELECT id, slug, name, count FROM lokality'),
     db.prepare('SELECT id, slug, name, description_html, count FROM stores'),
   ]);
@@ -111,6 +112,39 @@ export async function listBy(db: D1Database, by: { lok?: number; store?: number 
     db.prepare(`SELECT COUNT(*) AS n FROM products p WHERE ${where}`).bind(...b),
   ]);
   return { items: a!.results as Card[], total: Number((c!.results[0] as { n: number }).n) };
+}
+
+/** Gift landings (src/data/darky.json): active offers of a set of categories (with children) under a price cap. */
+export async function listGift(db: D1Database, catIds: number[], q: ListQuery & { cap?: number | undefined }): Promise<{ items: Card[]; total: number }> {
+  const w = ['p.active = 1'];
+  const b: unknown[] = [];
+  if (catIds.length) { w.push(`EXISTS (SELECT 1 FROM cat_products x WHERE x.product_id = p.id AND x.cat_id IN (${catIds.map(() => '?').join(',')}))`); b.push(...catIds); }
+  const max = Math.min(q.max ?? Infinity, q.cap ?? Infinity);
+  if (Number.isFinite(max)) { w.push('p.price <= ?'); b.push(max); }
+  if (q.min !== undefined) { w.push('p.price >= ?'); b.push(q.min); }
+  if (q.store) { w.push('p.store_id = ?'); b.push(q.store); }
+  w.push("p.image <> ''");
+  const where = w.join(' AND ');
+  const ord = q.sort === 'price' ? 'p.price ASC' : q.sort === 'price-desc' ? 'p.price DESC' : q.sort === 'disc' ? 'p.disc_pct DESC, p.pop DESC' : q.sort === 'date' ? 'p.created_at DESC' : 'p.pop DESC, p.disc_pct DESC';
+  const [a, c] = await db.batch([
+    db.prepare(`SELECT ${CARD} FROM products p WHERE ${where} ORDER BY ${ord}, p.id DESC LIMIT ${PER_PAGE} OFFSET ${(q.page - 1) * PER_PAGE}`).bind(...b),
+    db.prepare(`SELECT COUNT(*) AS n FROM products p WHERE ${where}`).bind(...b),
+  ]);
+  return { items: a!.results as Card[], total: Number((c!.results[0] as { n: number }).n) };
+}
+
+/** Highest discount among active offers of a category (titles "se slevou až −X %"). */
+export async function maxDiscount(db: D1Database, catId: number): Promise<number> {
+  return (await db.prepare('SELECT MAX(disc) AS d FROM cat_products WHERE cat_id = ?').bind(catId).first<{ d: number | null }>())?.d ?? 0;
+}
+
+/** Offers ending soonest (Slevomat deal_end within 10 days). */
+export async function endingSoon(db: D1Database, n = 8): Promise<Card[]> {
+  return (await db.prepare(`SELECT ${CARD} FROM products p WHERE p.active = 1 AND p.image <> '' AND json_extract(p.info, '$.de') BETWEEN date('now') AND date('now', '+10 days')
+    ORDER BY p.pop DESC LIMIT ?`).bind(n).all<Card>()).results;
+}
+export async function biggestDiscounts(db: D1Database, n = 8): Promise<Card[]> {
+  return (await db.prepare(`SELECT ${CARD} FROM products p WHERE p.active = 1 AND p.image <> '' AND p.disc_pct BETWEEN 30 AND 90 ORDER BY p.pop DESC, p.disc_pct DESC LIMIT ?`).bind(n).all<Card>()).results;
 }
 
 export async function loadCategory(db: D1Database, id: number): Promise<CatFull | null> {

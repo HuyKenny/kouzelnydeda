@@ -1,7 +1,8 @@
 // View models for each page type: data from D1 + SEO meta (title, description, canonical, prev/next, robots, JSON-LD)
 // matching the WordPress/Rank Math + child theme output. Templates only render what these return.
 import {
-  ancestry, boxOffers, combos, latestPosts, listBy, listCategory, listPosts, loadCategory, loadPost, loadProduct, popular, postCat, search, similar, tree,
+  ancestry, biggestDiscounts, boxOffers, combos, endingSoon, latestPosts, listBy, listCategory, listGift, listPosts, loadCategory, loadPost, loadProduct, maxDiscount, popular,
+  postCat, search, similar, tree,
   type Card, type Cat, type PostCard, type Tree,
 } from './db';
 import { isFiltered, parseFilters, toListQuery, toQuery, type FilterState } from './filters';
@@ -13,13 +14,18 @@ import { categoryFaq, categoryIntro, cityIntro, comboIntro, kindOf, SERVICE_CATS
 import { cityName } from './cities';
 import { decode, stripTags } from './format';
 import type { Info } from '../../workers/import/src/parse';
+import { catIcon } from './ikony';
+import darky from '../data/darky.json';
+
+export interface Gift { slug: string; name: string; h1: string; icon: string; il?: string; cats: string[]; max?: number; title: string; desc: string; intro: string; hub?: boolean; season?: string }
+export const GIFTS = darky.items as Gift[];
 
 export interface Meta {
   title: string; description: string; canonical?: string | undefined; prev?: string | undefined; next?: string | undefined; robots: string[];
   ogType?: string; ogImage?: string; graph: unknown[]; jsonLd: unknown[];
 }
 export interface Crumb { name: string; url?: string }
-export interface Chip { name: string; url: string; count?: number; active?: boolean }
+export interface Chip { name: string; url: string; count?: number; active?: boolean; icon?: string; image?: string; grp?: string }
 
 const abs = (p: string) => BASE + p;
 const pagePath = (base: string, n: number) => (n <= 1 ? base : `${base}page/${n}/`);
@@ -62,21 +68,23 @@ function related(t: Tree, cat: Cat): Chip[] {
   const ok = (c: Cat) => c.count_total > 0 && !c.noindex && !c.canon_id;
   let list = (t.kids.get(cat.parent) ?? []).filter((c) => ok(c) && c.id !== cat.id);
   if (!list.length) list = (t.kids.get(cat.id) ?? []).filter(ok);
-  return list.sort((a, b) => b.count_total - a.count_total).slice(0, 8).map((c) => ({ name: decode(c.name), url: `/${c.slug}/`, count: c.count_total }));
+  return list.sort((a, b) => b.count_total - a.count_total).slice(0, 8).map((c) => ({ name: decode(c.name), url: `/${c.slug}/`, count: c.count_total, icon: catIcon(t, c.id) }));
 }
-const subcats = (t: Tree, cat: Cat) => (t.kids.get(cat.id) ?? []).filter((c) => c.count_total >= 3 && !c.noindex && !c.canon_id)
-  .sort((a, b) => b.count_total - a.count_total).map((c) => ({ name: decode(c.name), url: `/${c.slug}/`, count: c.count_total, image: c.image }));
+/** Children in the tree order (taxonomie.json), with icon and group ("Typ pobytu", "Pro koho", "Kdy"). */
+const subcats = (t: Tree, cat: Cat): Chip[] => (t.kids.get(cat.id) ?? []).filter((c) => c.count_total >= 1 && !c.noindex)
+  .sort((a, b) => a.sort - b.sort).map((c) => ({ name: decode(c.name), url: `/${c.slug}/`, count: c.count_total, image: c.image, icon: catIcon(t, c.id), grp: c.grp }));
 
 export interface ListingView {
   meta: Meta; crumbs: Crumb[]; h1: string; h2: string; intro: string; introTitle: string; descriptionHtml: string; items: Card[]; total: number;
   page: number; pages: number; base: string; qs: string; f: FilterState; filtered: boolean; chipsTitle: string; chips: Chip[]; related: Chip[];
-  subcats: Array<Chip & { image: string }>; faq: Array<{ q: string; a: string }>; trust: string; tree: Tree; pageType: string;
+  subcats: Chip[]; faq: Array<{ q: string; a: string }>; trust: string; tree: Tree; pageType: string; icon: string; section: string;
+  gifts: Gift[]; ill?: string;
 }
 type Redirect = { redirect: string };
 
 // ---------- category / combo ----------
 export async function categoryView(db: D1Database, catId: number, page: number, sp: URLSearchParams, city = ''): Promise<ListingView | Redirect | null> {
-  const [cat, t, cc] = await Promise.all([loadCategory(db, catId), tree(db), combos(db)]);
+  const [cat, t, cc, maxD] = await Promise.all([loadCategory(db, catId), tree(db), combos(db), maxDiscount(db, catId)]);
   if (!cat) return null;
   const f = parseFilters(sp);
   const filtered = isFiltered(f);
@@ -108,10 +116,10 @@ export async function categoryView(db: D1Database, catId: number, page: number, 
     trust = `${n.toLocaleString('cs-CZ')}+ nabídek ${name.toLowerCase()} ${cn.lok}`;
     // a thin combination is not a landing: canonical to the category (WordPress did the same)
     canonical = cn.known && n >= COMBO_MIN ? url : abs(`/${cat.slug}/`);
-    if (!cn.known) title = categoryTitle(name);
+    if (!cn.known) title = categoryTitle(name, maxD);
   } else {
-    title = categoryTitle(name);
-    description = cat.seo_desc || categoryDesc(name, cat.count_total);
+    title = categoryTitle(name, maxD);
+    description = categoryDesc(name, cat.count_total, maxD);
     h1 = name;
     h2 = `${name} se slevou — ${cat.count_total.toLocaleString('cs-CZ')} nabídek`;
     introTitle = `Jak vybrat v kategorii ${name}`;
@@ -134,7 +142,8 @@ export async function categoryView(db: D1Database, catId: number, page: number, 
   return {
     meta, crumbs, h1, h2, intro, introTitle, descriptionHtml: page === 1 && !lok && !filtered ? cat.description_html : '', items, total, page, pages, base,
     qs: toQuery(f), f, filtered, chipsTitle: 'Podle města', chips: cityChips(cat, cc, lok?.slug), related: related(t, cat), subcats: lok ? [] : subcats(t, cat),
-    faq, trust, tree: t, pageType: lok ? 'combo' : 'category',
+    faq, trust, tree: t, pageType: lok ? 'combo' : 'category', icon: catIcon(t, cat.id), section: chain[0]?.slug ?? '',
+    gifts: chain[0] ? GIFTS.filter((g) => !g.hub && g.cats.some((s) => s === chain[0]!.slug || chain.some((c) => c.slug === s))).slice(0, 6) : [],
   };
 }
 
@@ -173,7 +182,7 @@ export async function cityView(db: D1Database, slug: string, page: number, sp: U
     },
     crumbs, h1: `Zážitky a pobyty ${cn.lok}`, h2: '', intro: page === 1 ? cityIntro(cn.lok) : '', introTitle: '', descriptionHtml: '', items, total, page, pages, base,
     qs: toQuery(f), f, filtered, chipsTitle: 'Podle kategorie', chips, related: [], subcats: [], faq: [], trust: `${lok.count.toLocaleString('cs-CZ')}+ nabídek ${cn.lok}`,
-    tree: t, pageType: 'city',
+    tree: t, pageType: 'city', icon: 'mesto', section: '', gifts: [],
   };
 }
 
@@ -201,7 +210,40 @@ export async function storeView(db: D1Database, slug: string, page: number, sp: 
       graph: [collection(url, title)], jsonLd: [breadcrumbLd(crumbs)],
     },
     crumbs, h1: decode(st.name), h2: '', intro: '', introTitle: '', descriptionHtml: page === 1 ? st.description_html : '', items, total, page, pages, base,
-    qs: toQuery(f), f, filtered, chipsTitle: '', chips: [], related: [], subcats: [], faq: [], trust: '', tree: t, pageType: 'store',
+    qs: toQuery(f), f, filtered, chipsTitle: '', chips: [], related: [], subcats: [], faq: [], trust: '', tree: t, pageType: 'store', icon: '', section: '', gifts: [],
+  };
+}
+
+// ---------- gift landing (src/data/darky.json) ----------
+export async function giftView(db: D1Database, idx: number, page: number, sp: URLSearchParams): Promise<ListingView | Redirect | null> {
+  const g = GIFTS[idx];
+  if (!g) return null;
+  const t = await tree(db);
+  const f = parseFilters(sp);
+  const filtered = isFiltered(f);
+  const store = f.partner ? [...t.stores.values()].find((s) => s.slug === f.partner) : undefined;
+  const ids = g.cats.map((s) => t.bySlug.get(s)?.id).filter((x): x is number => !!x);
+  const { items, total } = await listGift(db, ids, { ...toListQuery(f, page, store?.id), cap: g.max });
+  const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+  const base = `/${g.slug}/`;
+  if (page > pages && page > 1) return { redirect: base };
+  const url = abs(pagePath(base, page));
+  const hub = GIFTS.find((x) => x.hub)!;
+  const crumbs: Crumb[] = [{ name: 'Domů', url: '/' }, ...(g.hub ? [] : [{ name: hub.name, url: `/${hub.slug}/` }]), { name: g.name === hub.name ? g.name : g.h1.split(':')[0]!, url: base }];
+  const faq = categoryFaq(g.name, 'zazitek');
+  return {
+    meta: {
+      title: paged(g.title, page), description: g.desc, robots: filtered ? ['noindex', 'follow'] : robots(false),
+      ...(filtered ? {} : { canonical: url }),
+      ...(page > 1 && !filtered ? { prev: abs(pagePath(base, page - 1)) } : {}),
+      ...(page < pages && !filtered ? { next: abs(pagePath(base, page + 1)) } : {}),
+      ogImage: items[0]?.image || OG_DEFAULT,
+      graph: [collection(url, g.title)], jsonLd: [breadcrumbLd(crumbs), itemListLd(g.h1, items), faqLd(faq)].filter(Boolean),
+    },
+    crumbs, h1: g.h1, h2: `${total.toLocaleString('cs-CZ')} tipů na dárek`, intro: '', introTitle: '', descriptionHtml: page === 1 ? `<p>${g.intro}</p>` : '',
+    items, total, page, pages, base, qs: toQuery(f), f, filtered, chipsTitle: 'Další tipy na dárek',
+    chips: GIFTS.filter((x) => !x.hub).map((x) => ({ name: x.name, url: `/${x.slug}/`, active: x.slug === g.slug, icon: x.icon })),
+    related: [], subcats: [], faq, trust: '', tree: t, pageType: 'gift', icon: g.icon, section: 'darky', gifts: [], ...(g.il ? { ill: g.il } : {}),
   };
 }
 
@@ -311,20 +353,25 @@ export async function blogView(db: D1Database, page: number, catId = 0) {
 
 // ---------- home + search ----------
 export async function homeView(db: D1Database) {
-  const [t, top, posts] = await Promise.all([tree(db), popular(db, 8), latestPosts(db, 3)]);
-  const tile = (slug: string, label?: string) => { const c = t.bySlug.get(slug); return c ? { name: label ?? decode(c.name), url: `/${c.slug}/`, count: c.count_total, image: c.image } : null; };
-  const sections = [tile('cestovani'), tile('zazitky'), tile('restaurace-a-bary'), tile('krasa-zdravi-a-relaxace', 'Krása & wellness'), tile('slevy')].filter((x): x is NonNullable<typeof x> => !!x);
-  const places = [tile('wellness-dovolena'), tile('dovolena-na-horach'), tile('romanticke-pobyty'), tile('glamping'), tile('chaty-a-chalupy'), tile('lyzarske-pobyty'),
-    tile('dovolena-s-all-inclusive', 'All inclusive'), tile('last-minute-pobyty-a-dovolena', 'Last minute')].filter((x): x is NonNullable<typeof x> => !!x);
+  const [t, top, posts, ending, deals] = await Promise.all([tree(db), popular(db, 8), latestPosts(db, 3), endingSoon(db, 8), biggestDiscounts(db, 8)]);
+  const sections = (t.kids.get(0) ?? []).filter((c) => c.count_total > 0).sort((a, b) => a.sort - b.sort)
+    .map((c) => ({ name: c.short || decode(c.name), url: `/${c.slug}/`, count: c.count_total, image: c.image, icon: catIcon(t, c.id), slug: c.slug,
+      kids: (t.kids.get(c.id) ?? []).filter((k) => k.count_total >= 5).sort((a, b) => b.count_total - a.count_total).slice(0, 5).map((k) => ({ name: decode(k.name), url: `/${k.slug}/` })) }));
+  const pick = (slugs: string[]) => slugs.map((s) => t.bySlug.get(s)).filter((c): c is Cat => !!c && c.count_total > 0)
+    .map((c) => ({ name: c.short || decode(c.name), url: `/${c.slug}/`, count: c.count_total, image: c.image, icon: catIcon(t, c.id) }));
+  const popularCats = pick(['wellness-pobyty', 'glamping', 'masaze', 'pobyty-pro-dva', 'jizda-na-okruhu', 'degustacni-menu', 'unikove-hry', 'sushi', 'lazenske-pobyty', 'kosmetika', 'vyhlidkove-lety', 'kurzy-vareni']);
   const total = [...t.stores.values()].reduce((n, s) => n + s.count, 0);
   const cities = [...t.loks.values()].filter((l) => l.slug !== 'cr' && l.count > 0 && cityName(l.slug).known).sort((a, b) => b.count - a.count).slice(0, 12);
+  const month = new Date().getMonth() + 1;
+  const season = month >= 11 ? GIFTS.find((g) => g.slug === 'vanocni-darek') : month <= 2 ? GIFTS.find((g) => g.slug === 'darek-na-valentyna') : undefined;
+  const seasonItems = season ? (await listGift(db, season.cats.map((s) => t.bySlug.get(s)?.id).filter((x): x is number => !!x), { page: 1, sort: 'pop' })).items.slice(0, 8) : [];
   // the live homepage texts (Rank Math override of page 3093)
   const title = 'Kouzelný děda - Kouzelník pro vyhledávání dovolené ✈🌴';
   const meta: Meta = {
     title, description: 'KouzelnýDěda.cz je vyhledávač na pobyty a dovolené. Denně tu na vás čeká přes 1000 nových dovolených u moře, pobytů v Česku i v zahraničí a poznávacích zájezdů.',
     canonical: BASE + '/', robots: robots(false), ogType: 'website', graph: [{ '@type': 'WebPage', '@id': BASE + '/#webpage', url: BASE + '/', name: title, isPartOf: { '@id': BASE + '/#website' }, inLanguage: 'cs' }], jsonLd: [],
   };
-  return { meta, sections, places, top, posts, total, cities, tree: t };
+  return { meta, sections, popularCats, top, posts, total, cities, ending, deals, season, seasonItems, gifts: GIFTS.filter((g) => !g.hub), tree: t };
 }
 
 export async function searchView(db: D1Database, q: string, page: number) {
