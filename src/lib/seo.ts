@@ -61,11 +61,11 @@ function shorten(name: string, max: number): string {
   return t.slice(0, i > 0 ? i : max).replace(/[\s,;:–-]+$/, '');
 }
 /** Offer: "{short name}, {place} – od 1 990 Kč | Kouzelný děda" (the custom Rank Math title of an old WordPress page wins). */
-export function productTitle(name: string, short: string, where: string, price: number, custom = '', from = false): string {
+export function productTitle(name: string, short: string, where: string, price: number, custom = '', from = false, unit = ''): string {
   if (custom) return rmVars(custom, name);
   const base = decode(short || name);
   const place = where && where !== 'Česko' && !base.toLowerCase().includes(where.toLowerCase()) ? `, ${where}` : '';
-  const pr = price > 0 ? ` – ${from ? 'od ' : ''}${kc(price)}` : '';
+  const pr = price > 0 ? ` – ${from || unit ? 'od ' : ''}${kc(price)}${unit ? '/' + unit.replace(/^za /, '') : ''}` : '';
   for (const b of [base + place, base]) {
     const t = `${b}${pr}${SEP}${SITE}`;
     if (t.length <= 62) return t;
@@ -74,12 +74,12 @@ export function productTitle(name: string, short: string, where: string, price: 
   return `${shorten(base, 62 - pr.length)}${pr}`;
 }
 /** Offer description ≤ ~158 characters: what it is, where, the price, why now. */
-export function productDesc(custom: string, name: string, lead: string, where: string, price: number, voucher = true): string {
+export function productDesc(custom: string, name: string, lead: string, where: string, price: number, voucher = true, unit = ''): string {
   if (custom) return custom;
   const first = stripTags(lead.split('\n').map((x) => x.trim().replace(/\.$/, '')).filter(Boolean).slice(0, 3).join(', ')).replace(/\s+/g, ' ').trim();
   const tail = voucher ? 'Voucher ihned e-mailem.' : 'Rezervace online.';
   const head = `${shorten(name, 70)}${where && where !== 'Česko' && !name.toLowerCase().includes(where.toLowerCase()) ? ` (${where})` : ''}.`;
-  const pr = price > 0 ? ` Cena od ${kc(price)}.` : '';
+  const pr = price > 0 ? ` Cena od ${kc(price)}${unit ? ' ' + unit : ''}.` : '';
   const room = 158 - head.length - pr.length - tail.length - 2;
   const lead2 = first && room > 30 ? ` ${shorten(first, room - 1)}.` : '';
   return `${head}${lead2}${pr} ${tail}`.replace(/\s+/g, ' ').trim();

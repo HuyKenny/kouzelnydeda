@@ -2,7 +2,7 @@
 // Replaces the four WP All Import imports of WordPress (30. 10. 2026). finalizeDay() once a day: popularity, combo
 // counts, category photos, sitemaps, data_version.
 import { decodeXmlStream, parseXmlItems, XmlError } from './xml/stream';
-import { FEEDS, type FeedDef, type Source } from './feeds';
+import { FEEDS, type FeedDef } from './feeds';
 import { finishVariants, itemHash, mergeVariants, parseItem, type Item } from './parse';
 import { openFeed, FeedFetchError } from './http';
 import { rebuildSitemaps } from '../../../src/lib/sitemap';

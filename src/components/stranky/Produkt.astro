@@ -49,7 +49,7 @@ const kostka = [
   highlights.length ? `Hlavní lákadla: ${highlights.slice(0, 3).map((h, i) => (i ? h.charAt(0).toLowerCase() + h.slice(1) : h)).join(', ')}.` : '',
   info.bo ? `Strava: ${info.bo.toLowerCase()}.` : '',
   ...(info.pa ?? []).filter(([k]) => /^(Doba trvání|Délka|Počet osob)$/i.test(k)).map(([k, val]) => `${k}: ${val}.`),
-  p.price > 0 ? `Teď stojí ${cena(p.price)}${p.price_old > p.price ? ` místo ${cena(p.price_old)}, tedy o ${p.disc_pct} % méně` : ''}.` : '',
+  p.price > 0 && pt.unit ? `Ubytování stojí od ${cena(p.price)} ${pt.unit}.` : p.price > 0 ? `Teď stojí ${cena(p.price)}${p.price_old > p.price ? ` místo ${cena(p.price_old)}, tedy o ${p.disc_pct} % méně` : ''}.` : '',
   info.ve ? `Voucher platí${info.vs ? ` od ${datum(info.vs)}` : ''} do ${datum(info.ve)}.` : '',
   info.cu && info.cu >= 10 ? `Koupilo ji už ${cislo(info.cu)} lidí${stars ? ` a zákazníci ji hodnotí ${stars} z 5 (${cislo(p.reviews)} hodnocení)` : ''}.` : stars ? `Zákazníci ji hodnotí ${stars} z 5 (${cislo(p.reviews)} hodnocení).` : '',
 ].filter(Boolean).join(' ');
@@ -82,7 +82,7 @@ const kostka = [
 			<aside class="box">
 				<div class="box__p num">
 					{p.price_old > p.price && <del data-var-hide>{cena(p.price_old)}</del>}
-					<strong>{priceRange && <small class="od" data-var-hide>od </small>}<span data-var-price>{cena(p.price)}</span></strong>
+					<strong>{(priceRange || pt.unit) && <small class="od" data-var-hide>od </small>}<span data-var-price>{cena(p.price)}</span>{pt.unit && <small class="od"> {pt.unit}</small>}</strong>
 					{save > 0 && <span class="box__save" data-var-hide><Ik n="jiskra" />Ušetříte {cena(save)}</span>}
 				</div>
 				{va.length > 0 && (
@@ -102,7 +102,7 @@ const kostka = [
 				</ul>
 				<div class="box__cta of__cta">
 					{p.active
-						? <a class="btn btn--c" href={goNow} {...goAttrs} data-cta>{pt.verb} za <span data-var-price>{cena(p.price)}</span> <Ik n="sipka" /></a>
+						? <a class="btn btn--c" href={goNow} {...goAttrs} data-cta>{pt.unit ? pt.verb : <>{pt.verb} za <span data-var-price>{cena(p.price)}</span></>} <Ik n="sipka" /></a>
 						: v.primary ? <a class="btn btn--o" href={`/${v.primary.slug}/`}>Podobné nabídky</a> : null}
 					<p class="box__pozn"><Ik n="stit" /><span>{pt.trust}. Kouzelný děda za doporučení může dostat provizi, cena se nemění.</span></p>
 				</div>
@@ -147,7 +147,7 @@ const kostka = [
 				{p.active && (
 					<div class="cta2">
 						<div><b>{name}</b><span class="num">{p.price_old > p.price && <del>{cena(p.price_old)}</del>} <strong>{cena(p.price)}</strong></span></div>
-						<a class="btn btn--c" href={goNow} {...goAttrs} data-cta>{pt.verb} za <span data-var-price>{cena(p.price)}</span> <Ik n="sipka" /></a>
+						<a class="btn btn--c" href={goNow} {...goAttrs} data-cta>{pt.unit ? pt.verb : <>{pt.verb} za <span data-var-price>{cena(p.price)}</span></>} <Ik n="sipka" /></a>
 					</div>
 				)}
 				{v.faq.length > 0 && (
@@ -176,6 +176,6 @@ const kostka = [
 		)}
 	</div>
 	{p.active && (
-		<div class="lista"><span><strong class="num">{priceRange ? 'od ' : ''}<span data-var-price>{cena(p.price)}</span></strong>{p.disc_pct >= 5 && <> <span class="uspora num">−{p.disc_pct} %</span></>}</span><a class="btn btn--c" href={goNow} {...goAttrs} data-cta>{pt.verb.split(' ')[0]} <Ik n="sipka" /></a></div>
+		<div class="lista"><span><strong class="num">{priceRange || pt.unit ? 'od ' : ''}<span data-var-price>{cena(p.price)}</span>{pt.unit && <small> / {pt.unit.replace(/^za /, '')}</small>}</strong>{p.disc_pct >= 5 && <> <span class="uspora num">−{p.disc_pct} %</span></>}</span><a class="btn btn--c" href={goNow} {...goAttrs} data-cta>{pt.verb.split(' ')[0]} <Ik n="sipka" /></a></div>
 	)}
 </Base>

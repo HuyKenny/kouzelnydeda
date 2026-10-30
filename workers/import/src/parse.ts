@@ -330,6 +330,24 @@ function kormidlo(n: XmlNode): Item | null {
   };
 }
 
+/** Words SHOUTED in a title ("… + UNIVERZITNÍ OXFORD + …") → normal case: a proper name keeps its capital (or an acronym its
+ *  capitals) when the description writes it so mid-sentence, the first word of each " + " part starts with a capital. */
+export function uncaps(title: string, context: string): string {
+  const UP = /^[\p{Lu}\d.-]*\p{Lu}[\p{Lu}\d.-]*$/u;
+  return title.split(/(\s*\+\s*)/).map((part, pi) => {
+    if (pi % 2) return part;
+    return part.split(/(\s+)/).map((w, wi) => {
+      const core = w.replace(/^[^\p{L}\d]+|[^\p{L}\d]+$/gu, '');
+      if (core.length === 1 && wi > 0 && /^[VZKSOUAI]$/.test(core)) return w.replace(core, core.toLowerCase()); // shouted preposition
+      if (core.length < 2 || !UP.test(core)) return w;
+      const cap = core.charAt(0) + core.slice(1).toLocaleLowerCase('cs');
+      const re = (x: string) => new RegExp(`(^|[^\\p{L}])${x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}($|[^\\p{L}])`, 'u');
+      const out = core.length <= 4 && re(core).test(context) ? core : new RegExp(`[^.!?\\s"„] ${cap.length > 4 ? cap.slice(0, -2) : cap}`, 'u').test(context) || wi === 0 ? cap : core.toLocaleLowerCase('cs');
+      return w.replace(core, out);
+    }).join('');
+  }).join('');
+}
+
 /** Rady na cestu (SDovolena format, no namespace): tours with the same detail page (variants A, B, C…) are one offer; the terms are its variants. */
 function radynacestu(n: XmlNode): Item | null {
   const detail = https(txt(n, 'tour_detail_url'));
@@ -383,7 +401,8 @@ function radynacestu(n: XmlNode): Item | null {
   };
   if (!info.in?.i && !info.in?.g) delete info.in;
   const cats = kind === '200' || kind === '500' ? ['@poznavaci-zajezdy', ...holidayCats(cc && cc !== 'CZE' ? cc : undefined)] : ['@dovolena-u-more', ...holidayCats(cc && cc !== 'CZE' ? cc : undefined)];
-  return { ext: group || slug, name: title.replace(/\s+/g, ' '), target: target(best), image: imgs[0] ?? '', images: imgs.slice(1, 7), price: best.price, priceOld: 0, lok: '', cats, excerpt: '', rating: 0, reviews: 0, info };
+  const ctx = [lead, ...prog.map((d) => plain(txt(d, 'desc')))].join(' ');
+  return { ext: group || slug, name: uncaps(title.replace(/\s+/g, ' '), ctx), target: target(best), image: imgs[0] ?? '', images: imgs.slice(1, 7), price: best.price, priceOld: 0, lok: '', cats, excerpt: '', rating: 0, reviews: 0, info };
 }
 
 /** SkvěléČesko.cz (Google Merchant Atom feed, deep links through Dognet): one entry = one bookable activity. */

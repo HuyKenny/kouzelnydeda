@@ -8,6 +8,10 @@ export interface Partner {
   verb: string;
   /** one line below the CTA */
   trust: string;
+  /** the price is per unit ("za noc"), not for the whole offer */
+  unit?: string;
+  /** false: booked at the partner, no voucher e-mailed */
+  voucher?: false;
 }
 const P: Record<string, Partner> = {
   'slevomat-cz': {
@@ -26,7 +30,7 @@ const P: Record<string, Partner> = {
     trust: 'Platba u Zážitky.cz · cena je stejná jako u partnera',
   },
   'skvele-cesko': {
-    name: 'SkvěléČesko.cz', color: '#1B8A5A', verb: 'Rezervovat',
+    name: 'SkvěléČesko.cz', color: '#1B8A5A', verb: 'Rezervovat', voucher: false,
     perks: ['Elektronická vstupenka s QR kódem do e-mailu během pár minut', 'Zrušení nebo přerezervování zdarma do 1 dne před začátkem', 'Garance vrácení peněz za neposkytnutou službu', 'Platba i benefity Up, Pluxee a Edenred'],
     trust: 'Rezervace a platba u SkvěléČesko.cz · cena je stejná jako u partnera',
   },
@@ -36,22 +40,22 @@ const P: Record<string, Partner> = {
     trust: 'Platba u Firmanazazitky.cz · cena je stejná jako u partnera',
   },
   excursia: {
-    name: 'Excursia.cz', color: '#FD7014', verb: 'Rezervovat zájezd',
+    name: 'Excursia.cz', color: '#FD7014', verb: 'Rezervovat zájezd', voucher: false,
     perks: ['Poznávací zájezd s českým průvodcem', 'Malá skupina (8–15 lidí)', 'Termín a cenu vybíráte přímo u cestovní kanceláře', 'Zájezd zajišťuje CK Excursia'],
     trust: 'Rezervace u CK Excursia · cena je stejná jako u cestovní kanceláře',
   },
   'rady-na-cestu': {
-    name: 'Rady na cestu', color: '#D4372C', verb: 'Rezervovat zájezd',
+    name: 'Rady na cestu', color: '#D4372C', verb: 'Rezervovat zájezd', voucher: false,
     perks: ['Zájezd s dopravou, ubytováním a průvodcem podle programu', 'Vyberete si konkrétní termín', 'Podrobný program a co je v ceně najdete v nabídce', 'Rezervujete přímo u cestovní kanceláře'],
     trust: 'Rezervace u Rady na cestu · cena je stejná jako u cestovní kanceláře',
   },
   'amazing-places': {
-    name: 'Amazing Places', color: '#2E7D6B', verb: 'Zjistit termíny a cenu',
+    name: 'Amazing Places', color: '#2E7D6B', verb: 'Zjistit termíny a cenu', unit: 'za noc', voucher: false,
     perks: ['Ručně vybrané ubytování s příběhem', 'Cena je uvedená za noc, termín si zvolíte na webu místa', 'Místo přijímá dárkové vouchery Amazing Places', 'Rezervace přímo u provozovatele'],
     trust: 'Rezervace přes Amazing Places · cena je stejná jako u provozovatele',
   },
   'ceske-kormidlo': {
-    name: 'České kormidlo', color: '#0B6FB3', verb: 'Rezervovat zájezd',
+    name: 'České kormidlo', color: '#0B6FB3', verb: 'Rezervovat zájezd', voucher: false,
     perks: ['Zájezd zajišťuje cestovní kancelář ČESKÉ KORMIDLO', 'Vyberete si konkrétní termín a délku pobytu', 'U zájezdů s dopravou je v nabídce nástupní místo', 'Cena platí pro vybraný termín'],
     trust: 'Rezervace u České kormidlo · cena je stejná jako u cestovní kanceláře',
   },

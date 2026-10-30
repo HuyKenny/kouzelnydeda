@@ -15,7 +15,7 @@ import { cityName } from './cities';
 import { cena, datum, decode, place, stripTags } from './format';
 import type { Info } from '../../workers/import/src/parse';
 import { catIcon } from './ikony';
-import { partnerName } from './partners';
+import { partner as partnerOf, partnerName } from './partners';
 import darky from '../data/darky.json';
 
 export interface Gift { slug: string; name: string; h1: string; icon: string; il?: string; cats: string[]; max?: number; title: string; desc: string; intro: string; hub?: boolean; season?: string }
@@ -299,11 +299,14 @@ export async function productView(db: D1Database, id: number) {
   const url = abs(`/${p.slug}/`);
   const name = decode(p.name);
   const where0 = place(p.city, info.cc);
-  const title = productTitle(p.name, info.ts ?? '', where0, p.price, p.seo_title, (info.va?.length ?? 0) > 1);
   const store = t.stores.get(p.store_id);
-  const description = productDesc(p.seo_desc, name, info.h || p.excerpt || info.d || '', where0, p.price, store?.slug !== 'skvele-cesko' && store?.slug !== 'ceske-kormidlo');
+  const pt = partnerOf(store?.slug);
+  const unit = pt.unit ?? '';
+  const title = productTitle(p.name, info.ts ?? '', where0, p.price, p.seo_title, (info.va?.length ?? 0) > 1, unit);
+  const description = productDesc(p.seo_desc, name, info.h || p.excerpt || info.d || '', where0, p.price, pt.voucher !== false, unit);
   const offer = p.active ? {
     '@type': 'Offer', url, price: p.price, priceCurrency: 'CZK', availability: 'https://schema.org/InStock',
+    ...(unit ? { priceSpecification: { '@type': 'UnitPriceSpecification', price: p.price, priceCurrency: 'CZK', unitText: unit.replace(/^za /, '') } } : {}),
     ...(info.de ? { priceValidUntil: info.de } : {}), ...(store ? { seller: { '@type': 'Organization', name: decode(store.name) } } : {}),
   } : undefined;
   const meta: Meta = {
