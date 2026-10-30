@@ -34,7 +34,6 @@ async function redirects(db: D1Database) {
 
 const LEGACY: Array<[RegExp, (m: RegExpExecArray) => string]> = [
   [/^\/(wp-)?sitemap\.xml$/, () => '/sitemap_index.xml'],
-  [/^\/product_cat-sitemap\.xml$/, () => '/product_cat-sitemap1.xml'],
   // WooCommerce bases Rank Math stripped (old links): /kategorie-produktu/<…>/<x>/, /stitek-produktu/<x>/
   [/^\/kategorie-produktu\/(.+)$/, (m) => '/' + m[1]!.split('/').filter(Boolean).pop() + '/'],
   [/^\/stitek-produktu\/.*$/, () => '/'],
