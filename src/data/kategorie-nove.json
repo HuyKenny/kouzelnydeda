@@ -1,0 +1,74 @@
+[
+ {
+  "slug": "strelba",
+  "name": "Střelba a airsoft",
+  "parent": "adrenalinove-zazitky",
+  "icon": "adrenalin"
+ },
+ {
+  "slug": "paintball-a-laser-game",
+  "name": "Paintball a laser game",
+  "parent": "adrenalinove-zazitky",
+  "icon": "adrenalin"
+ },
+ {
+  "slug": "lanova-centra",
+  "name": "Lanová centra a lezení",
+  "parent": "adrenalinove-zazitky",
+  "icon": "adrenalin"
+ },
+ {
+  "slug": "lety-balonem",
+  "name": "Lety balonem",
+  "parent": "vyhlidkove-lety",
+  "icon": "let"
+ },
+ {
+  "slug": "vodni-zazitky",
+  "name": "Vodní zážitky",
+  "parent": "zazitky",
+  "icon": "more"
+ },
+ {
+  "slug": "teambuilding",
+  "name": "Teambuilding a skupinové zážitky",
+  "parent": "zazitky",
+  "icon": "parta"
+ },
+ {
+  "slug": "bowling-a-zabava",
+  "name": "Bowling a zábava",
+  "parent": "zazitky",
+  "icon": "atrakce"
+ },
+ {
+  "slug": "venkovni-hry",
+  "name": "Venkovní hry a city quest",
+  "parent": "zazitky",
+  "icon": "mapa"
+ },
+ {
+  "slug": "pujcovny",
+  "name": "Půjčovny kol, lodí a vybavení",
+  "parent": "zazitky",
+  "icon": "kolo"
+ },
+ {
+  "slug": "muzea-a-pamatky",
+  "name": "Muzea a prohlídky",
+  "parent": "kultura-a-vylety",
+  "icon": "divadlo"
+ },
+ {
+  "slug": "cviceni-a-fitness",
+  "name": "Cvičení a fitness",
+  "parent": "sport-a-pohyb",
+  "icon": "sport"
+ },
+ {
+  "slug": "zimni-sporty",
+  "name": "Zimní sporty",
+  "parent": "sport-a-pohyb",
+  "icon": "hory"
+ }
+]

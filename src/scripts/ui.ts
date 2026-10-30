@@ -67,6 +67,21 @@ for (const b of $$<HTMLButtonElement>('.ga__t button')) {
   });
 }
 
+// variant picker of the offer box: the price, the savings and every CTA follow the chosen variant (Adrop variants carry their own link)
+const vy = $('[data-var]');
+if (vy) {
+  const base = vy.dataset.go ?? '';
+  const pick = () => {
+    const o: HTMLInputElement | HTMLOptionElement | null | undefined = vy.querySelector('input:checked') ?? vy.querySelector('select')?.selectedOptions[0];
+    if (!o) return;
+    const i = Number(o.value), price = Number(o.dataset.price);
+    for (const e of $$('[data-var-price]')) e.textContent = price.toLocaleString('cs-CZ') + '\u00a0Kč';
+    for (const e of $$('[data-var-hide]')) e.hidden = i !== 0;
+    for (const a of $$<HTMLAnchorElement>('a[data-cta]')) { a.href = base + (o.dataset.link ? `&v=${i}` : ''); a.dataset.price = String(Math.round(price)); }
+  };
+  vy.addEventListener('change', pick);
+}
+
 // sticky price bar once the main CTA scrolled away (mobile)
 const bar = $('.lista'), cta = $('.of__cta');
 if (bar && cta && 'IntersectionObserver' in window) {

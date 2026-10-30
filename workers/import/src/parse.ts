@@ -2,6 +2,7 @@
 // (imports 25/26 Slevomat, 27 Adrop, 28 Zážitky.cz). Everything the detail page shows goes into `info` (compact JSON).
 import type { XmlNode } from './xml/stream';
 import { ADROP_SKIP, SLEVOMAT_GOODS, SLEVOMAT_MAP, SLEVOMAT_SKIP, SLEVOMAT_TRAVEL_MAP, affiliateUrl, type Source } from './feeds';
+import { classify } from './classify';
 
 export interface Info {
   /** description (plain text, paragraphs separated by \n) */
@@ -23,8 +24,8 @@ export interface Info {
   tags?: string[] | undefined;
   /** params (Adrop) */
   pa?: Array<[string, string]> | undefined;
-  /** variants: name, price (Zážitky.cz) */
-  va?: Array<[string, number]> | undefined;
+  /** variants: label, price and — when the variant has its own page (Adrop) — its affiliate target (/go/<id>/?v=<n>) */
+  va?: Array<[string, number, string?]> | undefined;
   /** accommodation amenities (Slevomat TRAVEL/ACCOMMODATION_PARAMS) */
   ap?: string[] | undefined;
   /** accommodation rating /10 and its review count */
@@ -51,6 +52,8 @@ export interface Item {
   rating: number;
   reviews: number;
   info: Info;
+  /** Adrop: variant dimensions (city, specification, duration, persons, size), merged and dropped by finishVariants() */
+  vparts?: string[][] | undefined;
 }
 
 const kids = (n: XmlNode, name: string) => n.children.filter((c) => c.name === name);
@@ -165,53 +168,118 @@ function adrop(n: XmlNode): Item | null {
   const price = num(txt(n, 'PRICE_VAT'));
   if (!group || !itemId || !okUrl(url) || !(price > 0)) return null;
   const params = kids(n, 'PARAM').map((p) => [txt(p, 'PARAM_NAME'), txt(p, 'VAL')] as [string, string]).filter((p) => p[0] && p[1]);
-  const city = params.find((p) => p[0] === 'Město')?.[1] ?? '';
+  const pv = (k: string) => params.find((p) => p[0] === k)?.[1] ?? '';
+  const city = pv('Město');
   const imgs = [txt(n, 'IMGURL'), ...texts(n, 'IMGURL_ALTERNATIVE')].map(https).filter(okUrl);
   const old = num(txt(n, 'ADROPPUVCENA'));
+  const name = txt(n, 'PRODUCT') || txt(n, 'PRODUCTNAME');
+  const target = affiliateUrl('adrop', itemId, txt(n, 'URL'));
   return {
     ext: group,
-    name: txt(n, 'PRODUCT') || txt(n, 'PRODUCTNAME'),
+    name,
     // the URL is appended raw like WP All Import did (data1 = ITEM_ID)
-    target: affiliateUrl('adrop', itemId, txt(n, 'URL')),
+    target,
     image: imgs[0] ?? '',
     images: [...new Set(imgs.slice(1))].slice(0, 4),
     price,
     priceOld: old > price ? old : 0,
     lok: citySlug(city),
-    cats: ['Zážitky'],
+    cats: classify(`${name} ${ct} ${pv('Specifikace')} ${pv('Typ zážitku')}`),
     excerpt: '',
     rating: 0,
     reviews: 0,
-    info: { d: plain(txt(n, 'DESCRIPTION')) || undefined, pa: params.filter((p) => p[0] !== 'Lokalita').slice(0, 8) },
+    info: { d: plain(txt(n, 'DESCRIPTION')) || undefined, pa: params.filter((p) => !['Lokalita', 'Město', 'Specifikace', 'Doba trvání', 'Počet osob', 'Velikost'].includes(p[0])).slice(0, 8), va: [['', price, target]] },
+    vparts: [[city, pv('Specifikace'), pv('Doba trvání'), pv('Počet osob'), pv('Velikost')]],
   };
 }
 
+/** Variants of one Adrop group (rows with the same ITEMGROUP_ID) → one list: only the dimensions that differ make the label. */
+export function mergeVariants(a: Item, b: Item): Item {
+  const best = b.price < a.price ? b : a;
+  best.info.va = [...(a.info.va ?? []), ...(b.info.va ?? [])];
+  best.vparts = [...(a.vparts ?? []), ...(b.vparts ?? [])];
+  return best;
+}
+export function finishVariants(it: Item): void {
+  const parts = it.vparts;
+  delete it.vparts;
+  const va = it.info.va;
+  if (!parts || !va || va.length < 2) { if (it.info.va && !parts) return; delete it.info.va; return; }
+  const dims = [0, 1, 2, 3, 4].filter((d) => new Set(parts.map((p) => p[d])).size > 1);
+  const seen = new Set<string>();
+  const out: Array<[string, number, string?]> = [];
+  va.forEach(([, pr, t], i) => {
+    const label = (dims.map((d) => parts[i]![d]).filter(Boolean).join(' · ')) || `Varianta ${i + 1}`;
+    const key = label + '|' + pr;
+    if (!seen.has(key)) { seen.add(key); out.push(t ? [label, pr, t] : [label, pr]); }
+  });
+  out.sort((x, y) => x[1] - y[1] || x[0].localeCompare(y[0], 'cs'));
+  if (out.length < 2) { delete it.info.va; return; }
+  it.info.va = out.slice(0, 80);
+  // a group spread over several cities has no single place
+  if (new Set(parts.map((p) => p[0]).filter(Boolean)).size > 1) { it.lok = ''; }
+}
+
+const GIFT_TAG = /d[aá]r|v[aá]noc|origin[aá]ln|narozen|svatb|k \d+|cena|v[sš]echny|celoro|promoc|mlad[yý]|d[eě]d|t[rř]ic[aá]tn|nejlep|teenager|ješt[eě]|jihomor|letn[ií]/i;
 function zazitky(n: XmlNode): Item | null {
   const id = txt(n, 'ID');
   const url = https(txt(n, 'URL'));
-  const variants = kids(n, 'VARIANT').map((v) => [txt(v, 'PRODUCTNAMEEXT'), num(txt(v, 'PRICE_VAT'))] as [string, number]).filter((v) => v[1] > 0);
-  const price = variants[0]?.[1] ?? num(txt(n, 'PRICE_VAT'));
+  const name = txt(n, 'PRODUCT');
+  const lead = new RegExp('^' + name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[,:\\s–-]*', 'i');
+  const variants = kids(n, 'VARIANT').map((v) => [txt(v, 'PRODUCTNAMEEXT').replace(lead, '').trim() || txt(v, 'PRODUCTNAMEEXT'), num(txt(v, 'PRICE_VAT'))] as [string, number]).filter((v) => v[1] > 0);
+  const price = variants.length ? Math.min(...variants.map((v) => v[1])) : num(txt(n, 'PRICE_VAT'));
   if (!id || !okUrl(url) || !(price > 0)) return null;
   const imgs = ['IMGURL', 'IMGURL2', 'IMGURL3', 'IMGURL4', 'IMGURL5'].map((k) => https(txt(n, k))).filter(okUrl);
+  const desc = plain(txt(n, 'DESCRIPTION'));
+  const tags = [...new Set(texts(n, 'CATEGORYTEXT').flatMap((c) => c.split('|')).map((c) => c.trim()).filter((c) => c && !GIFT_TAG.test(c)))];
+  const stay = /\bpobyt|ubytov|\d+ noc|noci\b|nocí\b/i.test(name + ' ' + variants.map((v) => v[0]).join(' '));
   return {
     ext: id,
-    name: txt(n, 'PRODUCT'),
+    name,
     target: affiliateUrl('zazitky', id, txt(n, 'URL')),
     image: imgs[0] ?? '',
     images: imgs.slice(1),
     price,
     priceOld: 0,
     lok: '',
-    cats: ['Zážitky'],
+    cats: classify(`${name} ${desc.slice(0, 240)} ${tags.join(' ')}`, stay),
     excerpt: '',
     rating: 0,
     reviews: 0,
-    info: { d: plain(txt(n, 'DESCRIPTION')) || undefined, va: variants.slice(0, 12) },
+    info: { d: desc || undefined, va: variants.length > 1 ? variants.sort((x, y) => x[1] - y[1]).slice(0, 30) : undefined, tags: tags.slice(0, 8) },
+  };
+}
+
+/** SkvěléČesko.cz (Google Merchant Atom feed, deep links through Dognet): one entry = one bookable activity. */
+function skvelecesko(n: XmlNode): Item | null {
+  const id = txt(n, 'id');
+  const url = https(txt(n, 'link'));
+  const price = num(txt(n, 'price'));
+  const title = plain(txt(n, 'title'));
+  if (!id || !okUrl(url) || !(price > 0) || !title) return null;
+  const imgs = [txt(n, 'image_link'), ...texts(n, 'additional_image_link')].map(https).filter(okUrl);
+  const type = txt(n, 'product_type');
+  const city = txt(n, 'custom_label_0');
+  const provider = title.includes(' - ') ? title.split(' - ')[0]!.trim() : '';
+  return {
+    ext: id,
+    name: title,
+    target: affiliateUrl('skvelecesko', id, url),
+    image: imgs[0] ?? '',
+    images: imgs.slice(1, 7),
+    price,
+    priceOld: 0,
+    lok: citySlug(city),
+    cats: classify(`${title} ${type}`, false),
+    excerpt: '',
+    rating: 0,
+    reviews: 0,
+    info: { d: plain(txt(n, 'description')) || undefined, pv: provider ? { t: provider } : undefined, tags: type ? [type] : undefined },
   };
 }
 
 export function parseItem(src: Source, n: XmlNode): Item | null {
-  const it = src === 'slevomat' ? slevomat(n) : src === 'adrop' ? adrop(n) : zazitky(n);
+  const it = src === 'slevomat' ? slevomat(n) : src === 'adrop' ? adrop(n) : src === 'skvelecesko' ? skvelecesko(n) : zazitky(n);
   if (!it || !it.name) return null;
   if (!it.excerpt) it.excerpt = (it.info.d ?? '').split('\n')[0]!.slice(0, 300);
   return it;

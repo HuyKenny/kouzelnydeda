@@ -26,7 +26,7 @@ const badge = left !== null && left <= 7 ? { ik: 'hodiny', t: `Končí ${dni(lef
 	<article class={ended ? 'k k--end' : 'k'}>
 		<div class="fo">
 			{img && <img src={img.src} srcset={img.srcset} alt="" width="360" height="270" loading={idx < 3 ? 'eager' : 'lazy'} fetchpriority={idx === 0 ? 'high' : undefined} decoding="async" />}
-			{p.disc_pct >= 5 && <span class="sleva num">−{p.disc_pct} %</span>}
+			{p.disc_pct >= 5 && <span class="uspora num">−{p.disc_pct} %</span>}
 			{badge && <span class="k__badge"><Ik n={badge.ik} />{badge.t}</span>}
 		</div>
 		<div class="k__b">
@@ -38,7 +38,7 @@ const badge = left !== null && left <= 7 ? { ik: 'hodiny', t: `Končí ${dni(lef
 			<H class="k__n"><a href={`/${p.slug}/`}>{name}</a></H>
 		</div>
 		<div class="k__f">
-			<p class="k__p num">{p.price_old > p.price && <del>{cena(p.price_old)}</del>}<strong>{cena(p.price)}</strong></p>
+			<p class="k__p num">{p.price_old > p.price && <del>{cena(p.price_old)}</del>}<strong>{p.nv && p.nv > 1 ? 'od ' : ''}{cena(p.price)}</strong></p>
 			{!ended && <a class="k__go" href={`/go/${p.id}/?ctx=${ctxFull}`} target="_blank" rel="nofollow sponsored noopener" data-partner={store?.slug ?? ''} data-id={p.id} data-name={name} data-section={sec || undefined} data-price={Math.round(p.price)} aria-label={`${name} – k nabídce u partnera`}>K nabídce <Ik n="sipka" /></a>}
 		</div>
 	</article>

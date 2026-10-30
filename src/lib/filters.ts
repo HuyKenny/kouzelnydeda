@@ -4,7 +4,7 @@
 import type { ListQuery, Sort } from './db';
 
 export interface FilterState { sort: Sort; min?: number | undefined; max?: number | undefined; partner: string }
-export const SORTS: Array<[Sort, string]> = [['pop', 'Nejoblíbenější'], ['date', 'Nejnovější'], ['price', 'Nejlevnější'], ['price-desc', 'Nejdražší'], ['disc', 'Největší sleva']];
+export const SORTS: Array<[Sort, string]> = [['pop', 'Nejoblíbenější'], ['date', 'Nejnovější'], ['price', 'Nejlevnější'], ['price-desc', 'Nejdražší'], ['disc', 'Největší úspora']];
 const ALIAS: Record<string, Sort> = { popularity: 'pop', rating: 'pop', 'menu_order': 'pop', pop: 'pop', date: 'date', price: 'price', 'price-desc': 'price-desc', disc: 'disc' };
 
 export function parseFilters(sp: URLSearchParams): FilterState {

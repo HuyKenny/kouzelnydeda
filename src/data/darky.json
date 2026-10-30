@@ -9,8 +9,8 @@
    "kw": "zážitkové dárky (880)",
    "cats": [],
    "hub": true,
-   "title": "Zážitkové dárky a poukazy se slevou | Kouzelný děda",
-   "desc": "Darujte zážitek místo věcí: pobyty, wellness, adrenalin, degustace i kurzy se slevou až 70 %. Ověření partneři, voucher přijde hned e-mailem.",
+   "title": "Zážitkové dárky a poukazy | Kouzelný děda",
+   "desc": "Darujte zážitek místo věcí: pobyty, wellness, adrenalin, degustace i kurzy s úsporou až 70 %. Ověření partneři, voucher přijde hned e-mailem.",
    "intro": "Věci se okoukají, zážitky zůstanou. Vybrali jsme dárky, ze kterých se obdarovaný opravdu raduje — od romantického pobytu přes masáž až po jízdu ve sportovním autě. Většinu pořídíte jako dárkový voucher s dlouhou platností, který vám partner pošle hned e-mailem.",
    "il": "kouzelnik-darek"
   },
@@ -32,8 +32,8 @@
     "degustacni-menu",
     "kavarny-a-dorty"
    ],
-   "title": "Dárek pro ženu – zážitky a poukazy se slevou | Kouzelný děda",
-   "desc": "Masáž, wellness, kosmetika, romantický pobyt nebo kurz? Tipy na dárek pro ženu se slevou od ověřených partnerů. Voucher hned e-mailem.",
+   "title": "Dárek pro ženu – zážitky a poukazy | Kouzelný děda",
+   "desc": "Masáž, wellness, kosmetika, romantický pobyt nebo kurz? Tipy na dárek pro ženu od ověřených partnerů. Voucher hned e-mailem.",
    "intro": "Hledáte dárek pro manželku, přítelkyni, mámu nebo kamarádku? Zážitek potěší víc než další věc do skříně. Vybrali jsme to, co ženy dostávají nejraději: chvíli jen pro sebe v rukou masérky, wellness, péči o pleť, tvoření i romantiku ve dvou.",
    "il": "pro-ni"
   },
@@ -55,8 +55,8 @@
     "sport-a-pohyb",
     "bary-a-drinky"
    ],
-   "title": "Dárek pro muže – zážitky a poukazy se slevou | Kouzelný děda",
-   "desc": "Jízda na okruhu, střelba, úniková hra, steak nebo degustace piva. Tipy na zážitkový dárek pro muže se slevou, voucher přijde hned e-mailem.",
+   "title": "Dárek pro muže – zážitky a poukazy | Kouzelný děda",
+   "desc": "Jízda na okruhu, střelba, úniková hra, steak nebo degustace piva. Tipy na zážitkový dárek pro muže, voucher přijde hned e-mailem.",
    "intro": "Chlapi věci většinou nepotřebují, zážitky ale milují. Najdete tu jízdy ve sportovních autech, střelbu, únikové hry, virtuální realitu, degustace i pořádný steak — dárky pro manžela, tátu, bráchu i kamaráda, od pár stovek po velké zážitky.",
    "il": "pro-nej"
   },
@@ -76,7 +76,7 @@
     "degustace-vina-a-piva"
    ],
    "title": "Dárek pro pár – zážitky a pobyty ve dvou | Kouzelný děda",
-   "desc": "Romantický pobyt, privátní wellness, degustační večeře nebo kurz vaření ve dvou. Dárky pro páry se slevou, voucher hned e-mailem.",
+   "desc": "Romantický pobyt, privátní wellness, degustační večeře nebo kurz vaření ve dvou. Dárky pro páry, voucher hned e-mailem.",
    "intro": "Svatba, výročí, Vánoce nebo jen tak — nejlepší dárek pro pár je společný čas. Vybrali jsme pobyty a zážitky ve dvou: wellness s privátní saunou, degustační večeře, kurz vaření i únikovou hru, kde se ukáže, jak spolu táhnete za jeden provaz.",
    "il": "pro-par"
   },
@@ -93,8 +93,8 @@
     "jizda-na-koni",
     "rodinne-pobyty"
    ],
-   "title": "Dárek pro děti – zážitky a výlety se slevou | Kouzelný děda",
-   "desc": "Zábavní parky, zvířátka, jízda na koni, kroužky i rodinné pobyty. Zážitkové dárky pro děti se slevou od ověřených partnerů.",
+   "title": "Dárek pro děti – zážitky a výlety | Kouzelný děda",
+   "desc": "Zábavní parky, zvířátka, jízda na koni, kroužky i rodinné pobyty. Zážitkové dárky pro děti od ověřených partnerů.",
    "intro": "Hraček mají děti dost, zážitek si ale pamatují celé roky. Tipy na dárky pro malé i větší děti: zábavní a vodní parky, setkání se zvířátky, jízda na koni, tvořivé kurzy i rodinné pobyty, na které vyrazíte společně.",
    "il": "pro-deti"
   },
@@ -112,8 +112,8 @@
     "kultura-a-vylety",
     "gurmanske-pobyty"
    ],
-   "title": "Dárek pro rodiče – pobyty a zážitky se slevou | Kouzelný děda",
-   "desc": "Lázně, wellness pobyt, degustační večeře nebo divadlo. Dárky pro rodiče a prarodiče se slevou, voucher přijde hned e-mailem.",
+   "title": "Dárek pro rodiče – pobyty a zážitky | Kouzelný děda",
+   "desc": "Lázně, wellness pobyt, degustační večeře nebo divadlo. Dárky pro rodiče a prarodiče, voucher přijde hned e-mailem.",
    "intro": "Rodiče už mají všechno — kromě času pro sebe. Darujte jim pobyt v lázních nebo wellness, večeři v dobré restauraci, kulturu nebo výlet. Většinu nabídek si mohou vybrat s otevřeným termínem.",
    "il": "pro-rodice"
   },
@@ -129,7 +129,7 @@
     "degustacni-menu",
     "pobyty-pro-dva"
    ],
-   "title": "Dárek k narozeninám – zážitky se slevou | Kouzelný děda",
+   "title": "Dárek k narozeninám – zážitky | Kouzelný děda",
    "desc": "Originální dárek k narozeninám: zážitek, pobyt, masáž nebo degustace. Vyberte podle ceny, voucher přijde hned e-mailem.",
    "intro": "Kulatiny, osmnáctiny nebo obyčejné narozeniny — zážitek je dárek, který neskončí v šuplíku. Vyberte adrenalin, relax, dobré jídlo nebo pobyt a obdarovaný si termín zvolí sám.",
    "il": "dort"
@@ -143,7 +143,7 @@
    "cats": [],
    "season": "11-12",
    "title": "Vánoční dárek – zážitky a poukazy pod stromeček | Kouzelný děda",
-   "desc": "Zážitky a pobyty jako vánoční dárek se slevou. Voucher přijde hned e-mailem, stihnete i na poslední chvíli.",
+   "desc": "Zážitky a pobyty jako vánoční dárek. Voucher přijde hned e-mailem, stihnete i na poslední chvíli.",
    "intro": "Letos pod stromeček zážitek místo další věci. Vybrali jsme nejoblíbenější vánoční dárky — pobyty, wellness, masáže, adrenalin i degustace. Voucher vám partner pošle hned e-mailem, takže dárek stihnete i na poslední chvíli.",
    "il": "vanoce"
   },
@@ -161,7 +161,7 @@
     "masaze"
    ],
    "title": "Dárek na Valentýna – romantické zážitky | Kouzelný děda",
-   "desc": "Romantický pobyt, privátní wellness, masáž pro dva nebo degustační večeře. Valentýnské dárky se slevou.",
+   "desc": "Romantický pobyt, privátní wellness, masáž pro dva nebo degustační večeře. Valentýnské dárky.",
    "intro": "Na Valentýna platí, že nejlepší dárek je čas ve dvou. Romantické pobyty, privátní wellness, masáže pro páry a večeře, na které se nezapomíná.",
    "il": "srdce"
   },
@@ -174,7 +174,7 @@
    "cats": [],
    "max": 500,
    "title": "Dárky do 500 Kč – zážitky a poukazy | Kouzelný děda",
-   "desc": "Zážitkové dárky do 500 Kč: masáže, únikovky, degustace, kurzy a vstupenky se slevou. Malý dárek, velká radost.",
+   "desc": "Zážitkové dárky do 500 Kč: masáže, únikovky, degustace, kurzy a vstupenky. Malý dárek, velká radost.",
    "intro": "I za pár stovek se dá darovat zážitek. Vybrali jsme nabídky do 500 Kč — ideální dárek pro kolegy, kamarády nebo jako pozornost k většímu dárku.",
    "il": "cena"
   },
@@ -187,7 +187,7 @@
    "cats": [],
    "max": 1000,
    "title": "Dárky do 1 000 Kč – zážitky a poukazy | Kouzelný děda",
-   "desc": "Zážitkové dárky do 1 000 Kč se slevou: masáže, wellness, adrenalin, kurzy i degustace. Voucher přijde hned e-mailem.",
+   "desc": "Zážitkové dárky do 1 000 Kč: masáže, wellness, adrenalin, kurzy i degustace. Voucher přijde hned e-mailem.",
    "intro": "Do tisícovky se vejde masáž, wellness, úniková hra, kurz i pořádná večeře. Tady jsou nejlepší zážitkové dárky do 1 000 Kč.",
    "il": "cena"
   },
@@ -200,7 +200,7 @@
    "cats": [],
    "max": 2000,
    "title": "Dárky do 2 000 Kč – zážitky a poukazy | Kouzelný děda",
-   "desc": "Zážitkové dárky do 2 000 Kč se slevou: jízdy, lety, wellness, degustace i krátké pobyty. Voucher hned e-mailem.",
+   "desc": "Zážitkové dárky do 2 000 Kč: jízdy, lety, wellness, degustace i krátké pobyty. Voucher hned e-mailem.",
    "intro": "Do dvou tisíc pořídíte jízdu ve sportovním autě, vyhlídkový let, wellness pro dva nebo degustační menu. Vybrali jsme nejoblíbenější dárky v této ceně.",
    "il": "cena"
   },
@@ -211,8 +211,8 @@
    "icon": "voucher",
    "kw": "dárkový poukaz (3 500)",
    "cats": [],
-   "title": "Dárkový poukaz na zážitek či pobyt se slevou | Kouzelný děda",
-   "desc": "Dárkový poukaz na pobyt, wellness, masáž nebo zážitek se slevou. Poukaz přijde hned e-mailem, obdarovaný si termín vybere sám.",
+   "title": "Dárkový poukaz na zážitek či pobyt | Kouzelný děda",
+   "desc": "Dárkový poukaz na pobyt, wellness, masáž nebo zážitek. Poukaz přijde hned e-mailem, obdarovaný si termín vybere sám.",
    "intro": "Dárkový poukaz je jistota: obdarovaný si termín vybere sám a vy nemusíte hádat. Každá nabídka tady je voucher od ověřeného partnera — po zaplacení vám přijde e-mailem a můžete ho vytisknout nebo poslat dál.",
    "il": "voucher"
   }

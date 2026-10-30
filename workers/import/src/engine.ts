@@ -3,7 +3,7 @@
 // counts, category photos, sitemaps, data_version.
 import { decodeXmlStream, parseXmlItems, XmlError } from './xml/stream';
 import { FEEDS, type FeedDef, type Source } from './feeds';
-import { itemHash, parseItem, type Item } from './parse';
+import { finishVariants, itemHash, mergeVariants, parseItem, type Item } from './parse';
 import { openFeed, FeedFetchError } from './http';
 import { rebuildSitemaps } from '../../../src/lib/sitemap';
 import { cityName } from '../../../src/lib/cities';
@@ -43,6 +43,7 @@ interface Ctx {
   /** feed category path "<root>|<child>" (lower case) → category (cat_alias, scripts/taxonomie-apply.py) */
   alias: Map<string, number>;
   unmapped: Set<string>;
+  bySlug: Map<string, number>;
   slugs: Set<string>;
   newStmts: D1PreparedStatement[];
   loks: Map<string, number>;
@@ -60,7 +61,7 @@ async function context(db: D1Database): Promise<Ctx> {
   const cats = new Map((c!.results as CatRow[]).map((r) => [r.id, r]));
   const m = mx!.results[0] as { c: number; l: number };
   return {
-    db, cats, slugs: new Set((s!.results as Array<{ slug: string }>).map((r) => r.slug)), unmapped: new Set(),
+    db, cats, bySlug: new Map((c!.results as CatRow[]).map((r) => [r.slug, r.id])), slugs: new Set((s!.results as Array<{ slug: string }>).map((r) => r.slug)), unmapped: new Set(),
     alias: new Map((al!.results as Array<{ feed_key: string; cat_id: number }>).map((r) => [r.feed_key, r.cat_id])), newStmts: [], loks: new Map((l!.results as Array<{ id: number; slug: string }>).map((r) => [r.slug, r.id])), nextLok: m.l + 1,
   };
 }
@@ -77,6 +78,11 @@ function uniqueSlug(ctx: Ctx, base: string): string {
  *  site_cache 'cat:unmapped') — new public categories are no longer created automatically. */
 function resolveCats(ctx: Ctx, path: string[]): number[] {
   const out: number[] = [];
+  // classifier output ("@slug"): categories of the tree by slug
+  if (path[0]?.startsWith('@')) {
+    for (const s of path) { const id = ctx.bySlug.get(s.slice(1)); if (id) out.push(id); else ctx.unmapped.add(s); }
+    return out;
+  }
   const rootName = (path[0] ?? '').trim().toLowerCase();
   const root = ctx.alias.get('|' + rootName);
   if (!root) { if (rootName) ctx.unmapped.add('|' + rootName); return out; }
@@ -179,9 +185,10 @@ export async function runFeed(env: Env, f: FeedDef, opts: { force?: boolean } = 
       const it = parseItem(f.key, node);
       if (!it) continue;
       const prev = items.get(it.ext);
-      // Adrop lists one row per variant (same ITEMGROUP_ID): keep the cheapest, like "od X Kč"
-      if (!prev || it.price < prev.price) items.set(it.ext, it);
+      // Adrop lists one row per variant (same ITEMGROUP_ID): the cheapest is the offer ("od X Kč"), all of them its variants
+      items.set(it.ext, prev ? mergeVariants(prev, it) : it);
     }
+    for (const it of items.values()) finishVariants(it);
   } catch (e) {
     const msg = e instanceof FeedFetchError || e instanceof XmlError ? e.message : String(e);
     return finish('error', msg);
@@ -288,6 +295,18 @@ export async function nextDueFeed(db: D1Database): Promise<FeedDef | null> {
   return best;
 }
 
+/** Default order that sells every partner: inside each partner (and category) offers are ranked by popularity, the rank is
+ *  divided by √(partner size) and everything is sorted by that → Slevomat's thousands do not bury Adrop's hundreds, yet
+ *  a bigger partner still gets proportionally more places. Offers without a photo go last of their partner. */
+export async function remix(db: D1Database) {
+  const pos = (part: string) => `ROW_NUMBER() OVER (PARTITION BY ${part} ORDER BY (p.image <> '') DESC, p.pop DESC, p.disc_pct DESC, p.price DESC, p.id) * 1.0 / sqrt(COUNT(*) OVER (PARTITION BY ${part}))`;
+  await db.batch([
+    db.prepare(`UPDATE products SET mix = 1000000 - CAST(r.pos * 1000 AS INTEGER) FROM (SELECT p.id AS id, ${pos('p.store_id')} AS pos FROM products p WHERE p.active = 1) r WHERE products.id = r.id`),
+    db.prepare(`UPDATE cat_products SET mix = 1000000 - CAST(r.pos * 1000 AS INTEGER) FROM (SELECT x.cat_id AS c, x.created_at AS t, x.product_id AS i, ${pos('x.cat_id, p.store_id')} AS pos
+        FROM cat_products x JOIN products p ON p.id = x.product_id) r WHERE cat_products.cat_id = r.c AND cat_products.created_at = r.t AND cat_products.product_id = r.i`),
+  ]);
+}
+
 /** Once a day: popularity, combo counts, category photos, sitemaps, data_version. */
 export async function finalizeDay(env: Env, force = false): Promise<Record<string, unknown>> {
   const db = env.DB;
@@ -302,6 +321,7 @@ export async function finalizeDay(env: Env, force = false): Promise<Record<strin
     db.prepare('UPDATE cat_products SET pop = (SELECT p.pop FROM products p WHERE p.id = cat_products.product_id)'),
   ]);
   await recount(db);
+  await remix(db);
   // city × category counts (canonical + chips of /<kat>/lokalita/<mesto>/, KD_COMBO_MIN = 40)
   const combos = (await db.prepare('SELECT x.cat_id AS c, l.slug AS s, COUNT(*) AS n FROM cat_products x JOIN lokality l ON l.id = x.lok_id WHERE x.lok_id > 0 GROUP BY x.cat_id, x.lok_id')
     .all<{ c: number; s: string; n: number }>()).results;

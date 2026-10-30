@@ -7,7 +7,7 @@
 import { sha256Hex } from './http';
 import { isLocal, type AppEnv } from './env';
 
-const ALLOWED = ['slevomat.cz', 'ehub.cz', 'adrop.cz', 'zazitky.cz'];
+const ALLOWED = ['slevomat.cz', 'ehub.cz', 'adrop.cz', 'zazitky.cz', 'dognet.com'];
 
 function isSafeTarget(url: unknown): url is string {
   if (typeof url !== 'string' || url.length === 0 || url.length > 8192) return false;
@@ -46,7 +46,13 @@ export async function handleGo(id: string | undefined, request: Request, env: Ap
   }
   const ctx = (new URL(request.url).searchParams.get('ctx') ?? 'go').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 48) || 'go';
   // Slevomat reports utm_content per campaign ("Report kanálů") → the placement of the click; nothing else is touched
-  const target = row.source === 'slevomat' ? row.target_url.replace(/([?&]utm_content=)[^&]*/, `$1${ctx}`) : row.target_url;
+  let target = row.source === 'slevomat' ? row.target_url.replace(/([?&]utm_content=)[^&]*/, `$1${ctx}`) : row.target_url;
+  // a chosen variant (Adrop: every variant has its own page and eHub data1) — the target is again read from D1 only
+  const v = new URL(request.url).searchParams.get('v');
+  if (v && /^\d{1,3}$/.test(v)) {
+    const va = (await env.DB.prepare("SELECT json_extract(info, '$.va') AS va FROM products WHERE id = ?").bind(row.id).first<{ va: string | null }>())?.va;
+    try { const t = (JSON.parse(va ?? '[]') as Array<[string, number, string?]>)[Number(v)]?.[2]; if (isSafeTarget(t)) target = t; } catch { /* the offer's own target */ }
+  }
   const log = (async () => {
     await env.DB.prepare('INSERT INTO clicks (product_id, source, context, ip_hash, clicked_at) VALUES (?, ?, ?, ?, ?)')
       .bind(row.id, row.source, ctx, await ipHash(ip, env), new Date().toISOString()).run();

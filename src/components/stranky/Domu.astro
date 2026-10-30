@@ -20,7 +20,7 @@ const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.imag
 		<div class="w hero__in">
 			<div>
 				<h1>Darujte zážitek, na který se <em>nezapomíná</em></h1>
-				<p class="hero__lead">Pobyty, wellness, adrenalin, degustace i kurzy se slevou až 70 % od Slevomatu, Zážitky.cz a Adropu. Vyberete u nás, koupíte u partnera — voucher přijde hned e-mailem.</p>
+				<p class="hero__lead">Pobyty, wellness, adrenalin, degustace i kurzy s úsporou až 70 % od Slevomatu, Zážitky.cz, Adropu a SkvěléČesko.cz. Vyberete u nás, koupíte u partnera — voucher přijde hned e-mailem.</p>
 				<div class="pruvodce">
 					<img class="pruvodce__k" src="/a/kouzelnik-darek-256.webp" alt="" width="110" height="110" />
 					<h2><Ik n="darek" />Komu chcete udělat radost?</h2>
@@ -29,7 +29,7 @@ const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.imag
 					<ul class="chips">{budget.map((g) => <li><a class="chip" href={`/${g.slug}/`}>{g.name}</a></li>)}<li><a class="chip" href="/zazitkove-darky/">Na ceně nezáleží</a></li></ul>
 					<p>Každá nabídka je voucher s dlouhou platností — obdarovaný si termín vybere sám.</p>
 				</div>
-				<ul class="cisla"><li><b>{cislo(v.total)}</b> nabídek</li><li><b>3</b> ověření partneři</li><li><b>denně</b> nové slevy</li></ul>
+				<ul class="cisla"><li><b>{cislo(v.total)}</b> nabídek</li><li><b>4</b> ověření partneři</li><li><b>denně</b> nové nabídky</li></ul>
 			</div>
 			<div class="hero__art" aria-hidden="true">
 				{heroImgs[0] && <img class="a1" src={heroImgs[0].src} alt="" width="360" height="270" />}
@@ -61,8 +61,8 @@ const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.imag
 		</section>
 		<section class="sek">
 			<div class="sh"><h2>Oblíbené kategorie</h2></div>
-			<ul class="obl">{v.popularCats.map((c) => { const im = card(c.image, 160); return (
-				<li><a href={c.url}><div class="fo">{im && <img src={im.src} alt="" width="150" height="150" loading="lazy" />}</div><span>{c.name}</span></a></li>
+			<ul class="obl">{v.popularCats.map((c) => { const im = crop(c.image, 360, 450); const im2 = crop(c.image, 720, 900); return (
+				<li><a class="sc" href={c.url}>{im && <img src={im} srcset={`${im} 1x, ${im2} 2x`} alt="" width="360" height="450" loading="lazy" />}<span class="sc__t"><b><Ik n={c.icon} />{c.name}</b><small>{cislo(c.count)} nabídek</small></span></a></li>
 			); })}</ul>
 		</section>
 		{v.ending.length > 0 && (
@@ -77,21 +77,21 @@ const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.imag
 		</section>
 		{v.deals.length > 0 && (
 			<section class="sek">
-				<div class="sh"><h2>Největší slevy</h2><a href="/zazitky/?orderby=disc" rel="nofollow">Všechny slevy →</a></div>
-				<Mrizka items={v.deals} t={v.tree} eager={false} ctx="home-slevy" />
+				<div class="sh"><h2>Největší úspory</h2><a href="/zazitky/?orderby=disc" rel="nofollow">Vše s největší úsporou →</a></div>
+				<Mrizka items={v.deals} t={v.tree} eager={false} ctx="home-uspory" />
 			</section>
 		)}
 		<section class="sek">
 			<div class="sh"><h2>Jak to funguje</h2></div>
 			<ol class="jak">
-				<li><Ik n="hledat" /><b>Vyberete zážitek</b><span>Tisíce pobytů, zážitků a služeb s aktuální slevou na jednom místě.</span></li>
-				<li><Ik n="stit" /><b>Koupíte u partnera</b><span>Nákup dokončíte bezpečně u Slevomatu, Zážitky.cz nebo Adropu. Za stejnou cenu.</span></li>
+				<li><Ik n="hledat" /><b>Vyberete zážitek</b><span>Tisíce pobytů, zážitků a služeb v aktuálních cenách na jednom místě.</span></li>
+				<li><Ik n="stit" /><b>Koupíte u partnera</b><span>Nákup dokončíte bezpečně u partnera (Slevomat, Zážitky.cz, Adrop, SkvěléČesko). Za stejnou cenu.</span></li>
 				<li><Ik n="mail" /><b>Voucher přijde e-mailem</b><span>Vytisknete ho, darujete, nebo si rovnou zarezervujete termín.</span></li>
 			</ol>
 		</section>
 		<section class="sek">
 			<div class="partneri">
-				<span style="--c:#E2001A">Slevomat.cz</span><span style="--c:#00A3A3">Zážitky.cz</span><span style="--c:#FF6A00">Adrop.cz</span>
+				<span style="--c:#E2001A">Slevomat.cz</span><span style="--c:#00A3A3">Zážitky.cz</span><span style="--c:#FF6A00">Adrop.cz</span><span style="--c:#1B8A5A">SkvěléČesko.cz</span>
 				<p>Nabídky přebíráme přímo od partnerů a obnovujeme je několikrát denně.</p>
 			</div>
 		</section>
@@ -116,8 +116,8 @@ const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.imag
 			<div class="pas"><div><h2>Nevíte, co darovat?</h2><p>Dárkový poukaz na zážitek potěší každého — obdarovaný si termín vybere sám.</p></div><a class="btn" href="/darkovy-poukaz/">Vybrat poukaz <Ik n="sipka" /></a></div>
 		</section>
 		<section class="sek txt">
-			<h2>Zážitky, pobyty a dárky se slevou</h2>
-			<p>Kouzelný děda je vyhledávač zvýhodněných nabídek na zážitky, pobyty a wellness. Najdete tu wellness pobyty pro dva, glamping a tiny housy, lázně, masáže a kosmetiku, jízdy ve sportovních autech, únikové hry, degustační menu i kurzy vaření. Nabídky přebíráme přímo od Slevomatu, Zážitky.cz a Adropu a obnovujeme je několikrát denně, takže vidíte aktuální ceny i výši slevy. Většinu z nich pořídíte jako dárkový voucher — ideální dárek k narozeninám, na Vánoce nebo jen tak.</p>
+			<h2>Zážitky, pobyty a dárky</h2>
+			<p>Kouzelný děda je vyhledávač zvýhodněných nabídek na zážitky, pobyty a wellness. Najdete tu wellness pobyty pro dva, glamping a tiny housy, lázně, masáže a kosmetiku, jízdy ve sportovních autech, únikové hry, degustační menu i kurzy vaření. Nabídky přebíráme přímo od Slevomatu, Zážitky.cz, Adropu a SkvěléČesko.cz a obnovujeme je několikrát denně, takže vidíte aktuální ceny i výši úspory. Většinu z nich pořídíte jako dárkový voucher — ideální dárek k narozeninám, na Vánoce nebo jen tak.</p>
 		</section>
 	</div>
 </Base>

@@ -12,6 +12,8 @@ export interface Card {
   rating: number; reviews: number; deal_end: string | null; bought: number | null; created_at: string;
   /** country of the offer (Slevomat COUNTRY_ID, ISO alpha-3) */
   cc?: string | null;
+  /** number of variants (the price is "od") */
+  nv?: number | null;
 }
 export interface Product extends Card {
   source: string; active: number; images: string; lok_id: number; excerpt: string; info: string; legacy_html: string; cat_ids: string;
@@ -26,7 +28,7 @@ export type PostCard = Pick<Post, 'id' | 'slug' | 'title' | 'excerpt' | 'publish
 export interface Lok { id: number; slug: string; name: string; count: number }
 export interface Store { id: number; slug: string; name: string; description_html: string; count: number }
 
-const CARD = "p.id, p.slug, p.name, p.image, p.price, p.price_old, p.disc_pct, p.store_id, p.city, p.rating, p.reviews, json_extract(p.info, '$.de') AS deal_end, json_extract(p.info, '$.cu') AS bought, p.created_at, json_extract(p.info, '$.cc') AS cc";
+const CARD = "p.id, p.slug, p.name, p.image, p.price, p.price_old, p.disc_pct, p.store_id, p.city, p.rating, p.reviews, json_extract(p.info, '$.de') AS deal_end, json_extract(p.info, '$.cu') AS bought, p.created_at, json_extract(p.info, '$.cc') AS cc, json_array_length(p.info, '$.va') AS nv";
 
 let memo: { at: number; byId: Map<number, Cat>; bySlug: Map<string, Cat>; kids: Map<number, Cat[]>; loks: Map<number, Lok>; lokBySlug: Map<string, Lok>; stores: Map<number, Store> } | null = null;
 export async function tree(db: D1Database) {
@@ -77,7 +79,7 @@ function order(s: Sort, t: string): string {
     case 'price': return `${t}.price ASC, ${t}.created_at DESC`;
     case 'price-desc': return `${t}.price DESC, ${t}.created_at DESC`;
     case 'disc': return `${t}.disc DESC, ${t}.pop DESC`;
-    case 'pop': return `${t}.pop DESC, ${t}.created_at DESC`;
+    case 'pop': return `${t}.mix DESC, ${t}.pop DESC, ${t}.created_at DESC`;
     default: return `${t}.created_at DESC, ${t}.product_id DESC`;
   }
 }
@@ -108,7 +110,7 @@ export async function listBy(db: D1Database, by: { lok?: number; store?: number 
   if (q.min !== undefined) { w.push('p.price >= ?'); b.push(q.min); }
   if (q.max !== undefined) { w.push('p.price <= ?'); b.push(q.max); }
   const where = w.join(' AND ');
-  const ord = q.sort === 'price' ? 'p.price ASC' : q.sort === 'price-desc' ? 'p.price DESC' : q.sort === 'disc' ? 'p.disc_pct DESC, p.pop DESC' : q.sort === 'pop' ? 'p.pop DESC, p.created_at DESC' : 'p.created_at DESC';
+  const ord = q.sort === 'price' ? 'p.price ASC' : q.sort === 'price-desc' ? 'p.price DESC' : q.sort === 'disc' ? 'p.disc_pct DESC, p.pop DESC' : q.sort === 'pop' ? 'p.mix DESC, p.pop DESC, p.created_at DESC' : 'p.created_at DESC';
   const [a, c] = await db.batch([
     db.prepare(`SELECT ${CARD} FROM products p WHERE ${where} ORDER BY ${ord}, p.id DESC LIMIT ${PER_PAGE} OFFSET ${(q.page - 1) * PER_PAGE}`).bind(...b),
     db.prepare(`SELECT COUNT(*) AS n FROM products p WHERE ${where}`).bind(...b),
@@ -127,7 +129,7 @@ export async function listGift(db: D1Database, catIds: number[], q: ListQuery & 
   if (q.store) { w.push('p.store_id = ?'); b.push(q.store); }
   w.push("p.image <> ''");
   const where = w.join(' AND ');
-  const ord = q.sort === 'price' ? 'p.price ASC' : q.sort === 'price-desc' ? 'p.price DESC' : q.sort === 'disc' ? 'p.disc_pct DESC, p.pop DESC' : q.sort === 'date' ? 'p.created_at DESC' : 'p.pop DESC, p.disc_pct DESC';
+  const ord = q.sort === 'price' ? 'p.price ASC' : q.sort === 'price-desc' ? 'p.price DESC' : q.sort === 'disc' ? 'p.disc_pct DESC, p.pop DESC' : q.sort === 'date' ? 'p.created_at DESC' : 'p.mix DESC, p.pop DESC';
   const [a, c] = await db.batch([
     db.prepare(`SELECT ${CARD} FROM products p WHERE ${where} ORDER BY ${ord}, p.id DESC LIMIT ${PER_PAGE} OFFSET ${(q.page - 1) * PER_PAGE}`).bind(...b),
     db.prepare(`SELECT COUNT(*) AS n FROM products p WHERE ${where}`).bind(...b),
@@ -135,7 +137,7 @@ export async function listGift(db: D1Database, catIds: number[], q: ListQuery & 
   return { items: a!.results as Card[], total: Number((c!.results[0] as { n: number }).n) };
 }
 
-/** Highest discount among active offers of a category (titles "se slevou až −X %"). */
+/** Highest discount among active offers of a category (titles "ušetřete až X %"). */
 export async function maxDiscount(db: D1Database, catId: number): Promise<number> {
   return (await db.prepare('SELECT MAX(disc) AS d FROM cat_products WHERE cat_id = ?').bind(catId).first<{ d: number | null }>())?.d ?? 0;
 }
@@ -143,10 +145,10 @@ export async function maxDiscount(db: D1Database, catId: number): Promise<number
 /** Offers ending soonest (Slevomat deal_end within 10 days). */
 export async function endingSoon(db: D1Database, n = 8): Promise<Card[]> {
   return (await db.prepare(`SELECT ${CARD} FROM products p WHERE p.active = 1 AND p.image <> '' AND json_extract(p.info, '$.de') BETWEEN date('now') AND date('now', '+10 days')
-    ORDER BY p.pop DESC LIMIT ?`).bind(n).all<Card>()).results;
+    ORDER BY p.mix DESC LIMIT ?`).bind(n).all<Card>()).results;
 }
 export async function biggestDiscounts(db: D1Database, n = 8): Promise<Card[]> {
-  return (await db.prepare(`SELECT ${CARD} FROM products p WHERE p.active = 1 AND p.image <> '' AND p.disc_pct BETWEEN 30 AND 90 ORDER BY p.pop DESC, p.disc_pct DESC LIMIT ?`).bind(n).all<Card>()).results;
+  return (await db.prepare(`SELECT ${CARD} FROM products p WHERE p.active = 1 AND p.image <> '' AND p.disc_pct BETWEEN 30 AND 90 ORDER BY p.mix DESC, p.disc_pct DESC LIMIT ?`).bind(n).all<Card>()).results;
 }
 
 export async function loadCategory(db: D1Database, id: number): Promise<CatFull | null> {
@@ -160,7 +162,7 @@ export async function loadProduct(db: D1Database, id: number): Promise<Product |
 export async function similar(db: D1Database, catId: number, exclude: number, n = 8, lok = 0): Promise<Card[]> {
   if (!catId) return [];
   const lokFirst = lok ? `(x.lok_id = ${Number(lok)}) DESC, ` : '';
-  return (await db.prepare(`SELECT ${CARD} FROM cat_products x JOIN products p ON p.id = x.product_id WHERE x.cat_id = ? AND x.product_id <> ? ORDER BY ${lokFirst}x.pop DESC, x.created_at DESC LIMIT ?`)
+  return (await db.prepare(`SELECT ${CARD} FROM cat_products x JOIN products p ON p.id = x.product_id WHERE x.cat_id = ? AND x.product_id <> ? ORDER BY ${lokFirst}x.mix DESC, x.pop DESC, x.created_at DESC LIMIT ?`)
     .bind(catId, exclude, n).all<Card>()).results;
 }
 
@@ -175,7 +177,7 @@ export async function boxOffers(db: D1Database, catId: number, seed: string): Pr
 }
 
 export async function popular(db: D1Database, n = 8): Promise<Card[]> {
-  return (await db.prepare(`SELECT ${CARD} FROM products p WHERE p.active = 1 AND p.image <> '' ORDER BY p.pop DESC, p.disc_pct DESC LIMIT ?`).bind(n).all<Card>()).results;
+  return (await db.prepare(`SELECT ${CARD} FROM products p WHERE p.active = 1 AND p.image <> '' ORDER BY p.mix DESC, p.pop DESC LIMIT ?`).bind(n).all<Card>()).results;
 }
 
 export async function loadPost(db: D1Database, id: number): Promise<Post | null> {

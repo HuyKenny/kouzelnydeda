@@ -1,11 +1,11 @@
 // The three partner feeds that WP All Import read on WordPress (imports 25–28, 30. 10. 2026). URLs live in secrets
 // (FEED_URL_SLEVOMAT carries an auth token): scripts/set-feed-secrets.py <env>.
-export type Source = 'slevomat' | 'adrop' | 'zazitky';
+export type Source = 'slevomat' | 'adrop' | 'zazitky' | 'skvelecesko';
 
 export interface FeedDef {
   key: Source;
   /** XML element of one offer */
-  item: 'DEAL' | 'SHOPITEM';
+  item: 'DEAL' | 'SHOPITEM' | 'entry';
   /** stores.slug (WordPress taxonomy "store") */
   store: string;
   secret: string;
@@ -17,6 +17,7 @@ export const FEEDS: FeedDef[] = [
   { key: 'slevomat', item: 'DEAL', store: 'slevomat-cz', secret: 'FEED_URL_SLEVOMAT', everyH: 6 },
   { key: 'zazitky', item: 'SHOPITEM', store: 'zazitky-cz', secret: 'FEED_URL_ZAZITKY', everyH: 12 },
   { key: 'adrop', item: 'SHOPITEM', store: 'adrop-cz', secret: 'FEED_URL_ADROP', everyH: 12 },
+  { key: 'skvelecesko', item: 'entry', store: 'skvele-cesko', secret: 'FEED_URL_SKVELECESKO', everyH: 12 },
 ];
 
 /** Slevomat affiliate UTM in the documented shape (Kenny 30. 10. 2026; WP All Import used "svk…kouzelnydedaCZ").
@@ -26,7 +27,12 @@ export function affiliateUrl(src: Source, id: string, url: string): string {
   if (src === 'slevomat') {
     return `${url}?utm_source=affiliate&utm_medium=cpc&utm_campaign=${SLEVOMAT_CAMPAIGN}&utm_content=${id}&utm_term=q6q55khb`;
   }
-  // eHub: desturl is appended raw (that is how every live Adrop/Zážitky link looks and is tracked)
+  // Dognet (SkvěléČesko.cz): the partner URL goes in raw after url= (Kenny's document, 30. 10. 2026)
+  if (src === 'skvelecesko') return `https://go.dognet.com/?chid=0ahgy2Fx&url=${url}`;
+  return ehubUrl(src === 'adrop' ? 'adrop' : 'zazitky', id, url);
+}
+/** eHub: desturl is appended raw (that is how every live Adrop/Zážitky link looks and is tracked). Also used per variant. */
+export function ehubUrl(src: 'adrop' | 'zazitky', id: string, url: string): string {
   const bid = src === 'adrop' ? '0001595B' : 'c22fc1d9';
   return `https://ehub.cz/system/scripts/click.php?a_aid=052443b7&a_bid=${bid}&data1=${id}&desturl=${url}`;
 }

@@ -138,7 +138,7 @@ export async function categoryView(db: D1Database, catId: number, page: number, 
     title = comboTitle(name, cn.lok);
     description = comboDesc(name, cn.lok, n);
     h1 = `${name} ${cn.lok}`;
-    h2 = `${name} ${cn.lok} se slevou — ${n.toLocaleString('cs-CZ')} nabídek`;
+    h2 = `${name} ${cn.lok} — ${n.toLocaleString('cs-CZ')} nabídek`;
     introTitle = `${name} ${cn.lok}`;
     intro = comboIntro(name, cn.lok, n, kind);
     trust = `${n.toLocaleString('cs-CZ')}+ nabídek ${name.toLowerCase()} ${cn.lok}`;
@@ -149,7 +149,7 @@ export async function categoryView(db: D1Database, catId: number, page: number, 
     title = categoryTitle(name, maxD);
     description = categoryDesc(name, cat.count_total, maxD);
     h1 = name;
-    h2 = `${name} se slevou — ${cat.count_total.toLocaleString('cs-CZ')} nabídek`;
+    h2 = `${name} — ${cat.count_total.toLocaleString('cs-CZ')} nabídek`;
     introTitle = `Jak vybrat v kategorii ${name}`;
     intro = categoryIntro(name, kind);
     // same-name duplicate categories point their canonical at the main one (kd_dup_canon_map)
@@ -351,8 +351,8 @@ function offerFaq(name: string, p: { price: number; price_old: number; city: str
   const inc = [...(info.in?.i ?? []), ...(info.bo ? [`strava: ${info.bo}`] : [])];
   if (inc.length) faq.push({ q: 'Co je v ceně?', a: inc.slice(0, 8).join(', ') + '.' });
   if (p.price > 0) faq.push({ q: 'Kolik to stojí?', a: `Teď ${cena(p.price)}${p.price_old > p.price ? ` místo ${cena(p.price_old)}, ušetříte ${cena(p.price_old - p.price)}` : ''}. Cena je stejná jako přímo u ${partner}.` });
-  faq.push({ q: 'Můžu nabídku darovat?', a: `Ano. Po zaplacení u ${partner} vám voucher přijde e-mailem — můžete ho vytisknout nebo poslat obdarovanému.` });
-  faq.push({ q: 'Jak nákup probíhá?', a: `Tlačítkem „Koupit“ přejdete na ${partner}, kde nabídku „${name}“ zaplatíte. Kouzelný děda nabídky jen vyhledává a porovnává, platba i voucher jdou přímo přes partnera.` });
+  faq.push({ q: 'Můžu nabídku darovat?', a: `Ano. Po zaplacení u ${partner} vám voucher nebo vstupenka přijde e-mailem — můžete ji vytisknout nebo poslat obdarovanému.` });
+  faq.push({ q: 'Jak nákup probíhá?', a: `Tlačítkem „Objednat“ přejdete na ${partner}, kde nabídku „${name}“ zaplatíte. Kouzelný děda nabídky jen vyhledává a porovnává, platba i voucher jdou přímo přes partnera.` });
   return faq;
 }
 
@@ -420,12 +420,22 @@ export async function blogView(db: D1Database, page: number, catId = 0) {
 // ---------- home + search ----------
 export async function homeView(db: D1Database) {
   const [t, top, posts, ending, deals] = await Promise.all([tree(db), popular(db, 8), latestPosts(db, 3), endingSoon(db, 8), biggestDiscounts(db, 8)]);
-  const sections = (t.kids.get(0) ?? []).filter((c) => c.count_total > 0).sort((a, b) => a.sort - b.sort)
-    .map((c) => ({ name: c.short || decode(c.name), url: `/${c.slug}/`, count: c.count_total, image: c.image, icon: catIcon(t, c.id), slug: c.slug,
+  const sec = (t.kids.get(0) ?? []).filter((c) => c.count_total > 0).sort((a, b) => a.sort - b.sort);
+  const POPULAR = ['wellness-pobyty', 'glamping', 'masaze', 'jizda-na-okruhu', 'unikove-hry', 'degustacni-menu'];
+  const pop = POPULAR.map((s) => t.bySlug.get(s)).filter((c): c is Cat => !!c && c.count_total > 0);
+  // every tile gets its own photo: the best offers of the category in the mixed order, the first photo nobody uses yet
+  const used = new Set(top.slice(0, 2).map((x) => x.image));
+  const tiles = [...sec, ...pop];
+  const photos = await db.batch(tiles.map((c) => db.prepare("SELECT p.image AS i FROM cat_products x JOIN products p ON p.id = x.product_id WHERE x.cat_id = ? AND p.image <> '' ORDER BY x.mix DESC LIMIT 12").bind(c.id)));
+  const photoOf = new Map<number, string>();
+  tiles.forEach((c, i) => {
+    const imgs = (photos[i]!.results as Array<{ i: string }>).map((r) => r.i);
+    const img = imgs.find((x) => !used.has(x)) ?? c.image;
+    used.add(img); photoOf.set(c.id, img);
+  });
+  const sections = sec.map((c) => ({ name: c.short || decode(c.name), url: `/${c.slug}/`, count: c.count_total, image: photoOf.get(c.id) ?? c.image, icon: catIcon(t, c.id), slug: c.slug,
       kids: (t.kids.get(c.id) ?? []).filter((k) => k.count_total >= 5).sort((a, b) => b.count_total - a.count_total).slice(0, 5).map((k) => ({ name: decode(k.name), url: `/${k.slug}/` })) }));
-  const pick = (slugs: string[]) => slugs.map((s) => t.bySlug.get(s)).filter((c): c is Cat => !!c && c.count_total > 0)
-    .map((c) => ({ name: c.short || decode(c.name), url: `/${c.slug}/`, count: c.count_total, image: c.image, icon: catIcon(t, c.id) }));
-  const popularCats = pick(['wellness-pobyty', 'glamping', 'masaze', 'pobyty-pro-dva', 'jizda-na-okruhu', 'degustacni-menu', 'unikove-hry', 'sushi', 'lazenske-pobyty', 'kosmetika', 'vyhlidkove-lety', 'kurzy-vareni']);
+  const popularCats = pop.map((c) => ({ name: c.short || decode(c.name), url: `/${c.slug}/`, count: c.count_total, image: photoOf.get(c.id) ?? c.image, icon: catIcon(t, c.id) }));
   const total = [...t.stores.values()].reduce((n, s) => n + s.count, 0);
   const cities = [...t.loks.values()].filter((l) => l.slug !== 'cr' && l.count > 0 && cityName(l.slug).known).sort((a, b) => b.count - a.count).slice(0, 12);
   const month = new Date().getMonth() + 1;
