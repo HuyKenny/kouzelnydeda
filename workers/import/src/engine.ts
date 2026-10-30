@@ -147,7 +147,7 @@ async function feedState(db: D1Database, key: string) {
   return db.prepare('SELECT * FROM feed_state WHERE feed = ?').bind(key).first<{ etag: string | null; last_modified: string | null; last_ok_at: string | null; last_status: string | null }>();
 }
 
-export async function runFeed(env: Env, f: FeedDef, opts: { force?: boolean } = {}): Promise<RunResult> {
+export async function runFeed(env: Env, f: FeedDef, opts: { force?: boolean; items?: Map<string, Item> } = {}): Promise<RunResult> {
   const t0 = Date.now();
   const db = env.DB;
   const res: RunResult = { feed: f.key, status: 'ok', read: 0, created: 0, changed: 0, expired: 0, revived: 0, ms: 0 };
@@ -168,12 +168,13 @@ export async function runFeed(env: Env, f: FeedDef, opts: { force?: boolean } = 
     return res;
   };
   const url = String(env[f.secret] ?? '');
-  if (!url) return finish('skipped', `no ${f.secret} secret`);
+  if (!url && !opts.items) return finish('skipped', `no ${f.secret} secret`);
 
   // 1. download + parse the whole feed (bounded: one item at a time; ~8k items × ~1.5 kB)
   const items = new Map<string, Item>();
   let meta: { etag: string | null; lastModified: string | null } = { etag: null, lastModified: null };
   try {
+    if (opts.items) { for (const [k, v] of opts.items) items.set(k, v); } else {
     const opened = await openFeed(url, env.ALLOWED_FEED_HOSTS, opts.force ? {} : { etag: st?.etag, lastModified: st?.last_modified });
     if (opened.status === 'not_modified') {
       await db.prepare("UPDATE products SET seen_at = ? WHERE source = ? AND active = 1").bind(now(), f.key).run();
@@ -189,6 +190,7 @@ export async function runFeed(env: Env, f: FeedDef, opts: { force?: boolean } = 
       items.set(it.ext, prev ? mergeVariants(prev, it) : it);
     }
     for (const it of items.values()) finishVariants(it);
+    }
   } catch (e) {
     const msg = e instanceof FeedFetchError || e instanceof XmlError ? e.message : String(e);
     return finish('error', msg);
@@ -287,6 +289,7 @@ export async function nextDueFeed(db: D1Database): Promise<FeedDef | null> {
   const rows = new Map((await db.prepare('SELECT feed, last_run_at, last_status FROM feed_state').all<{ feed: string; last_run_at: string | null; last_status: string | null }>()).results.map((r) => [r.feed, r]));
   let best: FeedDef | null = null, bestAge = -1;
   for (const f of FEEDS) {
+    if (!f.secret) continue; // pushed from outside (/ingest)
     const r = rows.get(f.key);
     if (r?.last_status === 'partial') return f;
     const age = r?.last_run_at ? (Date.now() - Date.parse(r.last_run_at.replace(' ', 'T') + 'Z')) / 3600_000 : 1e9;

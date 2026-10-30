@@ -1,6 +1,6 @@
 // The three partner feeds that WP All Import read on WordPress (imports 25–28, 30. 10. 2026). URLs live in secrets
 // (FEED_URL_SLEVOMAT carries an auth token): scripts/set-feed-secrets.py <env>.
-export type Source = 'slevomat' | 'adrop' | 'zazitky' | 'skvelecesko' | 'kormidlo';
+export type Source = 'slevomat' | 'adrop' | 'zazitky' | 'skvelecesko' | 'kormidlo' | 'firmanazazitky';
 
 export interface FeedDef {
   key: Source;
@@ -19,6 +19,8 @@ export const FEEDS: FeedDef[] = [
   { key: 'adrop', item: 'SHOPITEM', store: 'adrop-cz', secret: 'FEED_URL_ADROP', everyH: 12 },
   // České kormidlo (CK, SDovolena format: tours with every term and price; ~150 MB, no compression)
   { key: 'kormidlo', item: 'tour', store: 'ceske-kormidlo', secret: 'FEED_URL_KORMIDLO', everyH: 24 },
+  // Firmanazazitky.cz (CJ): no feed — scripts/firmanazazitky-import.py scrapes the product pages and POSTs them to /ingest/firmanazazitky
+  { key: 'firmanazazitky', item: 'entry', store: 'firma-na-zazitky', secret: '', everyH: 24 },
   { key: 'skvelecesko', item: 'entry', store: 'skvele-cesko', secret: 'FEED_URL_SKVELECESKO', everyH: 12 },
 ];
 
@@ -29,6 +31,8 @@ export function affiliateUrl(src: Source, id: string, url: string): string {
   if (src === 'slevomat') {
     return `${url}?utm_source=affiliate&utm_medium=cpc&utm_campaign=${SLEVOMAT_CAMPAIGN}&utm_content=${id}&utm_term=q6q55khb`;
   }
+  // CJ deep link (Firmanazazitky.cz): the product URL is the encoded url= parameter of the partner's tracking link
+  if (src === 'firmanazazitky') return `https://www.jdoqocy.com/click-100738307-17346622?sid=${id}&url=${encodeURIComponent(url)}`;
   // Dognet (SkvěléČesko.cz): the partner URL goes in raw after url= (Kenny's document, 30. 10. 2026)
   if (src === 'skvelecesko') return `https://go.dognet.com/?chid=0ahgy2Fx&url=${url}`;
   return ehubUrl(src === 'adrop' ? 'adrop' : src === 'kormidlo' ? 'kormidlo' : 'zazitky', id, url);

@@ -30,6 +30,11 @@ const P: Record<string, Partner> = {
     perks: ['Elektronická vstupenka s QR kódem do e-mailu během pár minut', 'Zrušení nebo přerezervování zdarma do 1 dne před začátkem', 'Garance vrácení peněz za neposkytnutou službu', 'Platba i benefity Up, Pluxee a Edenred'],
     trust: 'Rezervace a platba u SkvěléČesko.cz · cena je stejná jako u partnera',
   },
+  'firma-na-zazitky': {
+    name: 'Firmanazazitky.cz', color: '#7A3FC0', verb: 'Objednat poukaz',
+    perks: ['Výměna zážitku zdarma', 'Rychlé doručení – e-mailem ihned, 24/7', 'Dárkově zabaleno na přání', 'Garance ceny'],
+    trust: 'Platba u Firmanazazitky.cz · cena je stejná jako u partnera',
+  },
   'ceske-kormidlo': {
     name: 'České kormidlo', color: '#0B6FB3', verb: 'Rezervovat zájezd',
     perks: ['Zájezd zajišťuje cestovní kancelář ČESKÉ KORMIDLO', 'Vyberete si konkrétní termín a délku pobytu', 'U zájezdů s dopravou je v nabídce nástupní místo', 'Cena platí pro vybraný termín'],
