@@ -9,7 +9,7 @@ import Drobky from '../Drobky.astro';
 import Mrizka from '../Mrizka.astro';
 import Ik from '../Ik.astro';
 import { cena, cislo, datum, decode, dni, dniDo, place } from '../../lib/format';
-import { card, hero } from '../../lib/img';
+import { card, hero, uniquePhotos } from '../../lib/img';
 import { partner as partnerOf, partnerColor } from '../../lib/partners';
 import type { ProductView } from '../../lib/views';
 
@@ -18,7 +18,7 @@ const { v } = Astro.props;
 const { p, info } = v;
 const name = decode(p.name);
 const main = hero(p.image);
-const gallery = [p.image, ...v.images].filter(Boolean).slice(0, 6);
+const gallery = uniquePhotos(p.image, v.images);
 const save = p.price_old > p.price ? p.price_old - p.price : 0;
 const store = v.store;
 const pt = partnerOf(store?.slug);

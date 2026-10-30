@@ -51,7 +51,8 @@ def scrape(u):
     for m in re.findall(r'(?:src|href)="((?:https://www\.firmanazazitky\.cz)?/obrazek/[^"]+?\.(?:jpg|jpeg|png))"', s):
         m = m if m.startswith('http') else BASE + m
         key = re.sub(r'_\d+x\d+', '', m).split('-')[-1][:12] + m.split('/')[-1][:10]
-        if m not in seen: seen.add(m); imgs.append(urllib.parse.quote(m, safe=':/%'))
+        base = re.sub(r'_\d+x\d+(?=\.\w+$)', '', m.rsplit('.', 1)[0]).lower()
+        if base not in seen: seen.add(base); imgs.append(urllib.parse.quote(m, safe=':/%'))
     crumbs = re.findall(r'"name":\s*"([^"]+)"', s)
     cat = crumbs[1] if len(crumbs) > 2 else ''
     info = {'d': desc or lead, 'h': lead or None}

@@ -182,7 +182,7 @@ function adrop(n: XmlNode): Item | null {
     // the URL is appended raw like WP All Import did (data1 = ITEM_ID)
     target,
     image: imgs[0] ?? '',
-    images: [...new Set(imgs.slice(1))].slice(0, 4),
+    images: [...new Set(imgs.slice(1).filter((u) => u !== imgs[0]))].slice(0, 4),
     price,
     priceOld: old > price ? old : 0,
     lok: citySlug(city),

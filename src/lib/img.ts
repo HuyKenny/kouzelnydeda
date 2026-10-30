@@ -31,3 +31,16 @@ export function hero(url: string | null | undefined): { src: string; srcset: str
 
 /** Own uploads as site-relative paths, so every host (staging, workers.dev) serves its own copy. */
 export const ownUpload = (u: string | null | undefined) => String(u ?? '').replace(/^https?:\/\/(www\.)?kouzelnydeda\.cz(?=\/(wp-content|a)\/)/, '');
+
+/** Same photo in another size/format (feeds repeat the main photo in the gallery, Firmanazazitky lists every resize). */
+const photoKey = (u: string) => decodeURIComponent(u).toLowerCase().split('?')[0]!.replace(/^https?:\/\/(www\.)?/, '').replace(/\/(webp|thumbs?|small|medium|large)\//, '/').replace(/_\d+x\d+(?=\.\w+$)/, '').replace(/\.(webp|jpe?g|png)$/, '');
+export function uniquePhotos(main: string, more: string[], max = 6): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const u of [main, ...more]) {
+    const k = u ? photoKey(u) : '';
+    if (!k || seen.has(k)) continue;
+    seen.add(k); out.push(u);
+  }
+  return out.slice(0, max);
+}
