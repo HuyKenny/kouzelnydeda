@@ -220,7 +220,7 @@ export function finishVariants(it: Item): void {
   if (out.length < 2) { delete it.info.va; return; }
   it.info.va = out.slice(0, 80);
   // a group spread over several cities has no single place
-  if (new Set(parts.map((p) => p[0]).filter(Boolean)).size > 1) { it.lok = ''; }
+  if (new Set(parts.map((p) => p[0]).filter(Boolean)).size > 1) { it.lok = ''; it.city = ''; }
 }
 
 const GIFT_TAG = /d[aá]r|v[aá]noc|origin[aá]ln|narozen|svatb|k \d+|cena|v[sš]echny|celoro|promoc|mlad[yý]|d[eě]d|t[rř]ic[aá]tn|nejlep|teenager|ješt[eě]|jihomor|letn[ií]/i;
@@ -332,10 +332,13 @@ function skvelecesko(n: XmlNode): Item | null {
   const type = txt(n, 'product_type');
   const city = txt(n, 'custom_label_0');
   const provider = title.includes(' - ') ? title.split(' - ')[0]!.trim() : '';
+  const target = affiliateUrl('skvelecesko', id, url);
+  // the same activity is listed once per city (and per branch): one offer, the places are its variants
+  const group = title.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 110);
   return {
-    ext: id,
+    ext: group || id,
     name: title,
-    target: affiliateUrl('skvelecesko', id, url),
+    target,
     image: imgs[0] ?? '',
     images: imgs.slice(1, 7),
     price,
@@ -346,13 +349,14 @@ function skvelecesko(n: XmlNode): Item | null {
     excerpt: '',
     rating: 0,
     reviews: 0,
-    info: { d: plain(txt(n, 'description')) || undefined, pv: provider ? { t: provider } : undefined, tags: type ? [type] : undefined },
+    info: { d: plain(txt(n, 'description')) || undefined, pv: provider ? { t: provider } : undefined, tags: type ? [type] : undefined, va: [[city, price, target]] },
+    vparts: [[city]],
   };
 }
 
 export function parseItem(src: Source, n: XmlNode): Item | null {
   const it = src === 'slevomat' ? slevomat(n) : src === 'adrop' ? adrop(n) : src === 'skvelecesko' ? skvelecesko(n) : src === 'kormidlo' ? kormidlo(n) : zazitky(n);
-  if (!it || !it.name) return null;
+  if (!it || !it.name || !it.image) return null; // no photo = nothing to show (dead tours, empty entries)
   if (!it.excerpt) it.excerpt = (it.info.d ?? '').split('\n')[0]!.slice(0, 300);
   return it;
 }
