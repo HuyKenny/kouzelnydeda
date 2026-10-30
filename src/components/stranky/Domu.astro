@@ -6,7 +6,7 @@ import Base from '../../layouts/Base.astro';
 import Mrizka from '../Mrizka.astro';
 import Ik from '../Ik.astro';
 import { cislo, datum, decode, excerpt } from '../../lib/format';
-import { card } from '../../lib/img';
+import { card, crop } from '../../lib/img';
 import type { HomeView } from '../../lib/views';
 interface Props { v: HomeView }
 const { v } = Astro.props;
@@ -41,9 +41,9 @@ const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.imag
 	<div class="w">
 		<section class="sek">
 			<div class="sh"><h2>Co máte rádi?</h2></div>
-			<ul class="sekce">{v.sections.map((s, i) => { const im = card(s.image, 280); return (
+			<ul class="sekce">{v.sections.map((s, i) => { const im = crop(s.image, 300, 400); const im2 = crop(s.image, 600, 800); return (
 				<li>
-					<a class="sc" href={s.url}>{im && <img src={im.src} srcset={im.srcset} alt="" width="280" height="373" loading={i < 2 ? 'eager' : 'lazy'} />}<span class="sc__t"><b><Ik n={s.icon} />{s.name}</b><small>{cislo(s.count)} nabídek</small></span></a>
+					<a class="sc" href={s.url}>{im && <img src={im} srcset={`${im} 1x, ${im2} 2x`} alt="" width="300" height="400" loading={i < 2 ? 'eager' : 'lazy'} />}<span class="sc__t"><b><Ik n={s.icon} />{s.name}</b><small>{cislo(s.count)} nabídek</small></span></a>
 					<ul>{s.kids.map((k) => <li><a href={k.url}>{k.name}</a></li>)}</ul>
 				</li>
 			); })}</ul>

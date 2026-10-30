@@ -88,7 +88,8 @@ button, input, select { font: inherit; color: inherit; }
   .usp li:nth-child(n+2) { display: none; }
   .hd__in { flex-wrap: wrap; gap: 10px; padding-top: 10px; padding-bottom: 10px; min-height: 0; }
   .logo img { width: 124px; }
-  .hl { order: 3; flex-basis: 100%; max-width: none; }
+  .hl { order: 3; flex-basis: 100%; max-width: calc(100% - 4px); }
+  .hl form { box-shadow: 2px 2px 0 var(--plum); }
   .hd__dar { margin-left: auto; padding: 8px 12px; }
   .hd__dar span { display: none; }
   .nav > summary { display: flex; }
