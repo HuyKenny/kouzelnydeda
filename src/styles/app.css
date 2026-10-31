@@ -146,7 +146,6 @@ button, input, select { font: inherit; color: inherit; }
 .fo { position: relative; aspect-ratio: 4 / 3; background: var(--lav); border-radius: var(--r); overflow: hidden; }
 .fo img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
 .fo--bez::after { content: ""; position: absolute; inset: 0; background: url(/a/mark-256.webp) center / 34% no-repeat; opacity: .35; }
-.k .uspora { position: absolute; top: 12px; left: 10px; z-index: 2; font-size: 1.05rem; }
 .k__badge { position: absolute; left: 10px; bottom: 10px; z-index: 2; display: inline-flex; align-items: center; gap: 5px; background: #fff; color: var(--plum); border-radius: 999px; padding: 4px 10px; font-size: .78rem; font-weight: 700; box-shadow: 0 2px 6px rgb(0 0 0 / 12%); }
 .k__badge .ik { color: var(--coral); }
 .k__b { padding: 12px 4px 0; display: flex; flex-direction: column; gap: 5px; flex: 1; }
@@ -158,26 +157,6 @@ button, input, select { font: inherit; color: inherit; }
 .k__n { font-family: var(--font); font-size: 1rem; font-weight: 700; line-height: 1.35; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .k__n a { color: var(--plum); text-decoration: none; }
 .k__n a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
-.k__f { margin-top: auto; padding: 8px 4px 2px; display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
-.k__p del { display: block; color: var(--mute); font-size: .82rem; }
-.k__p strong { font-family: var(--head); font-size: 1.35rem; font-weight: 800; }
-.k__s { font-size: .8rem; color: var(--ok); font-weight: 700; }
-.k__go { position: relative; z-index: 3; display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 8px 13px; background: var(--coral-l); color: var(--coral-d); font-weight: 800; font-size: .86rem; text-decoration: none; white-space: nowrap; }
-.k__go:hover { background: var(--coral); color: #fff; }
-/* phones: two compact cards per row — twice as many offers per scroll, the "K nabídce" button spans the card */
-@media (max-width: 599px) {
-  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 12px; }
-  .k .uspora { top: 8px; left: 7px; font-size: .82rem; padding: 3px 7px; }
-  .k__badge { left: 6px; bottom: 6px; font-size: .68rem; padding: 3px 7px; gap: 3px; }
-  .k__b { padding: 8px 2px 0; gap: 3px; }
-  .k__m { font-size: .72rem; gap: 1px 6px; }
-  .k__m > :nth-child(n+3) { display: none; }
-  .k__n { font-size: .9rem; line-height: 1.3; }
-  .k__f { flex-direction: column; align-items: stretch; gap: 7px; padding: 6px 2px 0; }
-  .k__p del { display: inline; margin-right: 6px; font-size: .74rem; }
-  .k__p strong { font-size: 1.1rem; }
-  .k__go { justify-content: center; padding: 8px 6px; font-size: .82rem; }
-}
 .k--end { opacity: .7; }
 
 /* ---------- listing ---------- */
@@ -478,4 +457,31 @@ button, input, select { font: inherit; color: inherit; }
 .box__perks .ik { color: var(--ok); flex: none; margin-top: 2px; }
 [hidden] { display: none !important; }
 .kat-text, .sek.faq, .ft { content-visibility: auto; contain-intrinsic-size: auto 900px; }
-.k__p strong small { display: block; font-size: .72rem; font-weight: 700; color: var(--plum-2); }
+
+/* offer card, Slevomat-like: price and saving sit on the photo, below it title, rating, partner · place */
+.k__p { position: absolute; left: 10px; bottom: 10px; right: 10px; z-index: 2; margin: 0; display: flex; align-items: stretch; gap: 0; flex-wrap: wrap; }
+.k__cena { display: inline-flex; align-items: baseline; gap: 7px; background: #0c8a2b; color: #fff; font-family: var(--head); font-weight: 800; font-size: 1.15rem; line-height: 1; padding: 9px 12px; border-radius: 10px; white-space: nowrap; }
+.k__cena small { font-size: .72rem; font-weight: 700; opacity: .9; }
+.k__cena del { font-size: .82rem; font-weight: 600; opacity: .85; }
+.k__sleva { display: inline-flex; align-items: center; background: #ffc20e; color: #2a2100; font-family: var(--head); font-weight: 800; font-size: .95rem; padding: 0 10px; border-radius: 0 10px 10px 0; margin-left: -8px; padding-left: 16px; }
+.k__p .k__cena:has(+ .k__sleva) { border-radius: 10px; position: relative; z-index: 1; }
+.k__badge { top: 10px; bottom: auto; }
+.k__r { display: flex; align-items: center; gap: 4px; margin: 0; font-size: .86rem; color: var(--plum-2); }
+.k__r .ik { color: #f5a623; width: 15px; height: 15px; }
+.k__r b { color: var(--plum); }
+.k__r span { color: var(--mute); }
+.k__b { padding-bottom: 6px; }
+.k__go { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 599px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 10px; }
+  .k__p { left: 6px; bottom: 6px; right: 6px; }
+  .k__cena { font-size: .98rem; padding: 7px 9px; gap: 5px; }
+  .k__cena del { font-size: .7rem; }
+  .k__sleva { font-size: .8rem; padding: 0 7px 0 13px; }
+  .k__badge { top: 6px; left: 6px; font-size: .68rem; padding: 3px 7px; gap: 3px; }
+  .k__b { padding: 8px 2px 4px; gap: 3px; }
+  .k__n { font-size: .9rem; line-height: 1.3; }
+  .k__r { font-size: .78rem; }
+  .k__r span { display: none; }
+  .k__m { font-size: .72rem; gap: 1px 6px; }
+}
