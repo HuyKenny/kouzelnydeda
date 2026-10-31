@@ -405,6 +405,63 @@ function radynacestu(n: XmlNode): Item | null {
   return { ext: group || slug, name: uncaps(title.replace(/\s+/g, ' '), ctx), target: target(best), image: imgs[0] ?? '', images: imgs.slice(1, 7), price: best.price, priceOld: 0, lok: '', cats, excerpt: '', rating: 0, reviews: 0, info };
 }
 
+const COMP_ACC: Record<string, string> = { 'liga mistrů': 'Ligu mistrů', 'evropská liga': 'Evropskou ligu', 'konferenční liga': 'Konferenční ligu', 'liga národů': 'Ligu národů' };
+const LEAGUES = new Set(['Premier League', 'Serie A', 'La Liga', 'Bundesliga', 'Ligue 1', 'Eredivisie', 'Coppa Italia', 'FA Cup', 'Carabao Cup']);
+/** SEO name of a FutbalTour trip: "Liga mistrů: FC Barcelona - Aston Villa" → "Zájezd na Ligu mistrů: FC Barcelona – Aston Villa (21. 10. 2026)". */
+export function sportTitle(raw: string, sport: string, league: string, iso: string): string {
+  const t = plain(raw).replace(/\s+/g, ' ').trim().replace(/\s+[-–]\s+/g, ' – ');
+  const when = iso && !/\d{1,2}\. ?\d{1,2}\. ?\d{4}/.test(t) ? `, ${csDate(iso)}` : '';
+  if (/^zájezd/i.test(t)) return t + when;
+  const lowFirst = (x: string) => x.charAt(0).toLowerCase() + x.slice(1);
+  const m = t.match(/^([^:]+):\s*(.+ – .+)$/);
+  if (m && COMP_ACC[m[1]!.toLowerCase()]) return `Zájezd na ${COMP_ACC[m[1]!.toLowerCase()]}: ${m[2]}${when}`;
+  if (m && /^(NHL|NBA|NFL)\b/.test(m[1]!)) return `Zájezd na ${m[1]}: ${m[2]}${when}`;
+  if (m && sport !== 'Hokej') return `Zájezd na zápas ${m[1]}: ${m[2]}${when}`;
+  if (/^[^:]+ – [^:]+$/.test(t)) return `Zájezd na zápas ${t}${LEAGUES.has(league) ? ` (${league})` : ''}${when}`;
+  if (/^F1 Speciál/i.test(t)) return `Zájezd F1 Speciál: ${t.replace(/^F1 Speciál:?\s*/i, '')}${when}`;
+  if (/^F1\b/.test(t)) return `Zájezd na Formuli 1: ${t.replace(/^F1:?\s*/i, '')}${when}`;
+  if (/^(Semi)?finále/i.test(t)) return `Zájezd na ${lowFirst(t)}${when}`;
+  if (/^(maraton|půlmaraton)/i.test(t)) return `Zájezd na ${lowFirst(t)}${when}`;
+  if (sport === 'Tenis') return `Zájezd na tenis: ${t.replace(/^Tenis:\s*/i, '')}${when}`;
+  if (sport === 'Hokej') return `Hokejový zájezd: ${t}${when}`;
+  return `Zájezd: ${t}${when}`;
+}
+
+/** FutbalTour (Google Merchant RSS via Mergado, eHub deep links): tickets + travel to football, hockey, F1 … events. */
+function futbaltour(n: XmlNode): Item | null {
+  const id = txt(n, 'id');
+  const url = https(txt(n, 'link'));
+  const price = num(txt(n, 'price'));
+  const raw = txt(n, 'title');
+  const image = https(txt(n, 'image_link'));
+  if (!id || !raw || !okUrl(url) || !okUrl(image) || !(price > 0)) return null;
+  const sport = txt(n, 'custom_label_0');
+  const [, league = ''] = txt(n, 'product_type').split(' - ').map((x) => x.trim());
+  const ev = txt(n, 'event_date').match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+  const iso = ev ? `${ev[3]}-${ev[2]!.padStart(2, '0')}-${ev[1]!.padStart(2, '0')}` : '';
+  const place = txt(n, 'custom_label_1');
+  const city = place.split(',')[0]!.trim();
+  const desc = plain(txt(n, 'description')).split('\n').map((x) => x.trim()).filter((x) => x && !/^FutbalTour x|^Autorizovaný prodejce vstupenek/i.test(x));
+  const sub = sport === 'Fotbal' ? 'zajezdy-na-fotbal' : sport === 'Hokej' ? 'zajezdy-na-hokej' : sport === 'Formule 1' ? 'zajezdy-na-formuli-1' : 'ostatni-sportovni-zajezdy';
+  const pa: Array<[string, string]> = [['Sport', sport], ...(league ? [['Soutěž', league] as [string, string]] : []), ...(iso ? [['Termín', csDate(iso)] as [string, string]] : []), ...(place ? [['Místo', place] as [string, string]] : [])];
+  return {
+    ext: id,
+    name: sportTitle(raw, sport, league, iso),
+    target: affiliateUrl('futbaltour', id, url),
+    image,
+    images: [],
+    price,
+    priceOld: 0,
+    lok: citySlug(city),
+    city,
+    cats: ['@sportovni-zajezdy', '@' + sub],
+    excerpt: '',
+    rating: 0,
+    reviews: 0,
+    info: { d: desc.join('\n') || undefined, pv: { t: 'FutbalTour' }, pa, tags: [sport, league].filter(Boolean), ...(iso ? { de: iso } : {}) },
+  };
+}
+
 /** SkvěléČesko.cz (Google Merchant Atom feed, deep links through Dognet): one entry = one bookable activity. */
 function skvelecesko(n: XmlNode): Item | null {
   const id = txt(n, 'id');
@@ -439,7 +496,7 @@ function skvelecesko(n: XmlNode): Item | null {
 }
 
 export function parseItem(src: Source, n: XmlNode): Item | null {
-  const it = src === 'slevomat' ? slevomat(n) : src === 'adrop' ? adrop(n) : src === 'skvelecesko' ? skvelecesko(n) : src === 'kormidlo' ? kormidlo(n) : src === 'radynacestu' ? radynacestu(n) : zazitky(n);
+  const it = src === 'slevomat' ? slevomat(n) : src === 'adrop' ? adrop(n) : src === 'skvelecesko' ? skvelecesko(n) : src === 'kormidlo' ? kormidlo(n) : src === 'radynacestu' ? radynacestu(n) : src === 'futbaltour' ? futbaltour(n) : zazitky(n);
   if (!it || !it.name || !it.image) return null; // no photo = nothing to show (dead tours, empty entries)
   // generic gift vouchers ("Dárkový poukaz na zážitek", "Univerzální poukaz…") are not an offer — only services are listed
   if ((src === 'adrop' || src === 'zazitky') && /^(univerz\w*|dárkov\w* (poukaz|voucher|certifik\w*))/i.test(it.name.trim())) return null;

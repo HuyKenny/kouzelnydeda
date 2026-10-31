@@ -1,11 +1,11 @@
 // The three partner feeds that WP All Import read on WordPress (imports 25–28, 30. 10. 2026). URLs live in secrets
 // (FEED_URL_SLEVOMAT carries an auth token): scripts/set-feed-secrets.py <env>.
-export type Source = 'slevomat' | 'adrop' | 'zazitky' | 'skvelecesko' | 'kormidlo' | 'firmanazazitky' | 'excursia' | 'radynacestu' | 'amazingplaces';
+export type Source = 'slevomat' | 'adrop' | 'zazitky' | 'skvelecesko' | 'kormidlo' | 'firmanazazitky' | 'excursia' | 'radynacestu' | 'amazingplaces' | 'futbaltour';
 
 export interface FeedDef {
   key: Source;
   /** XML element of one offer */
-  item: 'DEAL' | 'SHOPITEM' | 'entry' | 'tour';
+  item: 'DEAL' | 'SHOPITEM' | 'entry' | 'tour' | 'item';
   /** stores.slug (WordPress taxonomy "store") */
   store: string;
   secret: string;
@@ -27,6 +27,8 @@ export const FEEDS: FeedDef[] = [
   { key: 'radynacestu', item: 'tour', store: 'rady-na-cestu', secret: 'FEED_URL_RADYNACESTU', everyH: 24 },
   // Amazing Places (hotels, chalets, wineries; Post Affiliate Pro ?a_box=&a_cam=): scripts/amazingplaces-import.py → /ingest/amazingplaces
   { key: 'amazingplaces', item: 'entry', store: 'amazing-places', secret: '', everyH: 168 },
+  // FutbalTour (zájezdy se vstupenkou na fotbal, hokej, F1 …; Google Merchant RSS na Mergadu, eHub bid 5ace1024)
+  { key: 'futbaltour', item: 'item', store: 'futbaltour', secret: 'FEED_URL_FUTBALTOUR', everyH: 12 },
   { key: 'skvelecesko', item: 'entry', store: 'skvele-cesko', secret: 'FEED_URL_SKVELECESKO', everyH: 12 },
 ];
 
@@ -43,6 +45,7 @@ export function affiliateUrl(src: Source, id: string, url: string): string {
   // CJ deep link (Firmanazazitky.cz): the product URL is the encoded url= parameter of the partner's tracking link
   if (src === 'firmanazazitky') return `https://www.jdoqocy.com/click-100738307-17346622?sid=${id}&url=${encodeURIComponent(url)}`;
   // Dognet (SkvěléČesko.cz): the partner URL goes in raw after url= (Kenny's document, 30. 10. 2026)
+  if (src === 'futbaltour') return `https://ehub.cz/system/scripts/click.php?a_aid=052443b7&a_bid=5ace1024&data1=${id}&desturl=${url}`;
   if (src === 'skvelecesko') return `https://go.dognet.com/?chid=0ahgy2Fx&url=${url}`;
   return ehubUrl(src === 'adrop' ? 'adrop' : src === 'kormidlo' ? 'kormidlo' : 'zazitky', id, url);
 }

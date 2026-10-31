@@ -54,6 +54,11 @@ const P: Record<string, Partner> = {
     perks: ['Ručně vybrané ubytování s příběhem', 'Cena je uvedená za noc, termín si zvolíte na webu místa', 'Místo přijímá dárkové vouchery Amazing Places', 'Rezervace přímo u provozovatele'],
     trust: 'Rezervace přes Amazing Places · cena je stejná jako u provozovatele',
   },
+  futbaltour: {
+    name: 'FutbalTour', color: '#0E7C3A', verb: 'Rezervovat zájezd', voucher: false,
+    perks: ['Zájezd se vstupenkou na zápas nebo akci', 'Autorizovaný prodejce vstupenek', 'Termín udává datum zápasu', 'Rezervace přímo u FutbalTour'],
+    trust: 'Rezervace u FutbalTour · cena je stejná jako u pořadatele zájezdu',
+  },
   'ceske-kormidlo': {
     name: 'České kormidlo', color: '#0B6FB3', verb: 'Rezervovat zájezd', voucher: false,
     perks: ['Zájezd zajišťuje cestovní kancelář ČESKÉ KORMIDLO', 'Vyberete si konkrétní termín a délku pobytu', 'U zájezdů s dopravou je v nabídce nástupní místo', 'Cena platí pro vybraný termín'],

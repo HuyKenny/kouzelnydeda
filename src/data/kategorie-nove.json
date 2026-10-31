@@ -246,5 +246,37 @@
   "short": "Moravskoslezský kraj",
   "parent": "dovolena-v-cesku",
   "icon": "mapa"
+ },
+ {
+  "slug": "sportovni-zajezdy",
+  "name": "Sportovní zájezdy",
+  "parent": "zazitky",
+  "icon": "sport",
+  "group": "Typ zážitku"
+ },
+ {
+  "slug": "zajezdy-na-fotbal",
+  "name": "Zájezdy na fotbal",
+  "parent": "sportovni-zajezdy",
+  "icon": "sport"
+ },
+ {
+  "slug": "zajezdy-na-hokej",
+  "name": "Zájezdy na hokej",
+  "parent": "sportovni-zajezdy",
+  "icon": "sport"
+ },
+ {
+  "slug": "zajezdy-na-formuli-1",
+  "name": "Zájezdy na Formuli 1",
+  "parent": "sportovni-zajezdy",
+  "icon": "auto"
+ },
+ {
+  "slug": "ostatni-sportovni-zajezdy",
+  "name": "Tenis, NBA, NFL a maratony",
+  "parent": "sportovni-zajezdy",
+  "icon": "sport",
+  "short": "Další sporty"
  }
 ]
