@@ -63,25 +63,6 @@
       "il": "pro-nej"
     },
     {
-      "slug": "darek-pro-sportovce",
-      "name": "Pro sportovce",
-      "h1": "Dárek pro sportovce a fanoušky: zájezdy na zápasy i sportovní zážitky",
-      "icon": "sport",
-      "kw": "dárek pro sportovce",
-      "cats": [
-        "sportovni-zajezdy",
-        "sport-a-pohyb",
-        "zazitkove-jizdy",
-        "zimni-sporty",
-        "cviceni-a-fitness",
-        "vodni-zazitky"
-      ],
-      "title": "Dárek pro sportovce a fanoušky – zájezdy na zápasy | Kouzelný děda",
-      "desc": "Zájezd na zápas Ligy mistrů, hokej v NHL, Velká cena F1 nebo sportovní zážitek. Tipy na dárek pro sportovce a fanoušky, muže i ženy.",
-      "intro": "Fanoušek má dres a šálu, další věc do sbírky ho nepotěší. Zájezd na zápas jeho oblíbeného klubu ano. Najdete tu zájezdy se vstupenkou na fotbal, hokej a Formuli 1, k tomu sportovní zážitky pro ty, kdo si sport raději zkusí sami. Hodí se pro muže i ženy.",
-      "il": "pro-nej"
-    },
-    {
       "slug": "darek-pro-pary",
       "name": "Pro pár",
       "h1": "Dárek pro pár: zážitky ve dvou",
@@ -236,6 +217,25 @@
       "desc": "Dárkový poukaz na pobyt, wellness, masáž nebo zážitek. Poukaz přijde hned e-mailem, obdarovaný si termín vybere sám.",
       "intro": "Dárkový poukaz je jistota: obdarovaný si termín vybere sám a vy nemusíte hádat. Každá nabídka tady je voucher od ověřeného partnera — po zaplacení vám přijde e-mailem a můžete ho vytisknout nebo poslat dál.",
       "il": "voucher"
+    },
+    {
+      "slug": "darek-pro-sportovce",
+      "name": "Pro sportovce",
+      "h1": "Dárek pro sportovce a fanoušky: zájezdy na zápasy i sportovní zážitky",
+      "icon": "sport",
+      "kw": "dárek pro sportovce",
+      "cats": [
+        "sportovni-zajezdy",
+        "sport-a-pohyb",
+        "zazitkove-jizdy",
+        "zimni-sporty",
+        "cviceni-a-fitness",
+        "vodni-zazitky"
+      ],
+      "title": "Dárek pro sportovce a fanoušky – zájezdy na zápasy | Kouzelný děda",
+      "desc": "Zájezd na zápas Ligy mistrů, hokej v NHL, Velká cena F1 nebo sportovní zážitek. Tipy na dárek pro sportovce a fanoušky, muže i ženy.",
+      "intro": "Fanoušek má dres a šálu, další věc do sbírky ho nepotěší. Zájezd na zápas jeho oblíbeného klubu ano. Najdete tu zájezdy se vstupenkou na fotbal, hokej a Formuli 1, k tomu sportovní zážitky pro ty, kdo si sport raději zkusí sami. Hodí se pro muže i ženy.",
+      "il": "pro-nej"
     }
   ]
 }
