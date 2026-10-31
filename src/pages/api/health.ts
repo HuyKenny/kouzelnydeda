@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 import { getEnv } from '../../lib/server/env';
 
 export const prerender = false;
-const MAX_AGE_H = 30;
+const MAX_AGE_H = 200; // imports run weekly (Monday night)
 const MIN_OFFERS = 5_000;  // kouzelnydeda.cz: ~8.9k active offers at the migration (30. 10. 2026)
 
 export const GET: APIRoute = async () => {

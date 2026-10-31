@@ -30,7 +30,7 @@
       "workers_dev": true,
       "preview_urls": false,
       // every 20 min: the next due feed (Slevomat 6 h, Adrop + Zážitky 12 h), otherwise the daily finalisation
-      "triggers": { "crons": ["*/20 * * * *"] },
+      "triggers": { "crons": ["*/20 0-12 * * 1"] },
       "limits": { "cpu_ms": 300000 },
       "d1_databases": [{ "binding": "DB", "database_name": "kouzelnydeda-production", "database_id": "87b9cf42-57ee-4800-afa2-9134b8f857eb", "migrations_dir": "../../migrations" }],
       "vars": { "ALLOWED_FEED_HOSTS": "www.slevomat.cz,feeds.mergado.com,alis.zazitky.cz,www.skvelecesko.cz,export.ceskekormidlo.cz,xml.radynacestu.cz", "MAX_DROP_PCT": "40", "MAX_WRITES": "2500" }
