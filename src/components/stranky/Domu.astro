@@ -9,10 +9,13 @@ import Ik from '../Ik.astro';
 import { cislo, datum, decode, excerpt } from '../../lib/format';
 import { card, crop } from '../../lib/img';
 import type { HomeView } from '../../lib/views';
+import { partner } from '../../lib/partners';
 interface Props { v: HomeView }
 const { v } = Astro.props;
 const forWhom = v.gifts.filter((g) => ['darek-pro-zenu', 'darek-pro-muze', 'darek-pro-pary', 'darek-pro-deti', 'darek-pro-rodice', 'darek-k-narozeninam'].includes(g.slug));
 const budget = v.gifts.filter((g) => g.slug.startsWith('darky-do-'));
+// partners with live offers, the biggest first (strip, stats)
+const partners = [...v.tree.stores.values()].filter((s) => s.count > 0).sort((a, b) => b.count - a.count);
 const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.image, 360));
 ---
 <Base meta={v.meta} pageType="home" searchAction>
@@ -20,7 +23,7 @@ const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.imag
 		<div class="w hero__in">
 			<div>
 				<h1>Darujte zážitek, na který se <em>nezapomíná</em></h1>
-				<p class="hero__lead">Pobyty, wellness, adrenalin, degustace i kurzy s úsporou až 70 % od Slevomatu, Zážitky.cz, Adropu a SkvěléČesko.cz. Vyberete u nás, koupíte u partnera — voucher přijde hned e-mailem.</p>
+				<p class="hero__lead">Pobyty, wellness, adrenalin, degustace i kurzy s úsporou až 70 % od Slevomatu, Zážitky.cz, Adropu a dalších ověřených partnerů. Vyberete u nás, koupíte u partnera za stejnou cenu.</p>
 				<div class="pruvodce">
 					<img class="pruvodce__k" src="/a/kouzelnik-darek-256.webp" alt="" width="110" height="110" />
 					<h2><Ik n="darek" />Komu chcete udělat radost?</h2>
@@ -29,7 +32,7 @@ const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.imag
 					<ul class="chips">{budget.map((g) => <li><a class="chip" href={`/${g.slug}/`}>{g.name}</a></li>)}<li><a class="chip" href="/zazitkove-darky/">Na ceně nezáleží</a></li></ul>
 					<p>Každá nabídka je voucher s dlouhou platností — obdarovaný si termín vybere sám.</p>
 				</div>
-				<ul class="cisla"><li><b>{cislo(v.total)}</b> nabídek</li><li><b>4</b> ověření partneři</li><li><b>denně</b> nové nabídky</li></ul>
+				<ul class="cisla"><li><b>{cislo(v.total)}</b> nabídek</li><li><b>{partners.length}</b> ověřených partnerů</li><li><b>denně</b> nové nabídky</li></ul>
 			</div>
 			<div class="hero__art" aria-hidden="true">
 				{heroImgs[0] && <img class="a1" src={heroImgs[0].src} alt="" width="360" height="270" />}
@@ -85,13 +88,13 @@ const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.imag
 			<div class="sh"><h2>Jak to funguje</h2></div>
 			<ol class="jak">
 				<li><Ik n="hledat" /><b>Vyberete zážitek</b><span>Tisíce pobytů, zážitků a služeb v aktuálních cenách na jednom místě.</span></li>
-				<li><Ik n="stit" /><b>Koupíte u partnera</b><span>Nákup dokončíte bezpečně u partnera (Slevomat, Zážitky.cz, Adrop, SkvěléČesko). Za stejnou cenu.</span></li>
+				<li><Ik n="stit" /><b>Koupíte u partnera</b><span>Nákup dokončíte bezpečně u partnera, například u Slevomatu, Zážitky.cz nebo Adropu. Za stejnou cenu.</span></li>
 				<li><Ik n="mail" /><b>Voucher přijde e-mailem</b><span>Vytisknete ho, darujete, nebo si rovnou zarezervujete termín.</span></li>
 			</ol>
 		</section>
 		<section class="sek">
 			<div class="partneri">
-				<span style="--c:#E2001A">Slevomat.cz</span><span style="--c:#00A3A3">Zážitky.cz</span><span style="--c:#FF6A00">Adrop.cz</span><span style="--c:#1B8A5A">SkvěléČesko.cz</span>
+				{partners.map((s) => <a href={`/brand/${s.slug}/`} style={`--c:${partner(s.slug).color}`}>{partner(s.slug).name}</a>)}
 				<p>Nabídky přebíráme přímo od partnerů a obnovujeme je několikrát denně.</p>
 			</div>
 		</section>
@@ -117,7 +120,7 @@ const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.imag
 		</section>
 		<section class="sek txt">
 			<h2>Zážitky, pobyty a dárky</h2>
-			<p>Kouzelný děda je vyhledávač zvýhodněných nabídek na zážitky, pobyty a wellness. Najdete tu wellness pobyty pro dva, glamping a tiny housy, lázně, masáže a kosmetiku, jízdy ve sportovních autech, únikové hry, degustační menu i kurzy vaření. Nabídky přebíráme přímo od Slevomatu, Zážitky.cz, Adropu a SkvěléČesko.cz a obnovujeme je několikrát denně, takže vidíte aktuální ceny i výši úspory. Většinu z nich pořídíte jako dárkový voucher — ideální dárek k narozeninám, na Vánoce nebo jen tak.</p>
+			<p>Kouzelný děda je vyhledávač zvýhodněných nabídek na zážitky, pobyty a wellness. Najdete tu wellness pobyty pro dva, glamping a tiny housy, lázně, masáže a kosmetiku, jízdy ve sportovních autech, únikové hry, degustační menu i kurzy vaření. Nabídky přebíráme přímo od partnerů – Slevomatu, Zážitky.cz, Adropu, Firmanazazitky.cz, SkvěléČesko, cestovních kanceláří České kormidlo, Rady na cestu a Excursia i od Amazing Places – a obnovujeme je několikrát denně, takže vidíte aktuální ceny i výši úspory. Většinu z nich pořídíte jako dárkový voucher — ideální dárek k narozeninám, na Vánoce nebo jen tak.</p>
 		</section>
 	</div>
 </Base>

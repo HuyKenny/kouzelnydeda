@@ -176,7 +176,6 @@ button, input, select { font: inherit; color: inherit; }
   .k__f { flex-direction: column; align-items: stretch; gap: 7px; padding: 6px 2px 0; }
   .k__p del { display: inline; margin-right: 6px; font-size: .74rem; }
   .k__p strong { font-size: 1.1rem; }
-  .k__p strong small { font-size: .7rem; }
   .k__go { justify-content: center; padding: 8px 6px; font-size: .82rem; }
 }
 .k--end { opacity: .7; }
@@ -337,8 +336,8 @@ button, input, select { font: inherit; color: inherit; }
 .jak span { color: var(--plum-2); font-size: .95rem; }
 @media (max-width: 760px) { .jak { grid-template-columns: 1fr; gap: 22px; } }
 .partneri { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px 36px; padding: 22px; background: var(--lav); border-radius: var(--r); }
-.partneri span { font-family: var(--head); font-weight: 800; font-size: 1.3rem; color: var(--plum); display: inline-flex; align-items: center; gap: 8px; }
-.partneri span::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--c); }
+.partneri span, .partneri a { text-decoration: none; font-family: var(--head); font-weight: 800; font-size: 1.3rem; color: var(--plum); display: inline-flex; align-items: center; gap: 8px; }
+.partneri span::before, .partneri a::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--c); }
 .partneri p { flex-basis: 100%; text-align: center; margin: 0; color: var(--plum-2); font-size: .9rem; }
 .pas { background: var(--plum); color: #fff; border-radius: var(--r); padding: 26px; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; }
 .pas h2 { margin: 0 0 4px; }
@@ -479,3 +478,4 @@ button, input, select { font: inherit; color: inherit; }
 .box__perks .ik { color: var(--ok); flex: none; margin-top: 2px; }
 [hidden] { display: none !important; }
 .kat-text, .sek.faq, .ft { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+.k__p strong small { display: block; font-size: .72rem; font-weight: 700; color: var(--plum-2); }
