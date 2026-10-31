@@ -17,6 +17,19 @@ import { clientIp } from './lib/server/http';
 import { dataVersion } from './lib/server/versions';
 import { htmlCsp, securityHeaders } from './lib/security';
 import { parseFilters, toQuery } from './lib/filters';
+import { tree } from './lib/db';
+
+/** Listing views are counted for the ranking (impressions = views of the page × the cards on it): humans only, page 1–5. */
+async function countListView(request: Request, url: URL, db: D1Database): Promise<void> {
+  if (request.method !== 'GET' || url.search || /bot|crawl|spider|slurp|preview|headless|python|curl|wget|facebookexternalhit/i.test(request.headers.get('user-agent') ?? '')) return;
+  const m = url.pathname.match(/^\/([a-z0-9-]+)\/(?:page\/(\d{1,2})\/)?$/);
+  if (!m) return;
+  const page = Number(m[2] ?? 1);
+  if (page > 5) return;
+  try { if (!(await tree(db)).bySlug.has(m[1]!)) return; } catch { return; }
+  await db.prepare('INSERT INTO list_views (day, slug, page, n) VALUES (?, ?, ?, 1) ON CONFLICT(day, slug, page) DO UPDATE SET n = n + 1')
+    .bind(new Date().toISOString().slice(0, 10), m[1], page).run().catch(() => undefined);
+}
 
 const NO_CACHE = [/^\/go\//, /^\/api\//, /^\/wp-content\//, /^\/a\//, /^\/_astro\//];
 /** Paths whose case matters (base64 image paths, hashed assets, uploads) are never lowercased. */
@@ -167,7 +180,7 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
     try {
       key = cacheKey(url, await dataVersion());
       const hit = await cache.match(key);
-      if (hit) return finish(hit, url, { 'X-Kd-Page-Cache': 'HIT', 'Cache-Control': 'public, max-age=0, must-revalidate' });
+      if (hit) { ctx.locals.cfContext?.waitUntil(countListView(ctx.request, url, env.DB)); return finish(hit, url, { 'X-Kd-Page-Cache': 'HIT', 'Cache-Control': 'public, max-age=0, must-revalidate' }); }
     } catch { key = null; }
   }
 
@@ -177,6 +190,7 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
   }
 
   const res = await next();
+  if (res.status === 200 && (res.headers.get('content-type') ?? '').includes('text/html')) countListView(ctx as never, url, env.DB);
   const cc = res.headers.get('cache-control') ?? '';
   const ct = res.headers.get('content-type') ?? '';
   const isHtml = ct.includes('text/html');

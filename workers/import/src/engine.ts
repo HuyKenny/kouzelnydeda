@@ -304,10 +304,66 @@ export async function nextDueFeed(db: D1Database): Promise<FeedDef | null> {
  *  divided by √(partner size) and everything is sorted by that → Slevomat's thousands do not bury Adrop's hundreds, yet
  *  a bigger partner still gets proportionally more places. Offers without a photo go last of their partner. */
 export async function remix(db: D1Database) {
-  const pos = (part: string) => `ROW_NUMBER() OVER (PARTITION BY ${part} ORDER BY (p.image <> '') DESC, p.pop DESC, p.disc_pct DESC, p.price DESC, p.id) * 1.0 / sqrt(COUNT(*) OVER (PARTITION BY ${part}))`;
+  // The best offers of the category go first, whoever sells them. The key of an offer is half its rank in the category and
+  // half its rank among the offers of the same partner (so every partner's best sits near the top of its share), damped
+  // by how many better offers of the same partner there are: key = k / (1 + 0.1 · n). No photo → key halved.
   await db.batch([
-    db.prepare(`UPDATE products SET mix = 1000000 - CAST(r.pos * 1000 AS INTEGER) FROM (SELECT p.id AS id, ${pos('p.store_id')} AS pos FROM products p WHERE p.active = 1) r WHERE products.id = r.id`),
-    db.prepare(`UPDATE cat_products SET mix = 1000000 - CAST(r.pos * 1000 AS INTEGER) FROM (SELECT x.cat_id AS c, x.created_at AS t, x.product_id AS i, ${pos('x.cat_id, p.store_id')} AS pos
+    db.prepare(`UPDATE products SET mix = CAST(r.k * 1000000 AS INTEGER) FROM (SELECT t.id AS id, t.k0 / (1 + 0.1 * ROW_NUMBER() OVER (PARTITION BY t.st ORDER BY t.k0 DESC)) AS k FROM
+        (SELECT p.id AS id, p.store_id AS st, p.rank_score * (CASE WHEN p.image <> '' THEN 1.0 ELSE 0.5 END) AS k0 FROM products p WHERE p.active = 1) t) r WHERE products.id = r.id`),
+    db.prepare(`UPDATE cat_products SET mix = CAST(r.k * 1000000 AS INTEGER) FROM (SELECT t.c AS c, t.t AS t, t.i AS i, t.k0 / (1 + 0.1 * ROW_NUMBER() OVER (PARTITION BY t.c, t.st ORDER BY t.k0 DESC)) AS k FROM
+        (SELECT x.cat_id AS c, x.created_at AS t, x.product_id AS i, p.store_id AS st,
+           (0.5 * x.rank + 0.5 * PERCENT_RANK() OVER (PARTITION BY x.cat_id, p.store_id ORDER BY x.rank)) * (CASE WHEN p.image <> '' THEN 1.0 ELSE 0.5 END) AS k0
+         FROM cat_products x JOIN products p ON p.id = x.product_id) t) r
+        WHERE cat_products.cat_id = r.c AND cat_products.created_at = r.t AND cat_products.product_id = r.i`),
+  ]);
+}
+
+/** Impressions of products: every counted view of a listing page (list_views, middleware) shows the 24 cards that were
+ *  on that page at that moment — the order is still yesterday's here, which is what the visitors saw. Each day is
+ *  processed once (site_cache 'rank:impr_day'). */
+async function addImpressions(db: D1Database) {
+  const last = (await db.prepare("SELECT value FROM site_cache WHERE key = 'rank:impr_day'").first<{ value: string }>())?.value ?? '0000-00-00';
+  const today = new Date().toISOString().slice(0, 10);
+  const views = (await db.prepare('SELECT day, slug, page, n FROM list_views WHERE day > ? AND day < ?').bind(last, today).all<{ day: string; slug: string; page: number; n: number }>()).results;
+  const stmts = views.map((v) => db.prepare(`INSERT OR REPLACE INTO impr_daily (day, cat_id, product_id, pos, n)
+      SELECT ?, t.cat_id, t.product_id, ? + t.rn, ? FROM (SELECT x.cat_id, x.product_id, ROW_NUMBER() OVER (ORDER BY x.mix DESC, x.pop DESC, x.created_at DESC) AS rn
+        FROM cat_products x JOIN categories c ON c.id = x.cat_id WHERE c.slug = ? ORDER BY x.mix DESC, x.pop DESC, x.created_at DESC LIMIT 24 OFFSET ?) t`)
+    .bind(v.day, (v.page - 1) * 24, v.n, v.slug, (v.page - 1) * 24));
+  for (let i = 0; i < stmts.length; i += 50) await db.batch(stmts.slice(i, i + 50));
+  await db.batch([
+    db.prepare("INSERT INTO site_cache (key, value, updated_at) VALUES ('rank:impr_day', ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").bind(new Date(Date.now() - 86400_000).toISOString().slice(0, 10), new Date().toISOString()),
+    db.prepare("DELETE FROM impr_daily WHERE day < date('now', '-60 days')"),
+    db.prepare("DELETE FROM list_views WHERE day < date('now', '-60 days')"),
+  ]);
+}
+
+/** The "most likely to convert" score. Raw components 0..1 per product, then percentile within each category:
+ *  rank = .35 sales + .30 clicks + .15 searches + .10 quality + .10 novelty/price (all weighted so that missing data is
+ *  neutral, never a penalty). The click part learns: it needs ≥ 30 impressions and is fully trusted at 300. */
+export async function computeRank(db: D1Database) {
+  await addImpressions(db);
+  const since = new Date(Date.now() - 30 * 86400_000).toISOString();
+  await db.batch([
+    db.prepare(`UPDATE products SET
+      r_sales = 0.5 * (CASE WHEN rating > 0 THEN ((rating * reviews + 4.3 * 20) / (reviews + 20)) / 5.0 ELSE 0.5 END)
+              + 0.5 * (CASE WHEN CAST(json_extract(info, '$.cu') AS REAL) > 0 THEN CAST(json_extract(info, '$.cu') AS REAL) / (CAST(json_extract(info, '$.cu') AS REAL) + 300.0) ELSE 0.4 END)
+              + MIN(0.25, conv_30d * 0.05),
+      r_search = search_impr * 1.0 / (search_impr + 50.0),
+      r_qual = 0.4 * (image <> '') + 0.2 * (json_array_length(images) >= 2) + 0.2 * (length(COALESCE(json_extract(info, '$.d'), '')) > 150) + 0.2 * (rating > 0),
+      r_new = MAX(CASE WHEN created_at > datetime('now', '-7 days') THEN 1.0 ELSE 0.0 END, CASE WHEN price BETWEEN 150 AND 6000 THEN 0.7 ELSE 0.4 END)
+      WHERE active = 1`),
+    db.prepare(`UPDATE products SET r_click = 0.5 * (1 - w.w) + w.w * MIN(1.0, ((w.k + 2.0) / (w.e + 100.0)) / 0.08)
+      FROM (SELECT p.id AS id,
+              COALESCE((SELECT SUM(n) FROM impr_daily d WHERE d.product_id = p.id AND d.day > date('now', '-30 days')), 0) AS imp,
+              COALESCE((SELECT SUM(n * 1.0 / (1 + pos / 6.0)) FROM impr_daily d WHERE d.product_id = p.id AND d.day > date('now', '-30 days')), 0) AS e,
+              (SELECT COUNT(*) FROM clicks c WHERE c.product_id = p.id AND c.clicked_at > ?) AS k,
+              MIN(1.0, MAX(0.0, ((SELECT COALESCE(SUM(n), 0) FROM impr_daily d WHERE d.product_id = p.id AND d.day > date('now', '-30 days')) - 30) / 270.0)) AS w
+            FROM products p WHERE p.active = 1) w WHERE products.id = w.id`).bind(since),
+    db.prepare('UPDATE products SET rank_score = 0.35 * r_sales + 0.30 * r_click + 0.15 * r_search + 0.10 * r_qual + 0.10 * r_new WHERE active = 1'),
+    db.prepare(`UPDATE cat_products SET rank = r.v FROM (SELECT x.cat_id AS c, x.created_at AS t, x.product_id AS i,
+        0.35 * PERCENT_RANK() OVER (PARTITION BY x.cat_id ORDER BY p.r_sales) + 0.30 * PERCENT_RANK() OVER (PARTITION BY x.cat_id ORDER BY p.r_click)
+        + 0.15 * PERCENT_RANK() OVER (PARTITION BY x.cat_id ORDER BY p.r_search) + 0.10 * PERCENT_RANK() OVER (PARTITION BY x.cat_id ORDER BY p.r_qual)
+        + 0.10 * PERCENT_RANK() OVER (PARTITION BY x.cat_id ORDER BY p.r_new) AS v
         FROM cat_products x JOIN products p ON p.id = x.product_id) r WHERE cat_products.cat_id = r.c AND cat_products.created_at = r.t AND cat_products.product_id = r.i`),
   ]);
 }
@@ -328,6 +384,7 @@ export async function finalizeDay(env: Env, force = false): Promise<Record<strin
     db.prepare("DELETE FROM clicks WHERE clicked_at < datetime('now', '-24 months')"),
   ]);
   await recount(db);
+  await computeRank(db);
   await remix(db);
   // city × category counts (canonical + chips of /<kat>/lokalita/<mesto>/, KD_COMBO_MIN = 40)
   const combos = (await db.prepare('SELECT x.cat_id AS c, l.slug AS s, COUNT(*) AS n FROM cat_products x JOIN lokality l ON l.id = x.lok_id WHERE x.lok_id > 0 GROUP BY x.cat_id, x.lok_id')
