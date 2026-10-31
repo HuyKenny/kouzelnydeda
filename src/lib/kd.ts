@@ -87,15 +87,86 @@ export const SERVICE_CATS: Array<[string, string]> = [
   ['kavarny', 'Kavárny'], ['pece-o-plet-a-oblicej', 'Péče o pleť'],
 ];
 
-/** kd_theme_target(): an unknown offer-like slug → the closest section (the order matters, first match wins). */
-const THEME: Array<[RegExp, string]> = [
-  [/tantra|masaz|spa|kosmetik|plet|pedikur|manikur|kadernic|barber|strih|vlas|liposukc|hifu|facelift|make-up|ras-|oboci|maderoterap|lymfo|hubnut|ems-|lpg|permanent|head-spa|ritual|zabal|relax/, '/krasa-zdravi-a-relaxace/'],
-  [/adrenalin|jizd|spolujizd|rizeni|mustang|bentley|ford|formule|simulator|okruh|seskok|bungee|rafting|canyoning|motork|ctyrkolk|tank|strelb|paintball|laser-game|airsoft|rybolov|rybar/, '/adrenalinove-zazitky/'],
-  [/pobyt|hotel|chat|chalup|penzion|apartm|glamping|tiny-house|treehouse|iglu|igloo|resort|dovolen|nocleh|ubytovan|vila|rezort|sardinie|chateau|zbiroh|mikulov/, '/vikendove-pobyty/'],
-  [/sushi|vecere|obed|restaur|degustac|vino|pivo|pivn|pivovar|kavarn|brunch|menu|hodovani|all-you-can-eat|steak|burger|kebab|churrasco|-wok|ramen|bistro|zmrzlin|wafle|toast|frgal|koleno|zebra|prkno|jidlo|napoj/, '/restaurace-a-bary/'],
-  [/wellness|sauna|virivk|infrasaun|romantika-pro-dva/, '/wellness-dovolena/'],
+/** An unknown path (old WooCommerce category / location tag / offer slug that no longer exists) → the closest live category.
+ *  Order matters, first match wins; the text is the lower-case ASCII path with "-" between words. Nothing here ends in a 404:
+ *  the fallback is the section of the stay / experience. */
+const D = (s: string) => `/${s}/`;
+const GEO: Array<[RegExp, string]> = [
+  // Czech regions and mountains first (names overlap with the foreign towns below)
+  [/\b(jizni-morava|brno|znojmo|lednice|breclav|hnanice|velke-pavlovice|mikulov|hodonin)\b/, 'dovolena-jihomoravsky-kraj'],
+  [/\b(jizni-cechy|cesky-krumlov|tabor|pisek|hartmanice|lipno)\b/, 'dovolena-jihocesky-kraj'],
+  [/\b(severni-morava|ostrava|novy-jicin|slavicin|rapotin|frydlant|jesenik|jeseniky|karvina)\b/, 'dovolena-moravskoslezsky-kraj'],
+  [/\b(stredni-cechy|benesov|kurim|caslav|kadan|decin|lysice|oponice|senohraby|adrspach|kvasetice)\b/, 'dovolena-stredocesky-kraj'],
+  [/\b(zapadni-cechy|plzen|sumava|bavorsky-les|krusne-hory|nove-hamry)\b/, 'dovolena-plzensky-kraj'],
+  [/\b(vysocina|jihlava|zdar|velichovky)\b/, 'dovolena-vysocina'],
+  [/\b(praha|prague)\b/, 'dovolena-praha'],
+  [/\b(liberec|jizerske-hory|harrachov|benecko|jablonec|doksy|cesky-raj|horni-libchavy|zlate-hory|jicin|krkonose)\b/, 'dovolena-liberecky-kraj'],
+  [/\b(karlovy-vary|marianske-lazne|luhacovice)\b/, 'dovolena-karlovarsky-kraj'],
+  [/\b(orlicke-hory|pardubice|letohrad|chrastovice)\b/, 'dovolena-pardubicky-kraj'],
+  [/\b(hradec-kralove|bile-karpaty|frydlant)\b/, 'dovolena-hradecky-kraj'],
+  [/\b(zlin|zlin-a-okoli|beskydy|pozlovice)\b/, 'dovolena-zlinsky-kraj'],
+  [/\b(olomouc|jeseniky|jesenik)\b/, 'dovolena-olomoucky-kraj'],
+  [/\b(chomutov|usti|teplice|jirkov|most)\b/, 'dovolena-ustecky-kraj'],
+  [/\b(cesko|ceska-republika|cela-cr|domaci|dovolena-2025|dovolena-2026|leto-2025|jizni-cechy)\b/, 'dovolena-v-cesku'],
+  // abroad: a country category when we have one, else the sea / abroad category
+  [/\b(madarsko|budapest|balaton\w*|heviz\w*|sarvar|bukfurdo|harkany|mezokovesd|miskolctapolca|zalakaros|cserkeszolo|demjen|gyor|tiszaujvaros|szentgotthard|komarom|sopron|bogacs|ostrihom|eger|hajduszoboszlo|balmazujvaros|zalacsany|felcsut|gotthard)\b/, 'dovolena-madarsko'],
+  [/\b(polsko|polske|kudowa\w*|kliczkow|krakov|gdansk|mezizdroje|vratislav|jeleni-hora|lehnice|bila|tatry|zakopane|baltske-more)\b/, 'dovolena-polsko'],
+  [/\b(slovensko|zuberec|vrbov|liptov|orava|velka-fatra|besenova|bojnice|slovensky-raj|bratislava|nizke-tatry|vysoke-tatry|nesvady|velky-meder|nizke-taury|vysoke-taury|brezova|krakow)\b/, 'dovolena-slovensko'],
+  [/\b(italie|grado|riccione|ischia|falcade|civetta\w*|val-di-fiemme|veneto|orbetello|rim|calella|lovran)\b/, 'dovolena-italie'],
+  [/\b(chorvatsko|novigrad|vodice|istrie|dalmacie)\b/, 'dovolena-chorvatsko'],
+  [/\b(rakousko|semmering|goldegg|grossarl|pertisau|korutany|salcbursko|muhlbach|linec|tyrolsko|alpy)\b/, 'dovolena-rakousko'],
+  [/\b(slovinsko|lendava|kamnik|kolobreh)\b/, 'dovolena-slovinsko'],
+  [/\b(nemecko|bad-griesbach|bad-muskau|langenfeld|papenburg|wedel|hamburk|mnichov|rujana|klink|dortmund|nahe)\b/, 'dovolena-nemecko'],
+  [/\b(bulharsko|varna|carevo|primorsko|recko|kreta|kos|zakynthos|kefalonia|acharavi|paralia|hvd|hotel-[a-z]+|egypt|marsa-alam|tunisko\w*|djerba|turecko|spanelsko|katalansko|portugalsko|cerna-hora|albanie|francie|belgie|dansko|nizozemi|norsko|svycarsko|island|agia-napa|kypr|armenie|gruzie|indie|jordansko|oman|maroko|thajsko|vietnam|filipiny|indonesie|japonsko|kuba|mexiko|brazilie|peru|kostarika|tanzanie|uzbekistan|sri-lanka|spojene-staty|rumunsko|la-palma|male|sol-guadalupe|condesa|villa-ilex|koupani-v-mori|plavky-u-more)\b/, 'dovolena-u-more'],
 ];
-export function themeTarget(slug: string): string {
-  for (const [re, to] of THEME) if (re.test(slug)) return to;
-  return '/zazitky/';
+const THEME: Array<[RegExp, string]> = [
+  // services (old WooCommerce categories and long offer slugs)
+  [/let-stihack|stihack|vetron|paraglid|balon|vyhlidkov\w* let|\blety?\b/, 'vyhlidkove-lety'],
+  [/mushing|ctyrkolk|buggy|hummer|autoskola|supersport|ferrari|lambo|mustang|okruh|rolb|jizd|rizeni|spolujizd|pronajem-vozu|formule|simulator/, 'zazitkove-jizdy'],
+  [/bungee|lezeni|jump-aren|jump|via-ferrat|lanov|skok/, 'lanova-centra'],
+  [/paintball|laser-game|\blaser\b/, 'paintball-a-laser-game'],
+  [/strelb|airsoft|zbran/, 'strelba'],
+  [/venkovni-unikov|venkovni-hry|chytre-venkovni|city-quest/, 'venkovni-hry'],
+  [/unikov/, 'unikove-hry'],
+  [/potapeni|jachting|vodni|kajak|rafting|raft|plavb|surf/, 'vodni-zazitky'],
+  [/lyzov|zimni|rolba|sjezd|snowboard|bruslen/, 'zimni-sporty'],
+  [/badminton|sport|fitness|cviceni|joga/, 'sport-a-pohyb'],
+  [/cirkus|prohlidka|vstric-historii|exhibition|muzeum|hrad|zamek|harry-potter/, 'kultura-a-vylety'],
+  [/pivni-lazne|pivni-pobyt|pivni-hotel/, 'wellness-pobyty'],
+  [/degustac|vino|alkohol|pivni|pivo|tvrdy|napoje|nealkohol|cajova|whisk|rum\b|gin\b/, 'degustace-vina-a-piva'],
+  [/sushi/, 'sushi'],
+  [/pizza|burger|spaget|testovin|empanad|restaur|voucher-do-restauraci|sety|gurman|jidlo|menu|obed|vecere/, 'vouchery-do-restauraci'],
+  [/lymfat|maderoterap|celulit|anticelul/, 'lymfaticka-masaz'],
+  [/thajsk|thajske/, 'thajske-masaze'],
+  [/tantra/, 'tantra-masaze'],
+  [/masaz|uvolnujici|relax-pro-telo|doprejte-si-relax|ulevte-si-od-bolesti|permanentka-na-tri/, 'masaze'],
+  [/dentalni|zub|beleni|hygien/, 'pece-o-zdravi'],
+  [/kadernic|vlas|head-spa|keratin|shinique/, 'kadernictvi-a-barber'],
+  [/kosmet|plet|peeling|hifu|thermage|omlazen|liceni|make-up|aknozn|karbonov|depilac/, 'kosmetika'],
+  [/krasa|relax\b|wellness-a-krasa|bryle/, 'wellness-a-krasa'],
+  [/wellness|sauna|virivk|lazne|spa\b/, 'wellness-pobyty'],
+  [/foceni|fotokn|atelier/, 'foceni'],
+  [/kovarsk|tanecni|kurz/, 'kurzy'],
+  [/valentyn/, 'valentynske-pobyty'],
+  [/romantik|pro-dva|rozlucka/, 'pobyty-pro-dva'],
+  [/s-detmi|detsky|prazdniny|rodin/, 'rodinne-pobyty'],
+  [/bez-deti/, 'pobyty-bez-deti'],
+  [/prodlouzeny-vikend|vikend|long-weekend|svatky/, 'vikendove-pobyty'],
+  [/na-horach|hory|hotel-na-horach/, 'pobyty-na-horach'],
+  [/chata|chalup|kemp/, 'chaty-a-chalupy'],
+  [/penzion/, 'penziony'],
+  [/luxusni|chateau|resort/, 'luxusni-hotely'],
+  [/netradicni|glamping|tiny|iglu/, 'netradicni-ubytovani'],
+  [/pobyt|hotel|ubytovan|typ-ubytovani|dovolen|nocleh|apartm|vyborne|skvele-85|travelking|personal/, 'pobyty'],
+  [/black-friday|darkov|bedny|truhly|poukaz|voucher|zbozi|potraviny|drogerie|doplnk|bytove|domacnost|hracky|plavky|saty|satky|damske|goji|yuzee|cascara|vitamin|fotoknihy|detsky-pokoj|army|letenky|pro-koho|pro-jednoho|auto-moto/, 'zazitkove-darky'],
+];
+function ascii(s: string): string { return s.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); }
+/** the closest live category for an unknown path (old tags, categories, dead offers); services first, then places */
+export function fallbackTarget(path: string): string {
+  const t = ascii(path.replace(/\/page\/\d+\/?$/, ''));
+  if (/^hotel-[a-z0-9-]{2,18}$/.test(t)) return D('dovolena-u-more'); // old Slevomat hotels abroad (Greece, Bulgaria …)
+  for (const [re, to] of THEME) if (re.test(t)) return D(to);
+  for (const [re, to] of GEO) if (re.test(t)) return D(to);
+  return D('zazitky');
 }
+export function themeTarget(slug: string): string { return fallbackTarget(slug); }
