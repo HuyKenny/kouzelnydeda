@@ -71,7 +71,8 @@ for r in bad:
         rest = [u for u in alts if u != live]
         sql.append(f"UPDATE products SET image={q(live)}, images={q(json.dumps(rest))} WHERE id={r['id']};")
     else:
-        sql.append(f"UPDATE products SET active=0 WHERE id={r['id']};")
+        sql.append(f"UPDATE products SET active=0, expired_at=datetime('now') WHERE id={r['id']};")
+        sql.append(f"DELETE FROM cat_products WHERE product_id={r['id']};")
     print(r['id'], 'replace' if live else 'DEACTIVATE', r['image'][:90])
 if sql and not dry:
     p = f'/tmp/images-audit-{env}.sql'

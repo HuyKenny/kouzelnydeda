@@ -441,6 +441,8 @@ function skvelecesko(n: XmlNode): Item | null {
 export function parseItem(src: Source, n: XmlNode): Item | null {
   const it = src === 'slevomat' ? slevomat(n) : src === 'adrop' ? adrop(n) : src === 'skvelecesko' ? skvelecesko(n) : src === 'kormidlo' ? kormidlo(n) : src === 'radynacestu' ? radynacestu(n) : zazitky(n);
   if (!it || !it.name || !it.image) return null; // no photo = nothing to show (dead tours, empty entries)
+  // generic gift vouchers ("Dárkový poukaz na zážitek", "Univerzální poukaz…") are not an offer — only services are listed
+  if ((src === 'adrop' || src === 'zazitky') && /^(univerz\w*|dárkov\w* (poukaz|voucher|certifik\w*))/i.test(it.name.trim())) return null;
   if (!it.excerpt) it.excerpt = (it.info.d ?? '').split('\n')[0]!.slice(0, 300);
   return it;
 }
