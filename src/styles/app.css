@@ -460,10 +460,10 @@ button, input, select { font: inherit; color: inherit; }
 
 /* offer card, Slevomat-like: price and saving sit on the photo, below it title, rating, partner · place */
 .k__p { position: absolute; left: 10px; bottom: 10px; right: 10px; z-index: 2; margin: 0; display: flex; align-items: stretch; gap: 0; flex-wrap: wrap; }
-.k__cena { display: inline-flex; align-items: baseline; gap: 7px; background: #0c8a2b; color: #fff; font-family: var(--head); font-weight: 800; font-size: 1.15rem; line-height: 1; padding: 9px 12px; border-radius: 10px; white-space: nowrap; }
+.k__cena { display: inline-flex; align-items: baseline; gap: 7px; background: var(--coral); color: #fff; font-family: var(--head); font-weight: 800; font-size: 1.15rem; line-height: 1; padding: 9px 12px; border-radius: 10px; white-space: nowrap; }
 .k__cena small { font-size: .72rem; font-weight: 700; opacity: .9; }
 .k__cena del { font-size: .82rem; font-weight: 600; opacity: .85; }
-.k__sleva { display: inline-flex; align-items: center; background: #ffc20e; color: #2a2100; font-family: var(--head); font-weight: 800; font-size: .95rem; padding: 0 10px; border-radius: 0 10px 10px 0; margin-left: -8px; padding-left: 16px; }
+.k__sleva { display: inline-flex; align-items: center; background: var(--gold); color: var(--plum); font-family: var(--head); font-weight: 800; font-size: .95rem; padding: 0 10px; border-radius: 0 10px 10px 0; margin-left: -8px; padding-left: 16px; }
 .k__p .k__cena:has(+ .k__sleva) { border-radius: 10px; position: relative; z-index: 1; }
 .k__badge { top: 10px; bottom: auto; }
 .k__r { display: flex; align-items: center; gap: 4px; margin: 0; font-size: .86rem; color: var(--plum-2); }

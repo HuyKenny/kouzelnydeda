@@ -187,7 +187,7 @@ function adrop(n: XmlNode): Item | null {
     price,
     priceOld: old > price ? old : 0,
     lok: citySlug(city),
-    cats: classify(`${name} ${ct} ${pv('Specifikace')} ${pv('Typ zážitku')}`),
+    cats: classify(`${name} ${ct} ${pv('Specifikace')} ${pv('Typ zážitku')}`, undefined, name),
     excerpt: '',
     rating: 0,
     reviews: 0,
@@ -254,7 +254,7 @@ function zazitky(n: XmlNode): Item | null {
     price,
     priceOld: 0,
     lok: '',
-    cats: classify(`${name} ${desc.slice(0, 240)} ${tags.join(' ')}`, stay),
+    cats: classify(`${name} ${desc.slice(0, 240)} ${tags.join(' ')}`, stay, name),
     excerpt: '',
     rating: 0,
     reviews: 0,
@@ -322,8 +322,8 @@ function kormidlo(n: XmlNode): Item | null {
   // info.ve stays empty: a tour has many terms
   const where = place && !title.toLowerCase().includes(place.toLowerCase()) ? `${title}, ${place}` : title;
   const cats = kind === '200' ? ['@poznavaci-zajezdy', ...holidayCats(country && country !== 'CZE' ? country : undefined), ...(/advent|vanoc|vánoč/i.test(title) ? ['@vanocni-pobyty'] : /silvestr|nov(y|ý) rok|novoro/i.test(title) ? ['@silvestrovske-pobyty'] : [])]
-    : country && country !== 'CZE' ? ['@dovolena-u-more', ...holidayCats(country), ...classify(`${title} ${info.d ?? ''}`.slice(0, 600), true).filter((c) => c !== '@pobyty').slice(0, 1)]
-    : [...holidayCats(country || 'CZE', area), ...classify(`${title} ${(info.d ?? '').slice(0, 300)}`, true)];
+    : country && country !== 'CZE' ? ['@dovolena-u-more', ...holidayCats(country), ...classify(`${title} ${info.d ?? ''}`.slice(0, 600), true, title).filter((c) => c !== '@pobyty').slice(0, 1)]
+    : [...holidayCats(country || 'CZE', area), ...classify(`${title} ${(info.d ?? '').slice(0, 300)}`, true, title)];
   return {
     ext: id, name: where, target: target(best), image: imgs[0] ?? '', images: imgs.slice(1, 7), price: best.price, priceOld: 0,
     lok: country === 'CZE' ? citySlug(place) : '', city: country === 'CZE' ? place : '', cats, excerpt: '', rating: 0, reviews: 0, info,
@@ -429,7 +429,7 @@ function skvelecesko(n: XmlNode): Item | null {
     priceOld: 0,
     lok: citySlug(city),
     city,
-    cats: classify(`${title} ${type}`, false),
+    cats: classify(`${title} ${type}`, false, title),
     excerpt: '',
     rating: 0,
     reviews: 0,

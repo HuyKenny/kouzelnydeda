@@ -4,7 +4,8 @@
 const norm = (s: string) => s.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 const STAY: Array<[RegExp, string]> = [
-  [/glamping|tiny ?house|treehouse|hausbot/, 'netradicni-ubytovani'],
+  [/glamping|jurt[aouy]|kupol|maringotk|tiny ?house|treehouse|posed|bublin|stan(ovy|u)\b/, 'glamping'],
+  [/hausbot|vodni domek|domek na vode|netradicn/, 'netradicni-ubytovani'],
   [/lazn|termal|spa pobyt|rehabilit/, 'lazenske-pobyty'],
   [/wellness|sauna|virivk|privatni zon|masaz/, 'wellness-pobyty'],
   [/romantick|pro dva|pro pary|pro paru|svatebni noc/, 'pobyty-pro-dva'],
@@ -19,6 +20,7 @@ const STAY: Array<[RegExp, string]> = [
 ];
 
 const EXP: Array<[RegExp, string]> = [
+  [/\bkino\b|kina\b|divadl|predstaven|koncert|cirkus|mjuzikl|opera\b|vstupenk\w* na/, 'kultura-a-vylety'],
   [/\bbalon/, 'lety-balonem'],
   [/vyhlidkov\w* let|vrtulnik|paraglid|tandem|seskok|vetron|letoun|letadl|\blet\b|\blety\b|dron|vzdusn/, 'vyhlidkove-lety'],
   [/simulator|virtualni realit|\bvr\b/, 'virtualni-realita'],
@@ -60,11 +62,20 @@ const EXP: Array<[RegExp, string]> = [
 ];
 
 /** True when the offer is an overnight stay (variants "2 noci", "pobyt", accommodation words). */
-export const isStay = (t: string) => /(pobyt|ubytovani|hotel\b|hotelu|penzion|apartm|glamping|\d+ noc|noci\b|nocleh)/.test(norm(t));
+export const isStay = (t: string) => /(pobyt|ubytovani|hotel\b|hotelu|penzion|apartm|glamping|tiny ?house|treehouse|jurt[aouy]|maringotk|kupol[ea]? s|\d+ noc|noci\b|nocleh)/.test(norm(t));
 
-export function classify(text: string, stay = isStay(text)): string[] {
-  const t = norm(text);
-  const out: string[] = [];
-  for (const [re, slug] of stay ? STAY : EXP) if (re.test(t) && !out.includes(slug)) { out.push(slug); if (out.length >= 2) break; }
-  return out.length ? out.map((s) => '@' + s) : [stay ? '@pobyty' : '@zazitky'];
+/** The name decides (first 140 characters of the text); the description only when the name matches nothing — otherwise
+ *  a "Wellness pobyt" mentioning a massage would land among massages. */
+export function classify(text: string, stay?: boolean, name?: string): string[] {
+  const head = norm((name ?? text).slice(0, 140));
+  const full = norm(text);
+  const st = stay ?? isStay(head);
+  const rules = st ? STAY : EXP;
+  const pick = (t: string) => {
+    const out: string[] = [];
+    for (const [re, slug] of rules) if (re.test(t) && !out.includes(slug)) { out.push(slug); if (out.length >= 2) break; }
+    return out;
+  };
+  const out = pick(head).length ? pick(head) : pick(full);
+  return out.length ? out.map((s) => '@' + s) : [st ? '@pobyty' : '@zazitky'];
 }

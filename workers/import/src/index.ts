@@ -55,7 +55,7 @@ export default {
       for (const r of raw) {
         if (!r.ext || !r.name || !(r.price > 0) || !(f.key === 'amazingplaces' ? /^https:\/\/www\.amazingplaces\.cz\/cs\/kouzelna-mista\/[a-z0-9-]+\?a_box=33bnvjub&a_cam=9$/ : f.key === 'excursia' ? /^https:\/\/tracking\.affiliateport\.eu\/click\?o=1919&a=5453&/ : /^https:\/\/www\.(jdoqocy\.com|anrdoezrs\.net|kqzyfj\.com|tkqlhce\.com|dpbolvw\.net)\//).test(r.target)) continue;
         const { catText, ...it } = r;
-        it.cats = f.key === 'excursia' ? ['@poznavaci-zajezdy'] : f.key === 'amazingplaces' ? [...holidayCats(it.info?.cc), ...classify(catText || it.name, true)] : classify(catText || it.name, false);
+        it.cats = f.key === 'excursia' ? ['@poznavaci-zajezdy'] : f.key === 'amazingplaces' ? [...holidayCats(it.info?.cc), ...classify(catText || it.name, true, it.name)] : classify(catText || it.name, undefined, it.name);
         items.set(it.ext, { ...it, priceOld: 0, rating: 0, reviews: 0, images: it.images ?? [], lok: it.lok ?? '', info: it.info ?? {}, excerpt: it.excerpt ?? '' });
       }
       return json(await runFeed(env, f, { force, items }));
