@@ -120,6 +120,10 @@ const GEO: Array<[RegExp, string]> = [
   [/\b(bulharsko|varna|carevo|primorsko|recko|kreta|kos|zakynthos|kefalonia|acharavi|paralia|hvd|hotel-[a-z]+|egypt|marsa-alam|tunisko\w*|djerba|turecko|spanelsko|katalansko|portugalsko|cerna-hora|albanie|francie|belgie|dansko|nizozemi|norsko|svycarsko|island|agia-napa|kypr|armenie|gruzie|indie|jordansko|oman|maroko|thajsko|vietnam|filipiny|indonesie|japonsko|kuba|mexiko|brazilie|peru|kostarika|tanzanie|uzbekistan|sri-lanka|spojene-staty|rumunsko|la-palma|male|sol-guadalupe|condesa|villa-ilex|koupani-v-mori|plavky-u-more)\b/, 'dovolena-u-more'],
 ];
 const THEME: Array<[RegExp, string]> = [
+  [/ferrari/, 'jizda-ve-ferrari'], [/lamborghini|lambo/, 'jizda-v-lamborghini'], [/porsche/, 'jizda-v-porsche'], [/mustang/, 'jizda-ve-fordu-mustang'], [/dodge|challenger/, 'jizda-v-dodge'], [/tatra|tatrou/, 'jizda-tatrou'],
+  [/seskok|skydiv/, 'tandemovy-seskok'], [/paraglid/, 'paragliding'], [/vzducholod/, 'let-vzducholodi'], [/vetrny-tunel|volny-pad/, 'vetrny-tunel-a-volny-pad'], [/ferrat/, 'via-ferrata-zazitky'], [/jetpack|hoverboard|flyboard/, 'flyboarding-a-jetpack'],
+  [/potap|freediving/, 'potapeni'], [/lukostrel/, 'lukostrelba-kurzy'], [/minigolf/, 'minigolf'], [/kviz|quiz/, 'hospodsky-kviz'], [/privatni-wellness|privatni-spa/, 'privatni-wellness'], [/tanecn|tanec-|salsa|bachata/, 'tanecni-kurzy'], [/koz[aeouy]?-|kozou|alpak/, 'prochazka-s-kozou-a-alpakami'],
+  [/pivni-lazne|pivni-koupel/, 'pivni-lazne'], [/bugin|buggy|ctyrkol|offroad|atv/, 'bugiiny-a-ctyrkolky'],
   // services (old WooCommerce categories and long offer slugs)
   [/let-stihack|stihack|vetron|paraglid|balon|vyhlidkov\w* let|\blety?\b/, 'vyhlidkove-lety'],
   [/mushing|ctyrkolk|buggy|hummer|autoskola|supersport|ferrari|lambo|mustang|okruh|rolb|jizd|rizeni|spolujizd|pronajem-vozu|formule|simulator/, 'zazitkove-jizdy'],

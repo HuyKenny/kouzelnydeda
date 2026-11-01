@@ -61,14 +61,36 @@ const EXP: Array<[RegExp, string]> = [
   [/striptyz|erotick/, 'striptyz'],
 ];
 
-/** Series with their own hub category, added to whatever the source's own tree says (any source: Slevomat's categories are mapped separately). */
-const SERIES: Array<[RegExp, string]> = [
-  [/cirkus|cirkusu/, 'cirkus'],
-  [/head ?spa/, 'head-spa'],
+/** Series with their own hub category, added to whatever the source's own tree says (any source: Slevomat's categories are mapped separately).
+ *  Third field: also applies to stay offers (a hotel that merely mentions a minigolf or an ATV must not land in that series). */
+const SERIES: Array<[RegExp, string, boolean]> = [
+  [/cirkus|cirkusu/, 'cirkus', true],
+  [/head ?spa/, 'head-spa', true],
+  [/ferrari/, 'jizda-ve-ferrari', false],
+  [/lamborghini/, 'jizda-v-lamborghini', false],
+  [/porsche|porshe/, 'jizda-v-porsche', false],
+  [/mustang/, 'jizda-ve-fordu-mustang', false],
+  [/dodge|challenger|hellcat/, 'jizda-v-dodge', false],
+  [/\btatr(a|ou|u) ?\d{3}|\btatrou\b/, 'jizda-tatrou', false],
+  [/bugin|buggy|ctyrkol|\batv\b|offroad|off-road|4x4/, 'bugiiny-a-ctyrkolky', false],
+  [/seskok|skydiv|volneho padu/, 'tandemovy-seskok', false],
+  [/paraglid/, 'paragliding', false],
+  [/vzducholod/, 'let-vzducholodi', false],
+  [/vetrn\w* tunel|windtunnel/, 'vetrny-tunel-a-volny-pad', false],
+  [/ferrat/, 'via-ferrata-zazitky', false],
+  [/jetpack|hoverboard|flyboard/, 'flyboarding-a-jetpack', false],
+  [/potap|freediving|diving/, 'potapeni', false],
+  [/lukostrel/, 'lukostrelba-kurzy', false],
+  [/minigolf/, 'minigolf', false],
+  [/hospodsky kviz|pub ?quiz|\bkviz\b/, 'hospodsky-kviz', false],
+  [/pivni (lazn|koupel|spa|wellness)/, 'pivni-lazne', true],
+  [/privatni (wellness|spa|sauna|virivk)|soukrom\w* (wellness|spa|sauna|virivk)/, 'privatni-wellness', true],
+  [/tanecn|taneni|\btanec\b|\btance\b|salsa|bachata|zumba/, 'tanecni-kurzy', false],
+  [/\bkoz[aeouy]\b|kozami|kozou|alpak|oslik/, 'prochazka-s-kozou-a-alpakami', false],
 ];
 export const seriesCats = (name: string): string[] => {
-  const n = norm(name);
-  return SERIES.filter(([re]) => re.test(n)).map(([, s]) => '@' + s);
+  const n = norm(name), stay = isStay(n);
+  return SERIES.filter(([re, , stayOk]) => re.test(n) && (stayOk || !stay)).map(([, s]) => '@' + s);
 };
 
 /** True when the offer is an overnight stay (variants "2 noci", "pobyt", accommodation words). */

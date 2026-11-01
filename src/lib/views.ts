@@ -455,9 +455,9 @@ export async function homeView(db: D1Database) {
   const season = month >= 11 ? GIFTS.find((g) => g.slug === 'vanocni-darek') : month <= 2 ? GIFTS.find((g) => g.slug === 'darek-na-valentyna') : undefined;
   const seasonItems = season ? (await listGift(db, season.cats.map((s) => t.bySlug.get(s)?.id).filter((x): x is number => !!x), { page: 1, sort: 'pop' })).items.slice(0, 8) : [];
   // the live homepage texts (Rank Math override of page 3093)
-  const title = 'Zážitkové dárky a pobyty – vouchery online | Kouzelný děda';
+  const title = 'Zážitky a zážitkové dárky online | Kouzelný děda';
   const meta: Meta = {
-    title, description: `Darujte zážitek: wellness pobyty, glamping, masáže, jízdy v supercarech i kurzy. ${total.toLocaleString('cs-CZ')} nabídek od ověřených partnerů, voucher hned e-mailem.`,
+    title, description: `Zážitky pro každého: wellness pobyty, glamping, masáže, jízdy v supercarech, lety i kurzy. ${total.toLocaleString('cs-CZ')} nabídek od ověřených partnerů, voucher hned e-mailem.`,
     canonical: BASE + '/', robots: robots(false), ogType: 'website', graph: [{ '@type': 'WebPage', '@id': BASE + '/#webpage', url: BASE + '/', name: title, isPartOf: { '@id': BASE + '/#website' }, inLanguage: 'cs' }], jsonLd: [],
   };
   return { meta, sections, popularCats, top, posts, total, cities, ending, deals, season, seasonItems, gifts: GIFTS.filter((g) => !g.hub), tree: t };

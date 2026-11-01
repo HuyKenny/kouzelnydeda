@@ -292,5 +292,152 @@
   "short": "Head spa",
   "parent": "wellness-a-krasa",
   "icon": ""
+ },
+ {
+  "slug": "jizda-ve-ferrari",
+  "name": "Jízda ve Ferrari – zážitková jízda",
+  "short": "Ferrari",
+  "parent": "zazitkove-jizdy",
+  "icon": "auto"
+ },
+ {
+  "slug": "jizda-v-lamborghini",
+  "name": "Jízda v Lamborghini – zážitková jízda",
+  "short": "Lamborghini",
+  "parent": "zazitkove-jizdy",
+  "icon": "auto"
+ },
+ {
+  "slug": "jizda-v-porsche",
+  "name": "Jízda v Porsche – zážitková jízda",
+  "short": "Porsche",
+  "parent": "zazitkove-jizdy",
+  "icon": "auto"
+ },
+ {
+  "slug": "jizda-ve-fordu-mustang",
+  "name": "Jízda ve Fordu Mustang – zážitková jízda",
+  "short": "Ford Mustang",
+  "parent": "zazitkove-jizdy",
+  "icon": "auto"
+ },
+ {
+  "slug": "jizda-v-dodge",
+  "name": "Jízda v Dodge Challenger a Charger",
+  "short": "Dodge",
+  "parent": "zazitkove-jizdy",
+  "icon": "auto"
+ },
+ {
+  "slug": "jizda-tatrou",
+  "name": "Jízda v Tatře – offroad a legendární náklaďáky",
+  "short": "Tatra",
+  "parent": "zazitkove-jizdy",
+  "icon": "auto"
+ },
+ {
+  "slug": "bugiiny-a-ctyrkolky",
+  "name": "Bugina, čtyřkolka a offroad zážitky",
+  "short": "Bugiiny a čtyřkolky",
+  "parent": "zazitkove-jizdy",
+  "icon": "auto"
+ },
+ {
+  "slug": "tandemovy-seskok",
+  "name": "Tandemový seskok padákem",
+  "short": "Tandemový seskok",
+  "parent": "vyhlidkove-lety",
+  "icon": "let"
+ },
+ {
+  "slug": "paragliding",
+  "name": "Paragliding – tandemový let",
+  "short": "Paragliding",
+  "parent": "vyhlidkove-lety",
+  "icon": "let"
+ },
+ {
+  "slug": "let-vzducholodi",
+  "name": "Let vzducholodí",
+  "short": "Vzducholoď",
+  "parent": "vyhlidkove-lety",
+  "icon": "let"
+ },
+ {
+  "slug": "vetrny-tunel-a-volny-pad",
+  "name": "Větrný tunel a volný pád",
+  "short": "Větrný tunel",
+  "parent": "adrenalinove-zazitky",
+  "icon": "adrenalin"
+ },
+ {
+  "slug": "via-ferrata-zazitky",
+  "name": "Via ferrata – zážitky ve skalách",
+  "short": "Via ferrata",
+  "parent": "adrenalinove-zazitky",
+  "icon": "adrenalin"
+ },
+ {
+  "slug": "flyboarding-a-jetpack",
+  "name": "Flyboarding, jetpack a hoverboard",
+  "short": "Jetpack a flyboard",
+  "parent": "adrenalinove-zazitky",
+  "icon": "adrenalin"
+ },
+ {
+  "slug": "potapeni",
+  "name": "Potápění a freediving na zkoušku",
+  "short": "Potápění",
+  "parent": "vodni-zazitky",
+  "icon": "more"
+ },
+ {
+  "slug": "lukostrelba-kurzy",
+  "name": "Lukostřelba – kurzy a zážitky",
+  "short": "Lukostřelba",
+  "parent": "strelba",
+  "icon": "sport"
+ },
+ {
+  "slug": "minigolf",
+  "name": "Minigolf a adventure golf",
+  "short": "Minigolf",
+  "parent": "bowling-a-zabava",
+  "icon": "sport"
+ },
+ {
+  "slug": "hospodsky-kviz",
+  "name": "Hospodský kvíz a kvíz na doma",
+  "short": "Hospodský kvíz",
+  "parent": "zazitky",
+  "icon": "parta"
+ },
+ {
+  "slug": "pivni-lazne",
+  "name": "Pivní lázně – koupel v pivu",
+  "short": "Pivní lázně",
+  "parent": "wellness-a-krasa",
+  "icon": ""
+ },
+ {
+  "slug": "privatni-wellness",
+  "name": "Privátní wellness a spa pro dva",
+  "short": "Privátní wellness",
+  "parent": "wellness-a-krasa",
+  "icon": ""
+ },
+ {
+  "slug": "tanecni-kurzy",
+  "name": "Taneční kurzy a lekce tance",
+  "short": "Taneční kurzy",
+  "parent": "kurzy",
+  "icon": "sport"
+ },
+ {
+  "slug": "prochazka-s-kozou-a-alpakami",
+  "name": "Procházka s kozou, alpakou a zvířátky na farmě",
+  "short": "Kozy a alpaky",
+  "parent": "zoo-a-zviratka",
+  "icon": ""
  }
 ]
