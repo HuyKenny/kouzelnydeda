@@ -5,7 +5,7 @@ import Ik from './Ik.astro';
 import { tree } from '../lib/db';
 import { decode } from '../lib/format';
 import { getEnv } from '../lib/server/env';
-import { GIFTS } from '../lib/views';
+import { TOP_GIFTS } from '../lib/views';
 
 const t = await tree(getEnv().DB);
 const path = Astro.url.pathname;
@@ -15,7 +15,7 @@ const sections = (t.kids.get(0) ?? []).filter((c) => c.count_total > 0).sort((a,
 	for (const k of kids) (groups.get(k.grp) ?? groups.set(k.grp, []).get(k.grp)!).push(k);
 	return { slug: c.slug, name: c.short || decode(c.name), icon: c.icon, count: c.count_total, groups: [...groups.entries()].map(([g, ks]) => ({ g, ks: ks.slice(0, 12).map((k) => ({ slug: k.slug, name: decode(k.name), icon: k.icon })) })) };
 });
-const gifts = GIFTS.filter((g) => !g.hub);
+const gifts = TOP_GIFTS;
 ---
 <a class="skip" href="#obsah">Přeskočit na obsah</a>
 <div class="usp"><ul>

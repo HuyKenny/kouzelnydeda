@@ -20,6 +20,9 @@ import darky from '../data/darky.json';
 
 export interface Gift { slug: string; name: string; h1: string; icon: string; il?: string; cats: string[]; max?: number; title: string; desc: string; intro: string; hub?: boolean; season?: string; body?: string; faq?: Array<{ q: string; a: string }> }
 export const GIFTS = darky.items as Gift[];
+/** Only these gift landings are linked from the home page, menu and landing sidebars; the rest stays reachable through categories and the sitemap. */
+const TOP_GIFT_SLUGS = ['darek-pro-muze', 'darek-pro-zenu', 'darek-pro-pary', 'darek-pro-deti', 'darek-k-narozeninam', 'vanocni-darek', 'darek-pro-maminku', 'darek-pro-tatu', 'darek-pro-manzela', 'darek-pro-kamaradku', 'darek-pro-pritelkyni', 'darkovy-poukaz'];
+export const TOP_GIFTS = TOP_GIFT_SLUGS.map((s) => GIFTS.find((g) => g.slug === s)!).filter(Boolean);
 
 export interface Meta {
   title: string; description: string; canonical?: string | undefined; prev?: string | undefined; next?: string | undefined; robots: string[];
@@ -274,9 +277,9 @@ export async function giftView(db: D1Database, idx: number, page: number, sp: UR
     },
     crumbs, h1: g.h1, h2: `${total.toLocaleString('cs-CZ')} tipů na dárek`, intro: '', introTitle: '', descriptionHtml: page === 1 ? `<p>${g.intro}</p>` : '', bodyHtml: page === 1 && !filtered ? g.body ?? '' : '',
     items, total, page, pages, base, qs: toQuery(f), f, filtered, chipsTitle: 'Další tipy na dárek',
-    chips: GIFTS.filter((x) => !x.hub).map((x) => ({ name: x.name, url: `/${x.slug}/`, active: x.slug === g.slug, icon: x.icon })),
+    chips: [...TOP_GIFTS, ...(TOP_GIFTS.includes(g) || g.hub ? [] : [g])].map((x) => ({ name: x.name, url: `/${x.slug}/`, active: x.slug === g.slug, icon: x.icon })),
     related: [], subcats: [], faq, trust: '', tree: t, pageType: 'gift', icon: g.icon, section: 'darky', gifts: [], ...(g.il ? { ill: g.il } : {}),
-    side: { title: 'Tipy na dárek', url: `/${hub.slug}/`, icon: 'darek', groups: [{ g: '', items: GIFTS.filter((x) => !x.hub).map((x) => ({ name: x.name, url: `/${x.slug}/`, icon: x.icon, active: x.slug === g.slug })) }], cities: [] },
+    side: { title: 'Tipy na dárek', url: `/${hub.slug}/`, icon: 'darek', groups: [{ g: '', items: [...TOP_GIFTS, ...(TOP_GIFTS.includes(g) || g.hub ? [] : [g])].map((x) => ({ name: x.name, url: `/${x.slug}/`, icon: x.icon, active: x.slug === g.slug })) }], cities: [] },
   };
 }
 
@@ -460,7 +463,7 @@ export async function homeView(db: D1Database) {
     title, description: `Zážitky pro každého: wellness pobyty, glamping, masáže, jízdy v supercarech, lety i kurzy. ${total.toLocaleString('cs-CZ')} nabídek od ověřených partnerů, voucher hned e-mailem.`,
     canonical: BASE + '/', robots: robots(false), ogType: 'website', graph: [{ '@type': 'WebPage', '@id': BASE + '/#webpage', url: BASE + '/', name: title, isPartOf: { '@id': BASE + '/#website' }, inLanguage: 'cs' }], jsonLd: [],
   };
-  return { meta, sections, popularCats, top, posts, total, cities, ending, deals, season, seasonItems, gifts: GIFTS.filter((g) => !g.hub), tree: t };
+  return { meta, sections, popularCats, top, posts, total, cities, ending, deals, season, seasonItems, gifts: TOP_GIFTS, tree: t };
 }
 
 export async function searchView(db: D1Database, q: string, page: number) {
