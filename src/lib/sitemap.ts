@@ -1,7 +1,7 @@
 // Sitemaps with the Rank Math file names Google already knows (sitemap_index.xml, post-, page-, category-,
 // product-sitemapN, product_cat-sitemapN, store-, pa_lokalita-sitemap.xml; 200 URLs per file). Materialised into
 // site_cache by rebuildSitemaps() (import Worker, daily); the routes only read. Imported by both Workers.
-import { BASE, COMBO_MIN, isoPrague } from './site';
+import { BASE, comboMin, isoPrague } from './site';
 import { CITY } from './cities';
 
 const PER_FILE = 200;
@@ -48,7 +48,7 @@ export async function collect(db: D1Database): Promise<Record<string, U[]>> {
     for (const [cid, cities] of Object.entries(cm)) {
       const c = bySlug.get(Number(cid));
       if (!c || c.noindex || c.canon_id) continue;
-      for (const [city, n] of Object.entries(cities)) if (n >= COMBO_MIN && city !== 'cr' && CITY[city]) comboUrls.push({ loc: `${BASE}/${c.slug}/lokalita/${city}/`, mod: '' });
+      for (const [city, n] of Object.entries(cities)) if (n >= comboMin(city) && city !== 'cr' && CITY[city]) comboUrls.push({ loc: `${BASE}/${c.slug}/lokalita/${city}/`, mod: '' });
     }
   } catch { /* no combos yet */ }
   const gifts = await all<{ slug: string; m: string | null }>("SELECT slug, '' AS m FROM slugs WHERE kind = 'gift'").catch(() => []);

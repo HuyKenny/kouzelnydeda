@@ -14,6 +14,20 @@ export const CITY: Record<string, [string, string]> = {
   zlin: ['Zlín', 've Zlíně'],
   'karlovy-vary': ['Karlovy Vary', 'v Karlových Varech'],
   jihlava: ['Jihlava', 'v Jihlavě'],
+  london: ['Londýn', 'v Londýně'],
+  manchester: ['Manchester', 'v Manchesteru'],
+  roma: ['Řím', 've Římě'],
+  madrid: ['Madrid', 'v Madridu'],
+  barcelona: ['Barcelona', 'v Barceloně'],
+  milano: ['Milán', 'v Miláně'],
+  liverpool: ['Liverpool', 'v Liverpoolu'],
+  napoli: ['Neapol', 'v Neapoli'],
+  turin: ['Turín', 'v Turíně'],
+  most: ['Most', 'v Mostě'],
+  decin: ['Děčín', 'v Děčíně'],
+  opava: ['Opava', 'v Opavě'],
+  'cesky-krumlov': ['Český Krumlov', 'v Českém Krumlově'],
+  pribram: ['Příbram', 'v Příbrami'],
 };
 
 /** Unknown slug: words capitalised, "v …" (the theme's fallback). */

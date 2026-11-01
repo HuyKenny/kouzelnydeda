@@ -11,6 +11,10 @@ export const PER_PAGE = 24;
 export const POSTS_PER_PAGE = 12;
 /** kd_combo: a category × city listing with at least this many offers is its own landing page (canonical to itself). */
 export const COMBO_MIN = 40;
+/** Smaller towns and football cities (FutbalTour trips) get their landings from fewer offers. */
+export const COMBO_MIN_EXTRA = 15;
+const EXTRA = new Set(['london', 'manchester', 'roma', 'madrid', 'barcelona', 'milano', 'liverpool', 'napoli', 'turin', 'most', 'decin', 'opava', 'cesky-krumlov', 'pribram']);
+export const comboMin = (city: string) => (EXTRA.has(city) ? COMBO_MIN_EXTRA : COMBO_MIN);
 /** Days an ended offer keeps its page ("Nabídka skončila", noindex) before it 301s to its category. */
 export const EXPIRED_KEEP_DAYS = 30;
 /** Operator (same as the legal pages). */

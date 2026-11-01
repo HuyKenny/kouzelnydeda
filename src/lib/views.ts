@@ -6,11 +6,11 @@ import {
   type Card, type Cat, type PostCard, type Tree,
 } from './db';
 import { isFiltered, parseFilters, toListQuery, toQuery, type FilterState } from './filters';
-import { BASE, COMBO_MIN, EXPIRED_KEEP_DAYS, OG_DEFAULT, PER_PAGE, POSTS_PER_PAGE, isoPrague } from './site';
+import { BASE, comboMin, EXPIRED_KEEP_DAYS, OG_DEFAULT, PER_PAGE, POSTS_PER_PAGE, isoPrague } from './site';
 import {
   BLOG_DESC, BLOG_TITLE, rmVars, categoryDesc, categoryTitle, cityDesc, cityTitle, clamp, comboDesc, comboTitle, productDesc, productTitle, paged, robots, withSite,
 } from './seo';
-import { categoryFaq, categoryIntro, cityIntro, comboIntro, kindOf, SERVICE_CATS, themeTarget, type Kind } from './kd';
+import { categoryFaq, categoryIntro, cityIntro, comboIntro, fallbackTarget, kindOf, SERVICE_CATS, themeTarget, type Kind } from './kd';
 import { cityName } from './cities';
 import { cena, datum, decode, place, stripTags } from './format';
 import type { Info } from '../../workers/import/src/parse';
@@ -57,7 +57,7 @@ function cityChips(cat: Cat, counts: Record<string, Record<string, number>>, cur
   const c = counts[String(cat.id)] ?? {};
   const chips: Chip[] = [];
   for (const [slug, n] of Object.entries(c)) {
-    if (slug === 'cr' || n < COMBO_MIN || !cityName(slug).known) continue;
+    if (slug === 'cr' || n < comboMin(slug) || !cityName(slug).known) continue;
     chips.push({ name: cityName(slug).nom, url: `/${cat.slug}/lokalita/${slug}/`, count: n, active: slug === current });
   }
   chips.sort((a, b) => (b.count ?? 0) - (a.count ?? 0));
@@ -143,7 +143,7 @@ export async function categoryView(db: D1Database, catId: number, page: number, 
     intro = comboIntro(name, cn.lok, n, kind);
     trust = `${n.toLocaleString('cs-CZ')}+ nabídek ${name.toLowerCase()} ${cn.lok}`;
     // a thin combination is not a landing: canonical to the category (WordPress did the same)
-    canonical = cn.known && n >= COMBO_MIN ? url : abs(`/${cat.slug}/`);
+    canonical = cn.known && n >= comboMin(lok.slug) ? url : abs(`/${cat.slug}/`);
     if (!cn.known) title = categoryTitle(name, cat.count_total, minP);
   } else {
     title = categoryTitle(name, cat.count_total, minP);
@@ -198,7 +198,7 @@ export async function cityView(db: D1Database, slug: string, page: number, sp: U
     for (const [cs, label] of SERVICE_CATS) {
       const c = t.bySlug.get(cs);
       const n = c ? cc[String(c.id)]?.[slug] ?? 0 : 0;
-      if (c && n >= COMBO_MIN) chips.push({ name: label, url: `/${cs}/lokalita/${slug}/`, count: n });
+      if (c && n >= comboMin(slug)) chips.push({ name: label, url: `/${cs}/lokalita/${slug}/`, count: n });
     }
   }
   const crumbs: Crumb[] = [{ name: 'Domů', url: '/' }, { name: cn.nom, url: base }];
@@ -388,6 +388,12 @@ export async function postView(db: D1Database, id: number) {
       for (const [slug] of [...freq.entries()].sort((a, b) => b[1] - a[1])) {
         const c = t.bySlug.get(slug);
         if (c && c.count_total >= 4) { boxCat = c; break; }
+      }
+      // still none: the closest category for the topic of the title/slug (the same keyword rules as the 404 redirects), else all experiences
+      if (!boxCat) {
+        const slug = fallbackTarget(`${post.slug} ${post.title}`).replace(/\//g, '');
+        const c = t.bySlug.get(slug) ?? t.bySlug.get('zazitky');
+        if (c && c.count_total >= 4) boxCat = c;
       }
     }
   }
