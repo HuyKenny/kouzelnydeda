@@ -1,7 +1,7 @@
 ---
 // Footer: sections, gifts, popular cities, information, affiliate disclosure, operator.
 import { OPERATOR } from '../lib/site';
-import { GIFTS } from '../lib/views';
+import { TOP_GIFTS } from '../lib/views';
 const year = new Date().getFullYear();
 const CITIES: Array<[string, string]> = [['praha', 'Praha'], ['brno', 'Brno'], ['ostrava', 'Ostrava'], ['plzen', 'Plzeň'], ['ceske-budejovice', 'České Budějovice'], ['hradec-kralove', 'Hradec Králové'],
 	['olomouc', 'Olomouc'], ['liberec', 'Liberec']];
@@ -16,7 +16,7 @@ const CITIES: Array<[string, string]> = [['praha', 'Praha'], ['brno', 'Brno'], [
 			<li><a href="/pobyty/">Pobyty a dovolená</a></li><li><a href="/zazitky/">Zážitky</a></li><li><a href="/wellness-a-krasa/">Wellness a krása</a></li>
 			<li><a href="/jidlo-a-piti/">Jídlo a pití</a></li><li><a href="/kurzy/">Kurzy a workshopy</a></li><li><a href="/wellness-pobyty/">Wellness pobyty</a></li><li><a href="/glamping/">Glamping</a></li>
 		</ul></div>
-		<div><h2>Dárky</h2><ul>{GIFTS.filter((g) => !g.hub).slice(0, 8).map((g) => <li><a href={`/${g.slug}/`}>{g.h1.split(':')[0]}</a></li>)}</ul></div>
+		<div><h2>Dárky</h2><ul>{TOP_GIFTS.slice(0, 8).map((g) => <li><a href={`/${g.slug}/`}>{g.h1.split(':')[0]}</a></li>)}</ul></div>
 		<div><h2>Města</h2><ul>{CITIES.map(([s, n]) => <li><a href={`/lokalita/${s}/`}>{n}</a></li>)}</ul></div>
 		<div><h2>Informace</h2><ul>
 			<li><a href="/o-nas/">O nás</a></li><li><a href="/blog/">Blog</a></li><li><a href="/podminky-pouziti/">Podmínky použití</a></li>
