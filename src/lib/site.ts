@@ -18,7 +18,7 @@ export const comboMin = (city: string) => (EXTRA.has(city) ? COMBO_MIN_EXTRA : C
 /** Days an ended offer keeps its page ("Nabídka skončila", noindex) before it 301s to its category. */
 export const EXPIRED_KEEP_DAYS = 30;
 /** Operator (same as the legal pages). */
-export const OPERATOR = { name: 'Ha Duy Huy', ico: '07876823', street: 'Bartáková 36', zip: '140 00', city: 'Praha', email: 'info@kouzelnydeda.cz' };
+export const OPERATOR = { name: 'Ha Duy Huy', ico: '07876823', ds: 'dxmsrdt', street: 'Bartáková 36', zip: '140 00', city: 'Praha', email: 'info@kouzelnydeda.cz' };
 
 export function orgGraph(searchAction = false): unknown[] {
   return [
