@@ -96,9 +96,21 @@ const SERIES: Array<[RegExp, string, boolean]> = [
   [/romantick\w* vecer|vecer\w* (pro dva|pri svick)/, 'romanticka-vecere', false],
   [/rozluck/, 'rozlucka-se-svobodou', true],
   [/(pokoj|apartma|chata|chatka|domek)\w* s (soukromou |privatni )?virivk|virivk\w* (na|v) pokoj/, 'pokoje-s-virivkou', true],
+  [/v oblacich|dinner in the sky/, 'vecere-v-oblacich', false],
+  [/preziti|survival|bushcraft/, 'kurzy-preziti', false],
+  [/barist|latte art|kurz o kave/, 'kurzy-baristy', false],
+  [/vrtulnik/, 'let-vrtulnikem', false],
+  [/letecky simulator|simulator (letadl|letu|boeing)|boeing|airbus|cessna/, 'letecke-simulatory', false],
+  [/sumav|lipno|zelezn\w* ruda/, 'pobyty-na-sumave', true],
+  [/krkonos|harrachov|spindler|pec pod snezkou|janske lazne|rokytnice|vrchlabi/, 'pobyty-v-krkonosich', true],
+  [/jeseni[kc]|karlova studanka|ramzova|jesenik/, 'pobyty-v-jesenikach', true],
+  [/beskyd|radhost|frenstat|ostravice|bumbalka/, 'pobyty-v-beskydech', true],
+  [/mikulov|lednice|valtice|palava|pavlov\b/, 'pobyty-v-mikulove', true],
+  [/all inclusive|ultra all|\bal\b inclusive/, 'pobyty-all-inclusive', true],
+  [/\brum\b|\brumu\b|whisky|whiskey|destilat/, 'degustace-rumu-a-whisky', false],
 ];
 // series that only make sense for stays (a castle tour or a romantic dinner is not a castle stay)
-const STAY_ONLY = new Set(['romanticke-pobyty', 'pobyty-na-zamku', 'pokoje-s-virivkou']);
+const STAY_ONLY = new Set(['romanticke-pobyty', 'pobyty-na-zamku', 'pokoje-s-virivkou', 'pobyty-na-sumave', 'pobyty-v-krkonosich', 'pobyty-v-jesenikach', 'pobyty-v-beskydech', 'pobyty-v-mikulove', 'pobyty-all-inclusive']);
 export const seriesCats = (name: string): string[] => {
   const n = norm(name), stay = isStay(n);
   return SERIES.filter(([re, s, stayOk]) => re.test(n) && (stayOk || !stay) && (stay || !STAY_ONLY.has(s))).map(([, s]) => '@' + s);

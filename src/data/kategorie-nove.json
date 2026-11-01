@@ -502,5 +502,89 @@
   "short": "Pokoj s vířivkou",
   "parent": "pobyty",
   "icon": ""
+ },
+ {
+  "slug": "vecere-v-oblacich",
+  "name": "Večeře v oblacích (Dinner in the Sky)",
+  "short": "Večeře v oblacích",
+  "parent": "jidlo-a-piti",
+  "icon": ""
+ },
+ {
+  "slug": "kurzy-preziti",
+  "name": "Kurzy přežití v přírodě a survival",
+  "short": "Kurzy přežití",
+  "parent": "kurzy",
+  "icon": ""
+ },
+ {
+  "slug": "kurzy-baristy",
+  "name": "Baristické kurzy a latte art",
+  "short": "Baristické kurzy",
+  "parent": "kurzy",
+  "icon": ""
+ },
+ {
+  "slug": "let-vrtulnikem",
+  "name": "Vyhlídkový let vrtulníkem",
+  "short": "Let vrtulníkem",
+  "parent": "vyhlidkove-lety",
+  "icon": ""
+ },
+ {
+  "slug": "letecke-simulatory",
+  "name": "Letecké simulátory (Boeing, Airbus, Cessna)",
+  "short": "Letecké simulátory",
+  "parent": "virtualni-realita",
+  "icon": ""
+ },
+ {
+  "slug": "pobyty-na-sumave",
+  "name": "Pobyty na Šumavě",
+  "short": "Šumava",
+  "parent": "pobyty-na-horach",
+  "icon": ""
+ },
+ {
+  "slug": "pobyty-v-krkonosich",
+  "name": "Pobyty v Krkonoších",
+  "short": "Krkonoše",
+  "parent": "pobyty-na-horach",
+  "icon": ""
+ },
+ {
+  "slug": "pobyty-v-jesenikach",
+  "name": "Pobyty v Jeseníkách",
+  "short": "Jeseníky",
+  "parent": "pobyty-na-horach",
+  "icon": ""
+ },
+ {
+  "slug": "pobyty-v-beskydech",
+  "name": "Pobyty v Beskydech",
+  "short": "Beskydy",
+  "parent": "pobyty-na-horach",
+  "icon": ""
+ },
+ {
+  "slug": "pobyty-v-mikulove",
+  "name": "Pobyty v Mikulově, Lednici a na Pálavě",
+  "short": "Mikulov a Pálava",
+  "parent": "pobyty",
+  "icon": ""
+ },
+ {
+  "slug": "pobyty-all-inclusive",
+  "name": "Pobyty all inclusive",
+  "short": "All inclusive",
+  "parent": "pobyty",
+  "icon": ""
+ },
+ {
+  "slug": "degustace-rumu-a-whisky",
+  "name": "Degustace rumu, whisky a destilátů",
+  "short": "Rum a whisky",
+  "parent": "degustace-vina-a-piva",
+  "icon": ""
  }
 ]
