@@ -40,4 +40,14 @@ L += ['', '## Příležitosti: pozice 4–20, nejvíc zobrazení', '| dotaz | zo
 for x in sorted([x for x in qs if 4 <= x['position'] <= 20], key=lambda x: -x['impressions'])[:25]: L.append(f"| {x['keys'][0]} | {int(x['impressions'])} | {int(x['clicks'])} | {x['position']:.1f} |")
 L += ['', '## Top stránky podle zobrazení', '| stránka | zobr. | kliky | pozice |', '|---|---|---|---|']
 for x in sorted(pg, key=lambda x: -x['impressions'])[:15]: L.append(f"| {x['keys'][0].replace('https://kouzelnydeda.cz', '')} | {int(x['impressions'])} | {int(x['clicks'])} | {x['position']:.1f} |")
+# tracked head keywords: position and impressions this week (exact query match, GSC normalises case)
+TRACKED = ['zážitky', 'zážitkové dárky', 'dárek pro muže', 'dárek pro ženu', 'wellness pobyt pro dva', 'zájezdy na fotbal', 'vstupenky na fotbal', 'dárek pro kamarádku', 'pivní lázně', 'privátní wellness']
+L += ['', '## Sledovaná klíčová slova', '| dotaz | pozice | zobr. | kliky | stránka |', '|---|---|---|---|---|']
+byq = {x['keys'][0]: x for x in qs}
+tp = {}
+for x in q(*w1, ['query', 'page'], 5000):
+    if x['keys'][0] in TRACKED and (x['keys'][0] not in tp or x['impressions'] > tp[x['keys'][0]]['impressions']): tp[x['keys'][0]] = x
+for kw in TRACKED:
+    x = byq.get(kw)
+    L.append(f"| {kw} | {x['position']:.1f} | {int(x['impressions'])} | {int(x['clicks'])} | {tp[kw]['keys'][1].replace('https://kouzelnydeda.cz', '') if kw in tp else ''} |" if x else f'| {kw} | nezobrazuje se | 0 | 0 | |')
 f = OUT / f'gsc-tyden-{end}.md'; f.write_text('\n'.join(L) + '\n'); print(f)
