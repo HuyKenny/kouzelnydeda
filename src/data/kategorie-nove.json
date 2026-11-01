@@ -586,5 +586,194 @@
   "short": "Rum a whisky",
   "parent": "degustace-vina-a-piva",
   "icon": ""
+ },
+ {
+  "slug": "zajezdy-na-premier-league",
+  "name": "Zájezdy a vstupenky na Premier League",
+  "short": "Premier League",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "zajezdy-na-serii-a",
+  "name": "Zájezdy a vstupenky na Serii A",
+  "short": "Serie A",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "zajezdy-na-la-ligu",
+  "name": "Zájezdy a vstupenky na La Ligu",
+  "short": "La Liga",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "zajezdy-na-bundesligu",
+  "name": "Zájezdy a vstupenky na Bundesligu",
+  "short": "Bundesliga",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "zajezdy-na-ligue-1",
+  "name": "Zájezdy a vstupenky na Ligue 1",
+  "short": "Ligue 1",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "zajezdy-na-ligu-mistru",
+  "name": "Zájezdy a vstupenky na Ligu mistrů",
+  "short": "Liga mistrů",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "zajezdy-na-evropskou-ligu",
+  "name": "Zájezdy a vstupenky na Evropskou ligu",
+  "short": "Evropská liga",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "zajezdy-na-nhl",
+  "name": "Zájezdy a vstupenky na NHL",
+  "short": "NHL",
+  "parent": "zajezdy-na-hokej",
+  "icon": ""
+ },
+ {
+  "slug": "zajezdy-na-ms-v-hokeji",
+  "name": "Zájezdy a vstupenky na MS v hokeji",
+  "short": "MS v hokeji",
+  "parent": "zajezdy-na-hokej",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-liverpool",
+  "name": "Vstupenky a zájezdy na Liverpool",
+  "short": "Liverpool",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-manchester-united",
+  "name": "Vstupenky a zájezdy na Manchester United",
+  "short": "Manchester United",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-manchester-city",
+  "name": "Vstupenky a zájezdy na Manchester City",
+  "short": "Manchester City",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-arsenal",
+  "name": "Vstupenky a zájezdy na Arsenal",
+  "short": "Arsenal",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-chelsea",
+  "name": "Vstupenky a zájezdy na Chelsea",
+  "short": "Chelsea",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-tottenham",
+  "name": "Vstupenky a zájezdy na Tottenham",
+  "short": "Tottenham",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-fc-barcelona",
+  "name": "Vstupenky a zájezdy na FC Barcelonu",
+  "short": "FC Barcelona",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-real-madrid",
+  "name": "Vstupenky a zájezdy na Real Madrid",
+  "short": "Real Madrid",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-atletico-madrid",
+  "name": "Vstupenky a zájezdy na Atlético Madrid",
+  "short": "Atlético Madrid",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-bayern-mnichov",
+  "name": "Vstupenky a zájezdy na Bayern Mnichov",
+  "short": "Bayern Mnichov",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-borussia-dortmund",
+  "name": "Vstupenky a zájezdy na Borussii Dortmund",
+  "short": "Dortmund",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-juventus",
+  "name": "Vstupenky a zájezdy na Juventus",
+  "short": "Juventus",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-inter-milan",
+  "name": "Vstupenky a zájezdy na Inter Milán",
+  "short": "Inter Milán",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-ac-milan",
+  "name": "Vstupenky a zájezdy na AC Milán",
+  "short": "AC Milán",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-ssc-neapol",
+  "name": "Vstupenky a zájezdy na SSC Neapol",
+  "short": "Neapol",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-as-rim",
+  "name": "Vstupenky a zájezdy na AS Řím",
+  "short": "AS Řím",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-lazio-rim",
+  "name": "Vstupenky a zájezdy na Lazio Řím",
+  "short": "Lazio Řím",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
+ },
+ {
+  "slug": "vstupenky-paris-saint-germain",
+  "name": "Vstupenky a zájezdy na Paris Saint-Germain",
+  "short": "PSG",
+  "parent": "zajezdy-na-fotbal",
+  "icon": ""
  }
 ]
