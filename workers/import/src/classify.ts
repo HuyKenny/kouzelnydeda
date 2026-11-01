@@ -61,6 +61,16 @@ const EXP: Array<[RegExp, string]> = [
   [/striptyz|erotick/, 'striptyz'],
 ];
 
+/** Series with their own hub category, added to whatever the source's own tree says (any source: Slevomat's categories are mapped separately). */
+const SERIES: Array<[RegExp, string]> = [
+  [/cirkus|cirkusu/, 'cirkus'],
+  [/head ?spa/, 'head-spa'],
+];
+export const seriesCats = (name: string): string[] => {
+  const n = norm(name);
+  return SERIES.filter(([re]) => re.test(n)).map(([, s]) => '@' + s);
+};
+
 /** True when the offer is an overnight stay (variants "2 noci", "pobyt", accommodation words). */
 export const isStay = (t: string) => /(pobyt|ubytovani|hotel\b|hotelu|penzion|apartm|glamping|tiny ?house|treehouse|jurt[aouy]|maringotk|kupol[ea]? s|\d+ noc|noci\b|nocleh)/.test(norm(t));
 

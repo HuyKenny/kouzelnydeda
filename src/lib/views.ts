@@ -18,7 +18,7 @@ import { catIcon } from './ikony';
 import { partner as partnerOf, partnerName } from './partners';
 import darky from '../data/darky.json';
 
-export interface Gift { slug: string; name: string; h1: string; icon: string; il?: string; cats: string[]; max?: number; title: string; desc: string; intro: string; hub?: boolean; season?: string }
+export interface Gift { slug: string; name: string; h1: string; icon: string; il?: string; cats: string[]; max?: number; title: string; desc: string; intro: string; hub?: boolean; season?: string; body?: string; faq?: Array<{ q: string; a: string }> }
 export const GIFTS = darky.items as Gift[];
 
 export interface Meta {
@@ -262,7 +262,7 @@ export async function giftView(db: D1Database, idx: number, page: number, sp: UR
   const url = abs(pagePath(base, page));
   const hub = GIFTS.find((x) => x.hub)!;
   const crumbs: Crumb[] = [{ name: 'Domů', url: '/' }, ...(g.hub ? [] : [{ name: hub.name, url: `/${hub.slug}/` }]), { name: g.name === hub.name ? g.name : g.h1.split(':')[0]!, url: base }];
-  const faq = categoryFaq(g.name, 'zazitek');
+  const faq = g.faq?.length ? g.faq : categoryFaq(g.name, 'zazitek');
   return {
     meta: {
       title: paged(g.title, page), description: g.desc, robots: filtered ? ['noindex', 'follow'] : robots(false),
@@ -272,7 +272,7 @@ export async function giftView(db: D1Database, idx: number, page: number, sp: UR
       ogImage: items[0]?.image || OG_DEFAULT,
       graph: [collection(url, g.title)], jsonLd: [breadcrumbLd(crumbs), itemListLd(g.h1, items), faqLd(faq)].filter(Boolean),
     },
-    crumbs, h1: g.h1, h2: `${total.toLocaleString('cs-CZ')} tipů na dárek`, intro: '', introTitle: '', descriptionHtml: page === 1 ? `<p>${g.intro}</p>` : '',
+    crumbs, h1: g.h1, h2: `${total.toLocaleString('cs-CZ')} tipů na dárek`, intro: '', introTitle: '', descriptionHtml: page === 1 ? `<p>${g.intro}</p>` : '', bodyHtml: page === 1 && !filtered ? g.body ?? '' : '',
     items, total, page, pages, base, qs: toQuery(f), f, filtered, chipsTitle: 'Další tipy na dárek',
     chips: GIFTS.filter((x) => !x.hub).map((x) => ({ name: x.name, url: `/${x.slug}/`, active: x.slug === g.slug, icon: x.icon })),
     related: [], subcats: [], faq, trust: '', tree: t, pageType: 'gift', icon: g.icon, section: 'darky', gifts: [], ...(g.il ? { ill: g.il } : {}),

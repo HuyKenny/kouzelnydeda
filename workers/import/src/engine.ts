@@ -5,6 +5,7 @@ import { decodeXmlStream, parseXmlItems, XmlError } from './xml/stream';
 import { FEEDS, type FeedDef } from './feeds';
 import { finishVariants, itemHash, mergeVariants, parseItem, type Item } from './parse';
 import { openFeed, FeedFetchError } from './http';
+import { seriesCats } from './classify';
 import { rebuildSitemaps } from '../../../src/lib/sitemap';
 import { cityName } from '../../../src/lib/cities';
 
@@ -221,7 +222,7 @@ export async function runFeed(env: Env, f: FeedDef, opts: { force?: boolean; ite
     if (ex && ex.active && ex.content_hash === hash) continue;
     if (writes >= maxWrites) { capped = true; break; }
     writes++;
-    const feedCats = resolveCats(ctx, it.cats);
+    const feedCats = resolveCats(ctx, [...it.cats, ...seriesCats(it.name)]);
     const disc = it.priceOld > it.price ? Math.round((it.priceOld - it.price) / it.priceOld * 100) : 0;
     const lok = lokId(ctx, it.lok);
     const city = it.lok ? (it.city || cityName(it.lok).nom) : '';

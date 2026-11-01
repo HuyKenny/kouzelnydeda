@@ -1,241 +1,916 @@
 {
-  "_doc": "Dárkové landingy (redesign v2, 31. 10. 2026): výběr aktivních nabídek z kategorií (včetně podkategorií) podle pravidla. slug = URL /<slug>/, cats = slugy uzlů z taxonomie.json (prázdné = všechny), max = cenový strop v Kč. Hledanost MM 30. 10. 2026 v kw.",
-  "items": [
+ "_doc": "Dárkové landingy (redesign v2, 31. 10. 2026): výběr aktivních nabídek z kategorií (včetně podkategorií) podle pravidla. slug = URL /<slug>/, cats = slugy uzlů z taxonomie.json (prázdné = všechny), max = cenový strop v Kč. Hledanost MM 30. 10. 2026 v kw.",
+ "items": [
+  {
+   "slug": "zazitkove-darky",
+   "name": "Zážitkové dárky",
+   "h1": "Zážitkové dárky a dárkové poukazy",
+   "icon": "darek",
+   "kw": "zážitkové dárky (880)",
+   "cats": [],
+   "hub": true,
+   "title": "Zážitkové dárky a poukazy | Kouzelný děda",
+   "desc": "Darujte zážitek místo věcí: pobyty, wellness, adrenalin, degustace i kurzy s úsporou až 70 %. Ověření partneři, voucher přijde hned e-mailem.",
+   "intro": "Věci se okoukají, zážitky zůstanou. Vybrali jsme dárky, ze kterých se obdarovaný opravdu raduje — od romantického pobytu přes masáž až po jízdu ve sportovním autě. Většinu pořídíte jako dárkový voucher s dlouhou platností, který vám partner pošle hned e-mailem.",
+   "il": "kouzelnik-darek",
+   "body": "<h2>Zážitkové dárky: jak vybrat ten správný</h2>\n<p>Zážitkové dárky mají proti věcem jednu zásadní výhodu: neleží v šuplíku. Obdarovaný si je užije, vzpomíná na ně a často je rád vybírá i příště. Rozcestník vám pomůže najít nabídky různých partnerů na jednom místě, srovnat ceny a vybrat voucher, který přijde e-mailem. Nakupuje se přímo u partnera za jeho cenu.</p>\n<h3>Jak se v nabídce zorientovat</h3>\n<p>V nabídce je přes 14 000 zážitků a pobytů. Pomůže, když si nejdřív zodpovíte tři otázky:</p>\n<ul>\n<li><strong>Pro koho dárek je?</strong> Pro partnera, rodiče, kolegu nebo dítě? Podle toho se liší vhodný zážitek.</li>\n<li><strong>Co ho baví?</strong> Adrenalin, jídlo, relaxace, tvoření nebo sport?</li>\n<li><strong>Kolik chcete utratit?</strong> Do 500 Kč, do tisíce, do dvou tisíc, nebo víc?</li>\n</ul>\n<h2>Typy zážitkových dárků</h2>\n<h3>Relax a péče</h3>\n<p>Masáže, kosmetika, sauna a wellness jsou nejčastější volba. Masáží je v nabídce přes 1 300, začínají zhruba na 149 Kč a v průměru vycházejí kolem 1 250 Kč. Hodí se pro ženy i muže, rodiče, přátele i kolegy.</p>\n<h3>Pobyty</h3>\n<p>Pobyty pro dva jsou největší dárek. V nabídce je jich téměř 2 900, začínají zhruba na 520 Kč a v průměru stojí kolem 4 400 Kč. Rodinné pobyty, wellness pobyty či lázně se liší cenou i programem, proto vždy zkontrolujte počet osob a to, co je v ceně.</p>\n<h3>Adrenalin a jízdy</h3>\n<p>Adrenalinové zážitky, jízdy ve sportovních autech, lety a střelba jsou dárkem pro ty, kdo rádi zkoušejí nové věci. Ceny se pohybují od padesátikoruny po desítky tisíc, podle délky a typu.</p>\n<h3>Jídlo a pití</h3>\n<p>Degustační menu, steakové večeře, kurzy vaření a degustace vína či piva se hodí pro gurmány. Alkoholické degustace jsou určeny pouze dospělým.</p>\n<h3>Tvoření a kultura</h3>\n<p>Kurzy malování a tvoření, focení, muzea a výlety jsou vhodné pro ty, kdo preferují klidnější formu zábavy.</p>\n<h2>Kolik zážitkový dárek stojí</h2>\n<p>Zážitek se dá pořídit na každý rozpočet. Do 500 Kč je přes 2 400 nabídek, do tisíce více než 4 600 a do dvou tisíc přes 7 500. Konkrétní rozpočet pomůže najít přehledy <a href=\"/darky-do-500-kc/\">dárků do 500 Kč</a>, <a href=\"/darky-do-1000-kc/\">do 1 000 Kč</a> a <a href=\"/darky-do-2000-kc/\">do 2 000 Kč</a>. Pro větší příležitosti se podívejte na pobyty a wellness, které stojí zpravidla tisíce korun.</p>\n<h2>Dárky podle osoby</h2>\n<p>Pokud hledáte pro konkrétního člověka, vyberte si inspiraci: <a href=\"/darek-pro-zenu/\">dárek pro ženu</a>, <a href=\"/darek-pro-muze/\">dárek pro muže</a>, <a href=\"/darek-pro-pary/\">dárek pro pár</a> nebo <a href=\"/darek-pro-deti/\">dárek pro děti</a>. Na Vánoce se hodí vánoční dárek, na narozeniny dárek k narozeninám.</p>\n<h2>Jak zážitek předat, aby udělal radost</h2>\n<p>Zážitek se dá zabalit stejně hezky jako věc. Vytiskněte voucher, vložte ho do obálky a přidejte drobnost: ke jízdě brýle, k degustaci sklenici, k masáži svíčku. Zajímavé je i zabalit voucher do krabice s hádankou, která se vztahuje k zážitku. Můžete také dárek věnovat s osobním dopisem a třeba s návrhem termínu, který vám oběma vyhovuje.</p>\n<h3>Zážitek pro více lidí</h3>\n<p>Na větší dárek se dá složit rodina, kolegové nebo přátelé. Vybírejte nabídky, kde je počet osob jasně uvedený, nebo dárek rozdělte na více menších. Skupinové zážitky, třeba únikové hry, bowling či degustace, mají společné plánování, které je samo o sobě součástí radosti.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher přijde e-mailem po zaplacení, takže dárek zvládnete i na poslední chvíli. Pro hezký dojem ho vytiskněte a vložte do obálky.</li>\n<li>Termín si vybírá obdarovaný. Platnost voucheru zkontrolujte u konkrétní nabídky.</li>\n<li>Na víkendy, prázdniny a svátky rezervujte s předstihem.</li>\n<li>U pobytů si ověřte počet osob a to, co je zahrnuto v ceně (strava, wellness, vstupy).</li>\n<li>U adrenalinu a sportu zkontrolujte věkové, váhové či zdravotní omezení.</li>\n<li>Pokud si nejste jistí, zvolte flexibilnější zážitek nebo dárkový poukaz.</li>\n</ul>\n<p>Všechny nabídky jsou od ověřených partnerů a cena je stejná jako u nich. My vám je pouze přehledně třídíme, abyste vybírali rychleji.</p>",
+   "faq": [
     {
-      "slug": "zazitkove-darky",
-      "name": "Zážitkové dárky",
-      "h1": "Zážitkové dárky a dárkové poukazy",
-      "icon": "darek",
-      "kw": "zážitkové dárky (880)",
-      "cats": [],
-      "hub": true,
-      "title": "Zážitkové dárky a poukazy | Kouzelný děda",
-      "desc": "Darujte zážitek místo věcí: pobyty, wellness, adrenalin, degustace i kurzy s úsporou až 70 %. Ověření partneři, voucher přijde hned e-mailem.",
-      "intro": "Věci se okoukají, zážitky zůstanou. Vybrali jsme dárky, ze kterých se obdarovaný opravdu raduje — od romantického pobytu přes masáž až po jízdu ve sportovním autě. Většinu pořídíte jako dárkový voucher s dlouhou platností, který vám partner pošle hned e-mailem.",
-      "il": "kouzelnik-darek"
+     "q": "Co je zážitkový dárek?",
+     "a": "Voucher na aktivitu nebo pobyt, který obdarovaný využije ve vybraném termínu: masáž, jízda, večeře, pobyt a další."
     },
     {
-      "slug": "darek-pro-zenu",
-      "name": "Pro ni",
-      "h1": "Dárek pro ženu: zážitky, které potěší",
-      "icon": "pro-ni",
-      "kw": "dárek pro ženu (1 300)",
-      "cats": [
-        "masaze",
-        "kosmetika",
-        "sauna",
-        "wellness-pobyty",
-        "pobyty-pro-dva",
-        "kurzy-malovani",
-        "diy-kurzy",
-        "foceni",
-        "degustacni-menu",
-        "kavarny-a-dorty",
-        "sportovni-zajezdy"
-      ],
-      "title": "Dárek pro ženu – zážitky a poukazy | Kouzelný děda",
-      "desc": "Masáž, wellness, kosmetika, romantický pobyt nebo kurz? Tipy na dárek pro ženu od ověřených partnerů. Voucher hned e-mailem.",
-      "intro": "Hledáte dárek pro manželku, přítelkyni, mámu nebo kamarádku? Zážitek potěší víc než další věc do skříně. Vybrali jsme to, co ženy dostávají nejraději: chvíli jen pro sebe v rukou masérky, wellness, péči o pleť, tvoření i romantiku ve dvou.",
-      "il": "pro-ni"
+     "q": "Jak se voucher dostane k obdarovanému?",
+     "a": "Voucher přijde e-mailem po zaplacení u partnera."
     },
     {
-      "slug": "darek-pro-muze",
-      "name": "Pro něj",
-      "h1": "Dárek pro muže: zážitky s adrenalinem i pohodou",
-      "icon": "pro-nej",
-      "kw": "dárek pro muže (11 000)",
-      "cats": [
-        "sportovni-zajezdy",
-        "adrenalinove-zazitky",
-        "zazitkove-jizdy",
-        "unikove-hry",
-        "virtualni-realita",
-        "steaky-a-burgery",
-        "tatarak",
-        "degustace-vina-a-piva",
-        "barber-shop",
-        "sport-a-pohyb",
-        "bary-a-drinky"
-      ],
-      "title": "Dárek pro muže – zážitky a poukazy | Kouzelný děda",
-      "desc": "Jízda na okruhu, střelba, úniková hra, steak nebo degustace piva. Tipy na zážitkový dárek pro muže, voucher přijde hned e-mailem.",
-      "intro": "Chlapi věci většinou nepotřebují, zážitky ale milují. Najdete tu jízdy ve sportovních autech, střelbu, únikové hry, virtuální realitu, degustace i pořádný steak — dárky pro manžela, tátu, bráchu i kamaráda, od pár stovek po velké zážitky.",
-      "il": "pro-nej"
+     "q": "Musí obdarovaný využít zážitek v konkrétní den?",
+     "a": "Ne, termín si vybírá sám v rámci platnosti uvedené u nabídky."
     },
     {
-      "slug": "darek-pro-pary",
-      "name": "Pro pár",
-      "h1": "Dárek pro pár: zážitky ve dvou",
-      "icon": "pro-par",
-      "kw": "dárek pro pár (180)",
-      "cats": [
-        "pobyty-pro-dva",
-        "wellness-pobyty",
-        "sauna",
-        "degustacni-menu",
-        "kurzy-vareni",
-        "unikove-hry",
-        "degustace-vina-a-piva"
-      ],
-      "title": "Dárek pro pár – zážitky a pobyty ve dvou | Kouzelný děda",
-      "desc": "Romantický pobyt, privátní wellness, degustační večeře nebo kurz vaření ve dvou. Dárky pro páry, voucher hned e-mailem.",
-      "intro": "Svatba, výročí, Vánoce nebo jen tak — nejlepší dárek pro pár je společný čas. Vybrali jsme pobyty a zážitky ve dvou: wellness s privátní saunou, degustační večeře, kurz vaření i únikovou hru, kde se ukáže, jak spolu táhnete za jeden provaz.",
-      "il": "pro-par"
+     "q": "Je cena u vás stejná jako u partnera?",
+     "a": "Ano, nakupujete přímo u partnera za jeho cenu."
     },
     {
-      "slug": "darek-pro-deti",
-      "name": "Pro děti",
-      "h1": "Zážitky jako dárek pro děti",
-      "icon": "pro-deti",
-      "kw": "dárek pro děti (580)",
-      "cats": [
-        "zazitky-pro-deti",
-        "zabavni-parky",
-        "zoo-a-zviratka",
-        "jizda-na-koni",
-        "rodinne-pobyty"
-      ],
-      "title": "Dárek pro děti – zážitky a výlety | Kouzelný děda",
-      "desc": "Zábavní parky, zvířátka, jízda na koni, kroužky i rodinné pobyty. Zážitkové dárky pro děti od ověřených partnerů.",
-      "intro": "Hraček mají děti dost, zážitek si ale pamatují celé roky. Tipy na dárky pro malé i větší děti: zábavní a vodní parky, setkání se zvířátky, jízda na koni, tvořivé kurzy i rodinné pobyty, na které vyrazíte společně.",
-      "il": "pro-deti"
-    },
-    {
-      "slug": "darek-pro-rodice",
-      "name": "Pro rodiče",
-      "h1": "Dárek pro rodiče: odpočinek a zážitky",
-      "icon": "pro-rodice",
-      "kw": "dárek pro rodiče (740)",
-      "cats": [
-        "lazenske-pobyty",
-        "pobyty-pro-seniory",
-        "wellness-pobyty",
-        "degustacni-menu",
-        "kultura-a-vylety",
-        "gurmanske-pobyty"
-      ],
-      "title": "Dárek pro rodiče – pobyty a zážitky | Kouzelný děda",
-      "desc": "Lázně, wellness pobyt, degustační večeře nebo divadlo. Dárky pro rodiče a prarodiče, voucher přijde hned e-mailem.",
-      "intro": "Rodiče už mají všechno — kromě času pro sebe. Darujte jim pobyt v lázních nebo wellness, večeři v dobré restauraci, kulturu nebo výlet. Většinu nabídek si mohou vybrat s otevřeným termínem.",
-      "il": "pro-rodice"
-    },
-    {
-      "slug": "darek-k-narozeninam",
-      "name": "K narozeninám",
-      "h1": "Dárek k narozeninám: zážitky, které nadchnou",
-      "icon": "dort",
-      "kw": "dárek k narozeninám (1 800)",
-      "cats": [
-        "zazitky",
-        "wellness-a-krasa",
-        "degustacni-menu",
-        "pobyty-pro-dva"
-      ],
-      "title": "Dárek k narozeninám – zážitky | Kouzelný děda",
-      "desc": "Originální dárek k narozeninám: zážitek, pobyt, masáž nebo degustace. Vyberte podle ceny, voucher přijde hned e-mailem.",
-      "intro": "Kulatiny, osmnáctiny nebo obyčejné narozeniny — zážitek je dárek, který neskončí v šuplíku. Vyberte adrenalin, relax, dobré jídlo nebo pobyt a obdarovaný si termín zvolí sám.",
-      "il": "dort"
-    },
-    {
-      "slug": "vanocni-darek",
-      "name": "Vánoce",
-      "h1": "Vánoční dárek: zážitky pod stromeček",
-      "icon": "vanoce",
-      "kw": "vánoční dárek (3 200)",
-      "cats": [],
-      "season": "11-12",
-      "title": "Vánoční dárek – zážitky a poukazy pod stromeček | Kouzelný děda",
-      "desc": "Zážitky a pobyty jako vánoční dárek. Voucher přijde hned e-mailem, stihnete i na poslední chvíli.",
-      "intro": "Letos pod stromeček zážitek místo další věci. Vybrali jsme nejoblíbenější vánoční dárky — pobyty, wellness, masáže, adrenalin i degustace. Voucher vám partner pošle hned e-mailem, takže dárek stihnete i na poslední chvíli.",
-      "il": "vanoce"
-    },
-    {
-      "slug": "darek-na-valentyna",
-      "name": "Valentýn",
-      "h1": "Dárek na Valentýna: romantika ve dvou",
-      "icon": "srdce",
-      "kw": "dárek na valentýna (280)",
-      "cats": [
-        "pobyty-pro-dva",
-        "valentynske-pobyty",
-        "sauna",
-        "degustacni-menu",
-        "masaze"
-      ],
-      "title": "Dárek na Valentýna – romantické zážitky | Kouzelný děda",
-      "desc": "Romantický pobyt, privátní wellness, masáž pro dva nebo degustační večeře. Valentýnské dárky.",
-      "intro": "Na Valentýna platí, že nejlepší dárek je čas ve dvou. Romantické pobyty, privátní wellness, masáže pro páry a večeře, na které se nezapomíná.",
-      "il": "srdce"
-    },
-    {
-      "slug": "darky-do-500-kc",
-      "name": "Do 500 Kč",
-      "h1": "Zážitkové dárky do 500 Kč",
-      "icon": "cena",
-      "kw": "dárky do 500 kč (80)",
-      "cats": [],
-      "max": 500,
-      "title": "Dárky do 500 Kč – zážitky a poukazy | Kouzelný děda",
-      "desc": "Zážitkové dárky do 500 Kč: masáže, únikovky, degustace, kurzy a vstupenky. Malý dárek, velká radost.",
-      "intro": "I za pár stovek se dá darovat zážitek. Vybrali jsme nabídky do 500 Kč — ideální dárek pro kolegy, kamarády nebo jako pozornost k většímu dárku.",
-      "il": "cena"
-    },
-    {
-      "slug": "darky-do-1000-kc",
-      "name": "Do 1 000 Kč",
-      "h1": "Zážitkové dárky do 1 000 Kč",
-      "icon": "cena",
-      "kw": "dárky do 1000 kč (50)",
-      "cats": [],
-      "max": 1000,
-      "title": "Dárky do 1 000 Kč – zážitky a poukazy | Kouzelný děda",
-      "desc": "Zážitkové dárky do 1 000 Kč: masáže, wellness, adrenalin, kurzy i degustace. Voucher přijde hned e-mailem.",
-      "intro": "Do tisícovky se vejde masáž, wellness, úniková hra, kurz i pořádná večeře. Tady jsou nejlepší zážitkové dárky do 1 000 Kč.",
-      "il": "cena"
-    },
-    {
-      "slug": "darky-do-2000-kc",
-      "name": "Do 2 000 Kč",
-      "h1": "Zážitkové dárky do 2 000 Kč",
-      "icon": "cena",
-      "kw": "",
-      "cats": [],
-      "max": 2000,
-      "title": "Dárky do 2 000 Kč – zážitky a poukazy | Kouzelný děda",
-      "desc": "Zážitkové dárky do 2 000 Kč: jízdy, lety, wellness, degustace i krátké pobyty. Voucher hned e-mailem.",
-      "intro": "Do dvou tisíc pořídíte jízdu ve sportovním autě, vyhlídkový let, wellness pro dva nebo degustační menu. Vybrali jsme nejoblíbenější dárky v této ceně.",
-      "il": "cena"
-    },
-    {
-      "slug": "darkovy-poukaz",
-      "name": "Dárkové poukazy",
-      "h1": "Dárkový poukaz na zážitek nebo pobyt",
-      "icon": "voucher",
-      "kw": "dárkový poukaz (3 500)",
-      "cats": [],
-      "title": "Dárkový poukaz na zážitek či pobyt | Kouzelný děda",
-      "desc": "Dárkový poukaz na pobyt, wellness, masáž nebo zážitek. Poukaz přijde hned e-mailem, obdarovaný si termín vybere sám.",
-      "intro": "Dárkový poukaz je jistota: obdarovaný si termín vybere sám a vy nemusíte hádat. Každá nabídka tady je voucher od ověřeného partnera — po zaplacení vám přijde e-mailem a můžete ho vytisknout nebo poslat dál.",
-      "il": "voucher"
-    },
-    {
-      "slug": "darek-pro-sportovce",
-      "name": "Pro sportovce",
-      "h1": "Dárek pro sportovce a fanoušky: zájezdy na zápasy i sportovní zážitky",
-      "icon": "sport",
-      "kw": "dárek pro sportovce",
-      "cats": [
-        "sportovni-zajezdy",
-        "sport-a-pohyb",
-        "zazitkove-jizdy",
-        "zimni-sporty",
-        "cviceni-a-fitness",
-        "vodni-zazitky"
-      ],
-      "title": "Dárek pro sportovce a fanoušky – zájezdy na zápasy | Kouzelný děda",
-      "desc": "Zájezd na zápas Ligy mistrů, hokej v NHL, Velká cena F1 nebo sportovní zážitek. Tipy na dárek pro sportovce a fanoušky, muže i ženy.",
-      "intro": "Fanoušek má dres a šálu, další věc do sbírky ho nepotěší. Zájezd na zápas jeho oblíbeného klubu ano. Najdete tu zájezdy se vstupenkou na fotbal, hokej a Formuli 1, k tomu sportovní zážitky pro ty, kdo si sport raději zkusí sami. Hodí se pro muže i ženy.",
-      "il": "pro-nej"
+     "q": "Kolik zážitkový dárek stojí?",
+     "a": "Od několika desítek korun po desítky tisíc. Nejčastěji se vybírá v rozmezí stovek až několika tisíc korun."
     }
-  ]
+   ]
+  },
+  {
+   "slug": "darek-pro-zenu",
+   "name": "Pro ni",
+   "h1": "Dárek pro ženu: zážitky, které potěší",
+   "icon": "pro-ni",
+   "kw": "dárek pro ženu (1 300)",
+   "cats": [
+    "masaze",
+    "kosmetika",
+    "sauna",
+    "wellness-pobyty",
+    "pobyty-pro-dva",
+    "kurzy-malovani",
+    "diy-kurzy",
+    "foceni",
+    "degustacni-menu",
+    "kavarny-a-dorty",
+    "sportovni-zajezdy"
+   ],
+   "title": "Dárek pro ženu – zážitky a poukazy | Kouzelný děda",
+   "desc": "Masáž, wellness, kosmetika, romantický pobyt nebo kurz? Tipy na dárek pro ženu od ověřených partnerů. Voucher hned e-mailem.",
+   "intro": "Hledáte dárek pro manželku, přítelkyni, mámu nebo kamarádku? Zážitek potěší víc než další věc do skříně. Vybrali jsme to, co ženy dostávají nejraději: chvíli jen pro sebe v rukou masérky, wellness, péči o pleť, tvoření i romantiku ve dvou.",
+   "il": "pro-ni",
+   "body": "<h2>Dárek pro ženu: jak vybrat zážitek, který opravdu potěší</h2>\n<p>Dárek pro ženu je snazší vybrat, když se nejdřív zeptáte sami sebe, jakou má ženy v životě roli a co jí chybí. Manželka většinou ocení společný čas a klid, kamarádka spíš něco hravého, kolegyně drobnou pozornost. Zážitek má oproti věci jednu výhodu: nikdy nevybíráte špatnou velikost ani barvu a nic nezůstane ležet v šuplíku.</p>\n<h3>Podle čeho se rozhodnout</h3>\n<ul>\n<li><strong>Zájmy:</strong> kdo rád tvoří, ocení kurz malování nebo tvoření; kdo má rád dobré jídlo, degustaci či posezení v kavárně.</li>\n<li><strong>Věk a životní situace:</strong> pro ženy s dětmi bývá největším luxusem hodina bez povinností, třeba masáž nebo wellness.</li>\n<li><strong>Rozpočet:</strong> v nabídce najdete vše od drobné pozornosti po celý víkendový pobyt.</li>\n</ul>\n<h2>Zážitky pro ženy, které se osvědčily</h2>\n<ul>\n<li><a href=\"/masaze/\">Masáže</a>: klasická, aromaterapeutická nebo masáž zad a šíje. Hodí se skoro vždy a obdarovaná si termín vybere sama. V nabídce je přes 1 300 masáží.</li>\n<li><a href=\"/kosmetika/\">Kosmetické ošetření</a>: péče o pleť, ošetření obličeje nebo řasy a obočí. Příjemná chvíle jen pro sebe.</li>\n<li><a href=\"/sauna/\">Sauna a privátní wellness</a>: pro ty, které chtějí relaxovat v klidu, ať už samy, nebo s kamarádkou.</li>\n<li><a href=\"/kurzy-malovani/\">Kurz malování</a> a <a href=\"/diy-kurzy/\">tvoření</a>: večer se skleničkou a výsledkem, který si odnese domů.</li>\n<li>Focení: profesionální portrét nebo párové focení v ateliéru, vzpomínka na dlouhé roky.</li>\n<li>Wellness pobyt nebo pobyt pro dva: pro velkou příležitost, třeba výročí nebo kulaté narozeniny.</li>\n</ul>\n<p>Pokud je žena fanynkou sportu, mrkněte i na sportovní zájezdy. Zaujmout může i degustační menu nebo posezení v kavárně.</p>\n<h2>Kolik dárek pro ženu stojí</h2>\n<p>Podle aktuální nabídky začíná masáž zhruba na 149 Kč, kosmetické ošetření od 99 Kč a posezení v kavárně od několika desítek korun. Průměrná masáž vyjde přibližně na 1 250 Kč, kosmetika na 1 080 Kč. Wellness pobyty začínají kolem 1 100 Kč a v průměru stojí přes 5 000 Kč, pobyty pro dva začínají okolo 520 Kč a v průměru stojí zhruba 4 400 Kč. Ceny se mění, proto platí údaj u konkrétní nabídky.</p>\n<h2>Jak dárek předat, aby měl atmosféru</h2>\n<p>I nejlepší zážitek působí líp, když se předá s drobným gestem. Voucher můžete vytisknout, vložit do obálky a přidat kytici, bonboniéru nebo ručně psanou kartičku. Pokud chcete překvapit, nechte si voucher v e-mailu a předejte ho až v ten správný den. U masáže či wellness můžete přidat pozvánku „vyber si termín, hlídání zajistím já“, což u žen s dětmi často udělá větší radost než samotný zážitek.</p>\n<h3>Pro kterou příležitost co vybrat</h3>\n<p>K narozeninám se hodí kurz, focení nebo wellness, na Vánoce spíš pobyt či masáž, ke Dni žen drobnější a příjemná pozornost, třeba kosmetika nebo kavárna s dortem. Na rozloučení či poděkování stačí menší částka.</p>\n<h2>Praktické rady před objednávkou</h2>\n<ul>\n<li>Nákup probíhá u partnera, cena je stejná jako na jeho webu. Voucher přijde e-mailem, můžete ho vytisknout nebo předat v hezké obálce.</li>\n<li>Termín si vybírá obdarovaná, podle podmínek konkrétní nabídky. Platnost voucheru je uvedena u každé nabídky, zkontrolujte ji.</li>\n<li>Na oblíbené termíny a víkendy se vyplatí rezervovat s předstihem.</li>\n<li>U pobytů dávejte pozor na počet osob v ceně a na to, zda je v ceně strava či vstup do wellness.</li>\n</ul>\n<p>Hledáte inspiraci pro konkrétní roli? Zkuste <a href=\"/darek-pro-maminku/\">dárek pro maminku</a> nebo <a href=\"/darek-pro-pritelkyni/\">dárek pro přítelkyni</a>.</p>",
+   "faq": [
+    {
+     "q": "Co darovat ženě, která má všechno?",
+     "a": "Zážitek. Masáž, wellness, kurz nebo večeře jí nezaplní skříň a udělá radost. Vyberte podle jejích zájmů a nechte ji vybrat termín."
+    },
+    {
+     "q": "Dá se dárek pro ženu koupit i na poslední chvíli?",
+     "a": "Ano, voucher přijde e-mailem, takže ho máte po zaplacení k dispozici hned. Počítejte jen s tím, že na samotný zážitek si musí rezervovat termín."
+    },
+    {
+     "q": "Kolik stojí zážitek pro ženu?",
+     "a": "Od několika desítek korun u kavárny, masáže od zhruba 149 Kč, po pobyty za tisíce korun. Přesná cena je vždy u nabídky."
+    },
+    {
+     "q": "Musí obdarovaná využít voucher v konkrétní den?",
+     "a": "Ne, termín si vybírá sama v rámci platnosti voucheru, která je uvedena u nabídky."
+    },
+    {
+     "q": "Je cena u vás stejná jako u partnera?",
+     "a": "Ano, nakupujete přímo u partnera za stejnou cenu, my vám nabídky pouze přehledně třídíme."
+    }
+   ]
+  },
+  {
+   "slug": "darek-pro-muze",
+   "name": "Pro něj",
+   "h1": "Dárek pro muže: zážitky s adrenalinem i pohodou",
+   "icon": "pro-nej",
+   "kw": "dárek pro muže (11 000)",
+   "cats": [
+    "sportovni-zajezdy",
+    "adrenalinove-zazitky",
+    "zazitkove-jizdy",
+    "unikove-hry",
+    "virtualni-realita",
+    "steaky-a-burgery",
+    "tatarak",
+    "degustace-vina-a-piva",
+    "barber-shop",
+    "sport-a-pohyb",
+    "bary-a-drinky"
+   ],
+   "title": "Dárek pro muže – zážitky a poukazy | Kouzelný děda",
+   "desc": "Jízda na okruhu, střelba, úniková hra, steak nebo degustace piva. Tipy na zážitkový dárek pro muže, voucher přijde hned e-mailem.",
+   "intro": "Chlapi věci většinou nepotřebují, zážitky ale milují. Najdete tu jízdy ve sportovních autech, střelbu, únikové hry, virtuální realitu, degustace i pořádný steak — dárky pro manžela, tátu, bráchu i kamaráda, od pár stovek po velké zážitky.",
+   "il": "pro-nej",
+   "body": "<h2>Dárek pro muže: zážitky, které ocení víc než další tričko</h2>\n<p>Dárek pro muže bývá oříšek hlavně proto, že si většinu věcí koupí sám. Zážitek tenhle problém obchází: nemusíte hádat značku ani velikost a dárek navíc vydrží v paměti déle než další sada ponožek. Vybírejte podle toho, jestli váš muž touží po adrenalinu, nebo po klidu a dobrém jídle.</p>\n<h3>Jak vybrat podle typu</h3>\n<ul>\n<li><strong>Sportovec a fanoušek:</strong> zájezd na zápas jeho klubu nebo aktivní zážitek, třeba lezení, paintball či zimní sporty.</li>\n<li><strong>Technik a autíčkář:</strong> jízda ve sportovním voze, motokáry, simulátor nebo vyhlídkový let.</li>\n<li><strong>Gurmán:</strong> steak, tatarák, degustace piva nebo whisky.</li>\n<li><strong>Pohodář:</strong> barber shop, wellness či večer v dobrém baru.</li>\n</ul>\n<h2>Zážitky pro muže, které fungují</h2>\n<ul>\n<li><a href=\"/zazitkove-jizdy/\">Zážitkové jízdy</a>: supersport, závodní auto nebo terénní vůz. Hodí se pro každého, kdo má rád motory, a v nabídce je přes 560 jízd.</li>\n<li><a href=\"/adrenalinove-zazitky/\">Adrenalinové zážitky</a>: skok, rafting, vyhlídkový let nebo bungee. Výběr je obrovský, od cen kolem 50 Kč až po desítky tisíc.</li>\n<li><a href=\"/unikove-hry/\">Únikové hry</a> a <a href=\"/virtualni-realita/\">virtuální realita</a>: ideální dárek s partou přátel.</li>\n<li>Steaky a burgery nebo tatarák: večer, na který se těší už při objednávce.</li>\n<li>Degustace vína a piva a bary a drinky: určeno jen pro dospělé.</li>\n<li>Barber shop: střih a úprava vousů, praktická a příjemná pozornost.</li>\n</ul>\n<p>Pro fanouška přijde vhod také zájezd na sportovní utkání nebo sportovní aktivita, kterou si sám nevyzkouší.</p>\n<h2>Kolik zážitek pro muže stojí</h2>\n<p>Podle dat z nabídky stojí barber shop v průměru kolem 430 Kč, steak či burger zhruba 620 Kč, únikové hry v průměru kolem 1 150 Kč a zážitkové jízdy v průměru téměř 2 900 Kč. Degustace vína a piva vychází v průměru na zhruba 2 200 Kč. Zájezdy na zápasy jsou dražší, protože zahrnují vstupenku a dopravu, ceny „od“ jsou orientační.</p>\n<h2>Jak dárek předat a nezkazit překvapení</h2>\n<p>Voucher na zážitek se předává jednoduše: vytiskněte ho, vložte do obálky nebo ho zabalte do krabičky s drobností, která se k zážitku vztahuje, třeba s brýlemi k jízdě či sklenicí k degustaci. Pokud chcete mít jistotu, že voucher využije, dejte mu k dispozici i termín, který nebude kolidovat s prací, a rezervaci mu pomozte domluvit. Muži často odkládají zážitek na „až bude čas“, takže krátká poznámka s konkrétním měsícem pomáhá.</p>\n<h3>Příležitosti, na které zážitek sedí</h3>\n<p>Na narozeniny se hodí adrenalinový zážitek nebo jízda, na Vánoce spíš večeře nebo pobyt, na Den otců klidnější degustace či steak. Pro kolegu stačí menší částka, třeba bowling, degustace nebo úniková hra s týmem.</p>\n<h3>Když nevíte, co si vybrat</h3>\n<p>Zvolte kategorii podle zájmu a až v ní procházejte konkrétní nabídky. Pokud si nejste jistí, vyberte flexibilnější zážitek, který se dá využít na více místech nebo v delším časovém okně, a v popisu u nabídky se podívejte na platnost voucheru a podmínky rezervace. Zkontrolujte také, zda se zážitek dá využít jednotlivě, nebo je cena za skupinu, protože u některých úniků a jízd se platí za osobu a u jiných za celý tým.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher dorazí e-mailem po zaplacení, takže se hodí i na poslední chvíli. Můžete ho vytisknout a zabalit.</li>\n<li>Termín a čas si vybírá obdarovaný. Platnost voucheru zkontrolujte u nabídky.</li>\n<li>Rychlé jízdy a lety bývají obsazené, rezervace s předstihem je rozumná.</li>\n<li>Zkontrolujte věkové či zdravotní omezení, třeba u adrenalinu.</li>\n</ul>\n<p>Pro konkrétnější inspiraci se podívejte na <a href=\"/darek-pro-tatu/\">dárek pro tátu</a>, <a href=\"/darek-pro-pritele/\">dárek pro přítele</a> nebo <a href=\"/darek-pro-dedu/\">dárek pro dědu</a>.</p>\n<p>Nákup probíhá u partnera za stejnou cenu, jakou najdete na jeho webu. Rozcestník vám pomůže rychleji vybrat a porovnat nabídky.</p>",
+   "faq": [
+    {
+     "q": "Co dát muži, který nic nechce?",
+     "a": "Zážitek. Jízda ve sportovním autě, steak, degustace nebo úniková hra mu udělá radost a nezabere místo doma."
+    },
+    {
+     "q": "Je zážitek vhodný i pro muže, který nemá rád adrenalin?",
+     "a": "Ano, stačí vybrat klidnější variantu, třeba barber shop, wellness, degustaci nebo večeři."
+    },
+    {
+     "q": "Jak předat voucher?",
+     "a": "Voucher přijde e-mailem. Můžete ho vytisknout, vložit do obálky nebo přeposlat jako zprávu."
+    },
+    {
+     "q": "Dá se dárek pro muže stihnout na poslední chvíli?",
+     "a": "Ano, voucher máte hned po zaplacení. Obdarovaný si pak sám domluví termín."
+    },
+    {
+     "q": "Jsou degustace jen pro dospělé?",
+     "a": "Ano, degustace vína, piva a pití v barech jsou určeny pouze dospělým."
+    }
+   ]
+  },
+  {
+   "slug": "darek-pro-pary",
+   "name": "Pro pár",
+   "h1": "Dárek pro pár: zážitky ve dvou",
+   "icon": "pro-par",
+   "kw": "dárek pro pár (180)",
+   "cats": [
+    "pobyty-pro-dva",
+    "wellness-pobyty",
+    "sauna",
+    "degustacni-menu",
+    "kurzy-vareni",
+    "unikove-hry",
+    "degustace-vina-a-piva"
+   ],
+   "title": "Dárek pro pár – zážitky a pobyty ve dvou | Kouzelný děda",
+   "desc": "Romantický pobyt, privátní wellness, degustační večeře nebo kurz vaření ve dvou. Dárky pro páry, voucher hned e-mailem.",
+   "intro": "Svatba, výročí, Vánoce nebo jen tak — nejlepší dárek pro pár je společný čas. Vybrali jsme pobyty a zážitky ve dvou: wellness s privátní saunou, degustační večeře, kurz vaření i únikovou hru, kde se ukáže, jak spolu táhnete za jeden provaz.",
+   "il": "pro-par",
+   "body": "<h2>Dárek pro pár: jak vybrat zážitek pro dva</h2>\n<p>Dárek pro pár se liší od dárku pro jednoho člověka: musí být příjemný pro oba a ideálně je přiměje trávit čas spolu. Hodí se na svatbu, výročí, Vánoce i bez důvodu. Než začnete vybírat, zvažte, jestli pár ocení klid, nebo spíš zábavu a trochu soutěžení.</p>\n<h3>Podle čeho se rozhodnout</h3>\n<ul>\n<li><strong>Typ páru:</strong> romantici ocení pobyt nebo večeři, aktivní páry kurz či úniku.</li>\n<li><strong>Doba vztahu:</strong> novomanželům se hodí pobyt, dlouholetým partnerům něco nového, třeba kurz vaření.</li>\n<li><strong>Rozpočet:</strong> od večeře po víkend ve wellness hotelu.</li>\n</ul>\n<h2>Zážitky pro dva, které se hodí jako dárek</h2>\n<ul>\n<li><a href=\"/pobyty-pro-dva/\">Pobyt pro dva</a>: nejobvyklejší svatební i výroční dárek. Nabídek je téměř 2 900, podle počtu nocí, polopenze a wellness.</li>\n<li><a href=\"/wellness-pobyty/\">Wellness pobyt</a>: bazén, sauna a masáže bez starostí. Vhodné pro pár, který si chce odpočinout.</li>\n<li><a href=\"/sauna/\">Privátní sauna a wellness</a>: hodina či dvě jen pro vás, bez cizích lidí.</li>\n<li><a href=\"/degustacni-menu/\">Degustační menu</a>: večer s několika chody, při kterém se pár u stolu zastaví.</li>\n<li>Kurz vaření: společné vaření a pak společná večeře.</li>\n<li>Úniková hra: hodina spolupráce, která pár baví.</li>\n<li>Degustace vína nebo piva: jen pro dospělé.</li>\n</ul>\n<h2>Kolik dárek pro pár stojí</h2>\n<p>Podle dat z nabídky začínají pobyty pro dva zhruba na 520 Kč, v průměru ale stojí kolem 4 400 Kč. Wellness pobyty začínají přibližně na 1 070 Kč a v průměru vycházejí na 5 300 Kč. Privátní wellness a sauny jsou levnější, v průměru kolem 2 000 Kč, degustační menu zhruba 1 500 Kč a únikové hry kolem 1 150 Kč. Ceny se mění, rozhoduje údaj u konkrétní nabídky.</p>\n<h2>Jak vybrat správně podle příležitosti</h2>\n<p>Na svatbu a výročí je nejpřirozenější pobyt či wellness víkend, který si pár užije po všem shonu. Na Valentýna a podobné dny stačí menší zážitek, třeba večeře či privátní wellness. Pro pár, který už má všechno, je zajímavou volbou společný kurz, protože z něj zůstane dovednost i vzpomínka.</p>\n<h3>Rady k výběru pobytu</h3>\n<p>Prohlédněte si, zda je v ceně snídaně, polopenze nebo vstup do bazénu a sauny, a jak dlouho se dá voucher využít. Zvažte vzdálenost místa a roční dobu: v zimě se hodí wellness, v létě třeba pobyt u vody nebo v přírodě. Pokud si nejste jistí vkusem páru, zvolte hotel s větším výběrem služeb.</p>\n<h3>Dárek, který se dá doplnit</h3>\n<p>K pobytu můžete přidat drobnost: láhev vína, svíčku nebo pohlednici s popisem. Pro skeptičtější páry funguje i kratší zážitek na zkoušku, který se později může stát tradicí.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>U pobytů zkontrolujte počet osob v ceně, délku pobytu a to, co zahrnuje (snídaně, polopenze, wellness).</li>\n<li>Termín si vybírá obdarovaný pár. Platnost voucheru je uvedena u nabídky.</li>\n<li>Rezervujte s předstihem, zejména na víkendy a prázdniny.</li>\n<li>Voucher dorazí e-mailem. Můžete ho vytisknout a zabalit nebo přidat tištěnou pozvánku.</li>\n</ul>\n<p>Podobné nabídky najdete i v části <a href=\"/darek-na-valentyna/\">dárek na Valentýna</a>, <a href=\"/darek-pro-pritelkyni/\">dárek pro přítelkyni</a> nebo <a href=\"/darkovy-poukaz/\">dárkové poukazy</a>.</p>\n<p>Nákup probíhá u partnera za stejnou cenu jako přímo u něj.</p>",
+   "faq": [
+    {
+     "q": "Co darovat páru ke svatbě?",
+     "a": "Pobyt pro dva nebo wellness víkend patří mezi nejčastější volbu. Pár si termín zvolí podle svého, třeba po svatební cestě."
+    },
+    {
+     "q": "Jak zvolit mezi pobytem a krátkým zážitkem?",
+     "a": "Pobyt se hodí pro větší příležitosti, krátký zážitek (večeře, wellness, úniková hra) pro menší dárek nebo doplněk."
+    },
+    {
+     "q": "Je v ceně pobytu strava?",
+     "a": "Záleží na nabídce. U každého pobytu je uvedeno, zda zahrnuje snídani, polopenzi nebo wellness."
+    },
+    {
+     "q": "Jak dlouho platí voucher?",
+     "a": "Platnost je uvedena u každé nabídky."
+    },
+    {
+     "q": "Můžeme termín změnit?",
+     "a": "Podmínky změny stanovuje partner. Zjistíte je u konkrétní nabídky."
+    }
+   ]
+  },
+  {
+   "slug": "darek-pro-deti",
+   "name": "Pro děti",
+   "h1": "Zážitky jako dárek pro děti",
+   "icon": "pro-deti",
+   "kw": "dárek pro děti (580)",
+   "cats": [
+    "zazitky-pro-deti",
+    "zabavni-parky",
+    "zoo-a-zviratka",
+    "jizda-na-koni",
+    "rodinne-pobyty"
+   ],
+   "title": "Dárek pro děti – zážitky a výlety | Kouzelný děda",
+   "desc": "Zábavní parky, zvířátka, jízda na koni, kroužky i rodinné pobyty. Zážitkové dárky pro děti od ověřených partnerů.",
+   "intro": "Hraček mají děti dost, zážitek si ale pamatují celé roky. Tipy na dárky pro malé i větší děti: zábavní a vodní parky, setkání se zvířátky, jízda na koni, tvořivé kurzy i rodinné pobyty, na které vyrazíte společně.",
+   "il": "pro-deti",
+   "body": "<h2>Dárek pro děti: zážitek místo další hračky</h2>\n<p>Dárek pro děti se vybírá podle věku víc než u dospělých. Tříleté dítě ocení zvířátka a hřiště, školák adrenalin a kamarády, teenager něco, čím se může pochlubit. Zážitek má výhodu, že dítěti nezáleží na tom, jestli už podobnou hračku má, a rodina si užije čas spolu.</p>\n<h3>Jak vybrat podle věku</h3>\n<ul>\n<li><strong>Do 5 let:</strong> zoo, minifarma, krátká projížďka na ponících, dětský svět.</li>\n<li><strong>6 až 11 let:</strong> aquapark, zábavní park, tvoření, jízda na koni.</li>\n<li><strong>Od 12 let:</strong> únikové hry, lezecká stěna, virtuální realita, sportovní aktivity.</li>\n</ul>\n<h2>Zážitky, které děti baví</h2>\n<ul>\n<li><a href=\"/zabavni-parky/\">Zábavní parky a aquaparky</a>: celodenní program, hodí se jako dárek k narozeninám i na konec školního roku.</li>\n<li><a href=\"/zoo-a-zviratka/\">Zoo a setkání se zvířátky</a>: vstupenky, programy s krmením nebo komentované prohlídky.</li>\n<li><a href=\"/jizda-na-koni/\">Jízda na koni</a>: pro děti, které milují zvířata, a pro jejich první setkání s koněm či poníkem.</li>\n<li><a href=\"/zazitky-pro-deti/\">Zážitky pro děti</a>: dílny, tvoření, trampolíny, lezení a další aktivity.</li>\n<li><a href=\"/rodinne-pobyty/\">Rodinný pobyt</a>: větší dárek pro celou rodinu, třeba od rodičů či prarodičů.</li>\n</ul>\n<p>Pokud je dítě starší, podívejte se i na únikové hry nebo virtuální realitu.</p>\n<h2>Kolik zážitek pro děti stojí</h2>\n<p>Podle dat z nabídky začíná dětský zážitek od zhruba 19 Kč, v průměru je cena kolem 1 150 Kč a více než 250 nabídek vyjde do 500 Kč. Vstup do zábavních parků a aquaparků je v průměru kolem 500 Kč, zoo a zvířátka kolem 1 400 Kč, jízda na koni zhruba 1 330 Kč. Rodinné pobyty jsou dražší: začínají kolem 890 Kč a v průměru vycházejí přes 4 600 Kč. Konkrétní cena a to, co zahrnuje, je vždy u nabídky.</p>\n<h2>Jak dárek předat, aby ho dítě docenilo</h2>\n<p>Malé děti si pod pojmem voucher nic nepředstaví, proto zážitek zabalte do něčeho hmatatelného: obálka s obrázkem, plyšové zvířátko ke zoo nebo plavky k aquaparku. Starším dětem stačí vytištěný voucher a společné plánování termínu. Tím se těšení prodlouží a dítě se do výběru zapojí.</p>\n<h3>Narozeniny, Vánoce, konec školního roku</h3>\n<p>K narozeninám se hodí aktivní zážitek s kamarády, na Vánoce raději společný rodinný program, který zahřeje i v zimě, a na konec školního roku aquapark nebo zábavní park. Pokud vybíráte víc dětem najednou, pomůže nabídka rodinných vstupů.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Zkontrolujte věkové a výškové limity, u některých aktivit je potřeba doprovod dospělého.</li>\n<li>Termín si domluví rodiče s dítětem. Platnost voucheru je uvedena u nabídky.</li>\n<li>Voucher přijde e-mailem. Pro děti je hezké zabalit ho do krabičky s drobností, třeba plyšákem ke zoo.</li>\n<li>U rodinných pobytů ověřte počet osob a věk dětí v ceně.</li>\n</ul>\n<p>Hledáte dárek pro dospělého člena rodiny? Mrkněte na <a href=\"/darek-pro-rodice/\">dárek pro rodiče</a> nebo <a href=\"/darek-k-narozeninam/\">dárek k narozeninám</a>.</p>\n<p>Nakupuje se u partnera za stejnou cenu jako přímo u něj. Rozcestník vám pomůže si nabídky projít a porovnat.</p>",
+   "faq": [
+    {
+     "q": "Co darovat dítěti místo hračky?",
+     "a": "Zážitek: zábavní park, zoo, jízdu na koni nebo tvořivou dílnu. Dítě si ho pamatuje déle než hračku."
+    },
+    {
+     "q": "Dá se dárek koupit na poslední chvíli?",
+     "a": "Ano, voucher přijde e-mailem a dítě může dostat vytištěný nebo ukázaný na telefonu. Termín se domlouvá později."
+    },
+    {
+     "q": "Je zážitek vhodný i pro malé děti?",
+     "a": "Ano, stačí vybrat nabídku podle věku. U každé je uvedeno, pro koho je určena a zda je nutný doprovod."
+    },
+    {
+     "q": "Jak dlouho voucher platí?",
+     "a": "Doba platnosti se liší a je uvedena u každé nabídky."
+    },
+    {
+     "q": "Dá se darovat zážitek pro celou rodinu?",
+     "a": "Ano, rodinné pobyty a vstupenky do parků se hodí pro celou rodinu. Zkontrolujte počet osob v ceně."
+    }
+   ]
+  },
+  {
+   "slug": "darek-pro-rodice",
+   "name": "Pro rodiče",
+   "h1": "Dárek pro rodiče: odpočinek a zážitky",
+   "icon": "pro-rodice",
+   "kw": "dárek pro rodiče (740)",
+   "cats": [
+    "lazenske-pobyty",
+    "pobyty-pro-seniory",
+    "wellness-pobyty",
+    "degustacni-menu",
+    "kultura-a-vylety",
+    "gurmanske-pobyty"
+   ],
+   "title": "Dárek pro rodiče – pobyty a zážitky | Kouzelný děda",
+   "desc": "Lázně, wellness pobyt, degustační večeře nebo divadlo. Dárky pro rodiče a prarodiče, voucher přijde hned e-mailem.",
+   "intro": "Rodiče už mají všechno — kromě času pro sebe. Darujte jim pobyt v lázních nebo wellness, večeři v dobré restauraci, kulturu nebo výlet. Většinu nabídek si mohou vybrat s otevřeným termínem.",
+   "il": "pro-rodice",
+   "body": "<h2>Dárek pro rodiče: chvíle odpočinku, které si zaslouží</h2>\n<p>Dárek pro rodiče vybíráte v době, kdy už většinu věcí mají a oni sami říkají, že nic nepotřebují. Přitom čas jen pro sebe, dobré jídlo nebo pobyt v klidu jsou věci, které si často odpírají. Vhodný dárek je zároveň způsob, jak za péči poděkovat.</p>\n<h3>Jak vybrat</h3>\n<ul>\n<li><strong>Zdravotní stav a pohyblivost:</strong> pro starší rodiče zvolte klidné aktivity bez dlouhé chůze.</li>\n<li><strong>Zájmy:</strong> kdo rád jí, ocení degustaci či gurmánský pobyt, kdo rád cestuje, pobyt či výlet.</li>\n<li><strong>Společný dárek:</strong> sourozenci se mohou složit na dražší pobyt.</li>\n</ul>\n<h2>Zážitky, které rodičům vyhovují</h2>\n<ul>\n<li><a href=\"/lazenske-pobyty/\">Lázeňský pobyt</a>: procedury, klid a režim, který rodiče vyhledávají. Nabídek je přes 500.</li>\n<li><a href=\"/pobyty-pro-seniory/\">Pobyt pro seniory</a>: přizpůsobené programy a tempo.</li>\n<li><a href=\"/wellness-pobyty/\">Wellness pobyt</a>: bazén, sauna a masáž pro aktivnější rodiče.</li>\n<li><a href=\"/degustacni-menu/\">Degustační menu</a>: večeře o několika chodech, kam rodiče sami nezamíří.</li>\n<li><a href=\"/kultura-a-vylety/\">Kultura a výlety</a>: divadlo, koncert, výlet lodí nebo vlakem.</li>\n<li>Gurmánský či vinařský pobyt: pro rodiče, kteří mají rádi dobré jídlo a víno.</li>\n</ul>\n<h2>Kolik dárek pro rodiče stojí</h2>\n<p>Podle nabídky začínají lázeňské pobyty zhruba na 980 Kč a v průměru vycházejí na 4 600 Kč. Pobyty pro seniory začínají kolem 850 Kč, v průměru stojí přes 5 900 Kč. Degustační menu je výrazně dostupnější, v průměru kolem 1 500 Kč, a kultura a výlety kolem 1 000 Kč. Gurmánské pobyty jsou nejdražší, začínají okolo 1 290 Kč a v průměru stojí téměř 7 000 Kč.</p>\n<h2>Jak dárek předat a usnadnit rodičům rozhodnutí</h2>\n<p>Rodiče si často říkají, že na luxus nemají čas, a voucher proto odkládají. Pomůže, když jim rovnou nabídnete konkrétní termín nebo pomoc s organizací: postaráte se o psa, odvezete je, pohlídáte vnoučata. Voucher můžete předat při rodinné oslavě, vložit do alba s fotkami nebo přidat vzkaz s poděkováním.</p>\n<h3>Příležitosti</h3>\n<p>Narozeniny, výročí svatby, Vánoce, Den matek nebo Den otců. Pokud dárek kupujete pro oba rodiče společně, vyberte pobyt či večeři pro dva. Pokud každému zvlášť, pomůže osobnější volba podle zájmů.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Pobyt si rodiče vyberou podle svých termínů, platnost voucheru je uvedena u nabídky.</li>\n<li>U pobytů ověřte, kolik osob je v ceně a zda je v ceně strava a procedury.</li>\n<li>Voucher dorazí e-mailem. Pokud rodiče e-mail nepoužívají, vytiskněte ho nebo jim ho předejte osobně.</li>\n<li>Nabídněte pomoc s rezervací, rodiče často odkládají telefonát.</li>\n</ul>\n<p>Pro každého z rodičů zvlášť se může hodit <a href=\"/darek-pro-maminku/\">dárek pro maminku</a> a <a href=\"/darek-pro-tatu/\">dárek pro tátu</a>.</p>\n<p>Nákup probíhá u partnera, cena je stejná jako u něj.</p>",
+   "faq": [
+    {
+     "q": "Co darovat rodičům, kteří nic nechtějí?",
+     "a": "Zážitek: lázně, večeři nebo výlet. Nezabere místo doma a ukáže, že na ně myslíte."
+    },
+    {
+     "q": "Jaký dárek se hodí pro starší rodiče?",
+     "a": "Klidnější: lázně, pobyt pro seniory, degustační menu nebo kulturní zážitek."
+    },
+    {
+     "q": "Můžeme dárek složit se sourozenci?",
+     "a": "Ano, nákup můžete rozdělit mezi více lidí a vybrat dražší pobyt."
+    },
+    {
+     "q": "Jak předat voucher rodičům?",
+     "a": "E-mail vytiskněte nebo přeposlete a přidejte osobní vzkaz."
+    },
+    {
+     "q": "Je v ceně pobytu strava?",
+     "a": "Záleží na nabídce, zkontrolujte popis."
+    }
+   ]
+  },
+  {
+   "slug": "darek-k-narozeninam",
+   "name": "K narozeninám",
+   "h1": "Dárek k narozeninám: zážitky, které nadchnou",
+   "icon": "dort",
+   "kw": "dárek k narozeninám (1 800)",
+   "cats": [
+    "zazitky",
+    "wellness-a-krasa",
+    "degustacni-menu",
+    "pobyty-pro-dva"
+   ],
+   "title": "Dárek k narozeninám – zážitky | Kouzelný děda",
+   "desc": "Originální dárek k narozeninám: zážitek, pobyt, masáž nebo degustace. Vyberte podle ceny, voucher přijde hned e-mailem.",
+   "intro": "Kulatiny, osmnáctiny nebo obyčejné narozeniny — zážitek je dárek, který neskončí v šuplíku. Vyberte adrenalin, relax, dobré jídlo nebo pobyt a obdarovaný si termín zvolí sám.",
+   "il": "dort",
+   "body": "<h2>Dárek k narozeninám: jak vybrat zážitek na míru</h2>\n<p>Dárek k narozeninám dává smysl, když odpovídá slavencovi, ne jen kalendáři. Padesátníka potěší něco jiného než osmnáctiletou. Zážitek má navíc výhodu, že se dá využít až v době, která slavenci vyhovuje, a že narozeniny prodlouží na celé týdny.</p>\n<h3>Jak vybrat</h3>\n<ul>\n<li><strong>Osobnost:</strong> dobrodruh, gurmán, odpočinkový typ nebo tvůrce?</li>\n<li><strong>Věk:</strong> kulatiny si zaslouží větší dárek, třeba pobyt, běžné narozeniny stačí kratší zážitek.</li>\n<li><strong>Rozpočet:</strong> do 500 Kč stačí kavárna či bowling, do 2 000 Kč masáž, jízda nebo degustace.</li>\n</ul>\n<h2>Zážitky, které se k narozeninám hodí</h2>\n<ul>\n<li><a href=\"/zazitky/\">Zážitky všeho druhu</a>: nejširší nabídka, tisíce voucherů od jízd po tvůrčí kurzy.</li>\n<li><a href=\"/wellness-a-krasa/\">Wellness a krása</a>: masáž, kosmetika, sauna pro slavence, který chce odpočívat.</li>\n<li><a href=\"/degustacni-menu/\">Degustační menu</a>: večeře o několika chodech pro gurmány.</li>\n<li>Pobyt pro dva: dárek pro kulaté narozeniny nebo od celé rodiny.</li>\n<li>Adrenalin, jízda nebo let: pro každého, kdo rád zkouší nové věci.</li>\n</ul>\n<p>Pokud dárek vybíráte pro konkrétní osobu, mrkněte na <a href=\"/darek-pro-muze/\">dárek pro muže</a> nebo <a href=\"/darek-pro-zenu/\">dárek pro ženu</a>.</p>\n<h2>Kolik dárek k narozeninám stojí</h2>\n<p>Z aktuální nabídky vychází, že zážitků do 500 Kč je přes 1 280, do 1 000 Kč více než 2 000 a do 2 000 Kč přes 3 200. Wellness a krása začínají na desítkách korun a v průměru stojí kolem 1 250 Kč. Degustační menu vychází v průměru na 1 500 Kč a pobyty pro dva začínají kolem 520 Kč, v průměru ale vyjdou na 4 400 Kč. Cenově se tedy dá vybrat pro každého. Vyberte si rozpočet přes <a href=\"/darky-do-1000-kc/\">dárky do 1 000 Kč</a> nebo <a href=\"/darky-do-2000-kc/\">do 2 000 Kč</a>.</p>\n<h2>Jak vybrat, když slavence moc neznáte</h2>\n<p>Pokud nevíte, co slavence baví, zvolte zážitek, který se líbí širokému okruhu lidí: večeře, masáž, wellness nebo degustace. Pro kolegy a vzdálenější známé stačí menší částka, pro rodinu a nejbližší přátele můžete jít výš. Dobré je také zeptat se někoho z okolí, třeba partnera slavence, nebo využít obecnější nabídku s delší platností.</p>\n<h3>Jak dárek předat</h3>\n<p>Vytiskněte voucher a vložte ho do narozeninové karty, nebo ho zabalte s drobností, která se k zážitku vztahuje. Pro slavence, který se nerad nechává překvapit, můžete zážitek vybrat společně a termín si zarezervovat hned. Překvapení pak může být jen v tom, kdo se k oslavě přidá.</p>\n<h3>Rozpočet a skupinové dárky</h3>\n<p>Kolegové, přátelé nebo rodina se mohou složit na větší zážitek, třeba pobyt nebo jízdu. Každý přispěje menší částkou a slavenec dostane něco, co by mu jednotlivec těžko koupil. Voucher pak předáte společně a ostatní se podepíší na přání.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher přijde e-mailem, takže ho získáte hned po zaplacení, i když narozeniny jsou zítra.</li>\n<li>Termín si vybírá slavenec. Zkontrolujte platnost voucheru.</li>\n<li>Na víkendy rezervujte s předstihem.</li>\n<li>Voucher můžete vytisknout, zabalit nebo ho vložit do narozeninové karty.</li>\n</ul>\n<p>Cena u nás je stejná jako u partnera, kde nákup probíhá.</p>",
+   "faq": [
+    {
+     "q": "Co dát k narozeninám člověku, který má všechno?",
+     "a": "Zážitek. Nezabere místo a slavenec si vybere, kdy ho využije."
+    },
+    {
+     "q": "Dá se dárek k narozeninám stihnout na poslední chvíli?",
+     "a": "Ano, voucher přijde e-mailem po zaplacení."
+    },
+    {
+     "q": "Kolik stojí zážitek k narozeninám?",
+     "a": "Od několika desítek korun po pobyty za tisíce. Přes 1 280 nabídek je do 500 Kč."
+    },
+    {
+     "q": "Musí slavenec využít voucher hned?",
+     "a": "Ne, termín si vybere sám v rámci platnosti uvedené u nabídky."
+    },
+    {
+     "q": "Co když se slavenci zážitek nelíbí?",
+     "a": "Podmínky změn stanovuje partner. Vyberte tedy zážitek podle zájmů, nebo zvolte flexibilnější nabídku."
+    }
+   ]
+  },
+  {
+   "slug": "vanocni-darek",
+   "name": "Vánoce",
+   "h1": "Vánoční dárek: zážitky pod stromeček",
+   "icon": "vanoce",
+   "kw": "vánoční dárek (3 200)",
+   "cats": [],
+   "season": "11-12",
+   "title": "Vánoční dárek – zážitky a poukazy pod stromeček | Kouzelný děda",
+   "desc": "Zážitky a pobyty jako vánoční dárek. Voucher přijde hned e-mailem, stihnete i na poslední chvíli.",
+   "intro": "Letos pod stromeček zážitek místo další věci. Vybrali jsme nejoblíbenější vánoční dárky — pobyty, wellness, masáže, adrenalin i degustace. Voucher vám partner pošle hned e-mailem, takže dárek stihnete i na poslední chvíli.",
+   "il": "vanoce",
+   "body": "<h2>Vánoční dárek: zážitek místo další věci pod stromeček</h2>\n<p>Vánoční dárek, který se neztratí v hromadě balicího papíru, je často zážitek. Voucher se vejde do obálky, nemusí se nést domů a po svátcích dárek pokračuje: rezervací, těšením a nakonec samotným zážitkem. Navíc se k němu nemusíte probíjet přes obchody plné lidí.</p>\n<h3>Jak vybrat vánoční dárek</h3>\n<ul>\n<li><strong>Partner nebo partnerka:</strong> pobyt pro dva, privátní wellness, večeře.</li>\n<li><strong>Rodiče a prarodiče:</strong> lázně, pobyt, kultura, klidný výlet.</li>\n<li><strong>Děti:</strong> aquapark, zoo, zábavní park, rodinný pobyt.</li>\n<li><strong>Přátelé a kolegové:</strong> únikovka, degustace, masáž, bowling.</li>\n</ul>\n<h2>Zážitky, které se k Vánocům hodí</h2>\n<ul>\n<li><a href=\"/pobyty-pro-dva/\">Pobyt pro dva</a> a <a href=\"/wellness-pobyty/\">wellness pobyt</a>: největší dárek pod stromeček, pro pár nebo od celé rodiny. Wellness pobyty začínají kolem 1 100 Kč a v průměru stojí zhruba 5 300 Kč.</li>\n<li><a href=\"/masaze/\">Masáž</a>: dárek, který potěší skoro každého. Podle nabídky od zhruba 149 Kč, v průměru kolem 1 250 Kč.</li>\n<li>Degustační menu: večer o několika chodech, v průměru kolem 1 500 Kč.</li>\n<li>Adrenalinový zážitek: pro ty, kdo si zimu zpestří něčím novým.</li>\n<li>Zážitková jízda: oblíbený dárek pro muže, v průměru téměř 2 900 Kč.</li>\n</ul>\n<p>Pokud hledáte pro konkrétní osobu, mrkněte i na <a href=\"/darek-pro-pary/\">dárek pro pár</a> či <a href=\"/darek-pro-rodice/\">dárek pro rodiče</a>.</p>\n<h2>Kdy objednat vánoční dárek</h2>\n<p>Voucher přijde e-mailem, takže ho teoreticky stihnete i na Štědrý den. Přesto doporučujeme nakupovat v listopadu a v první půlce prosince. Důvod není doručení, ale výběr: na předvánoční termíny a víkendy bývá největší zájem a obdarovaný se potřebuje zorientovat v termínech. Co dělat s časem: vybrat zážitek, zaplatit, vytisknout voucher a zabalit ho. Pokud chcete mít jistotu, že zážitek využije hned po svátcích, zkontrolujte platnost voucheru a doplňte vzkaz s doporučením, kdy rezervovat.</p>\n<h2>Vánoční dárek podle rozpočtu</h2>\n<p>Pokud počítáte s menší částkou, vystačíte si s masáží, kosmetikou, posezením v kavárně nebo kurzem tvoření. Pro střední rozpočet se hodí jízda, degustace či privátní wellness. Největší dárky, tedy pobyty, často skládá více lidí dohromady: rodina se domluví a darují rodičům nebo prarodičům společný víkend. Zážitek navíc umožní darovat všem členům rodiny najednou, třeba rodinný pobyt, který se nehodí do žádné krabice.</p>\n<h3>Na co si dát pozor</h3>\n<p>V zimě nejsou všechny aktivity dostupné. U venkovních zážitků, jako jsou lety či jízdy, se podívejte, v jakém období je lze využít, a zvažte, zda je obdarovaný využije až na jaře. Pokud je to pro vás důležité, vybírejte voucher s delší platností.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Nákup probíhá u partnera, cena je stejná jako u něj.</li>\n<li>Termín si vybírá obdarovaný, podle podmínek nabídky.</li>\n<li>U pobytů zkontrolujte počet osob v ceně a to, co je zahrnuto.</li>\n<li>Voucher můžete vytisknout, vložit do obálky a přidat drobnost, třeba svíčku nebo čokoládu.</li>\n</ul>\n<p>Na menší pozornosti se hodí <a href=\"/darky-do-1000-kc/\">dárky do 1 000 Kč</a> a <a href=\"/darky-do-500-kc/\">dárky do 500 Kč</a>.</p>",
+   "faq": [
+    {
+     "q": "Kdy je nejlepší doba na nákup vánočního dárku?",
+     "a": "Voucher přijde e-mailem, takže ho stihnete i na poslední chvíli. Lépe ale v listopadu a začátkem prosince, ať máte širší výběr."
+    },
+    {
+     "q": "Jak zabalit voucher na zážitek?",
+     "a": "Vytiskněte ho, vložte do obálky nebo krabičky a přidejte drobnost vztahující se k zážitku."
+    },
+    {
+     "q": "Platí voucher i po Vánocích?",
+     "a": "Platnost je uvedena u každé nabídky, zkontrolujte ji před nákupem."
+    },
+    {
+     "q": "Je cena vánočního dárku stejná jako u partnera?",
+     "a": "Ano, nakupujete přímo u partnera za jeho cenu."
+    },
+    {
+     "q": "Co když obdarovaný nemůže využít termín hned po svátcích?",
+     "a": "Termín si vybírá sám v době platnosti. Pro některé zážitky může být zima nevhodná, zkontrolujte popis."
+    }
+   ]
+  },
+  {
+   "slug": "darek-na-valentyna",
+   "name": "Valentýn",
+   "h1": "Dárek na Valentýna: romantika ve dvou",
+   "icon": "srdce",
+   "kw": "dárek na valentýna (280)",
+   "cats": [
+    "pobyty-pro-dva",
+    "valentynske-pobyty",
+    "sauna",
+    "degustacni-menu",
+    "masaze"
+   ],
+   "title": "Dárek na Valentýna – romantické zážitky | Kouzelný děda",
+   "desc": "Romantický pobyt, privátní wellness, masáž pro dva nebo degustační večeře. Valentýnské dárky.",
+   "intro": "Na Valentýna platí, že nejlepší dárek je čas ve dvou. Romantické pobyty, privátní wellness, masáže pro páry a večeře, na které se nezapomíná.",
+   "il": "srdce",
+   "body": "<h2>Dárek na Valentýna: romantické zážitky pro dva</h2>\n<p>Dárek na Valentýna nemusí být květina a bonboniéra, i když ty se k němu hodí. Nejlépe fungují zážitky, které vám dají čas jen pro dva: pobyt, wellness, masáž nebo večeře. Právě kvůli času se většinou Valentýn slaví.</p>\n<h3>Jak vybrat</h3>\n<ul>\n<li><strong>Nový vztah:</strong> lehčí zážitek, třeba večeře nebo privátní sauna.</li>\n<li><strong>Dlouhý vztah:</strong> pobyt nebo víkend, kde nikdo nic nemusí.</li>\n<li><strong>Rozpočet:</strong> menší dárek v řádu stovek nebo velký v řádu tisíců.</li>\n</ul>\n<h2>Romantické zážitky na Valentýna</h2>\n<ul>\n<li><a href=\"/valentynske-pobyty/\">Valentýnské pobyty</a>: balíčky s romantickou večeří, vínem nebo wellness. Podle nabídky začínají kolem 1 190 Kč a v průměru stojí zhruba 4 450 Kč.</li>\n<li><a href=\"/pobyty-pro-dva/\">Pobyty pro dva</a>: téměř 2 900 nabídek, od krátkých pobytů po delší.</li>\n<li><a href=\"/sauna/\">Privátní wellness a sauna</a>: hodina či dvě jen pro vás dva.</li>\n<li><a href=\"/degustacni-menu/\">Degustační menu</a>: elegantní večer, v průměru kolem 1 500 Kč.</li>\n<li>Párová masáž: oba se uvolníte zároveň, pokud je nabídka pro dvě osoby.</li>\n</ul>\n<p>Další inspiraci najdete u <a href=\"/darek-pro-pritelkyni/\">dárku pro přítelkyni</a>, <a href=\"/darek-pro-pritele/\">dárku pro přítele</a> nebo <a href=\"/darek-pro-pary/\">dárků pro páry</a>.</p>\n<h2>Kdy objednat valentýnský dárek</h2>\n<p>Voucher přijde e-mailem, takže ho získáte i den před Valentýnem. Problém bývá spíš termín: kolem 14. února bývá velký zájem o wellness a restaurace. Doporučujeme proto koupit dárek několik týdnů dopředu, ať obdarovaný stihne vybrat termín a ať máte širší výběr. Pokud chcete využít zážitek přímo na Valentýna, rezervujte co nejdřív, nebo zvolte jiný termín v týdnu či o víkendu před ním či po něm. Dárek na Valentýna tím neztratí nic ze svého kouzla.</p>\n<h2>Menší i větší valentýnský dárek</h2>\n<p>Valentýn nemusí být drahý. Pokud chcete jen drobnost, stačí posezení v kavárně, večer v baru nebo hodina v privátní sauně. Pro střední rozpočet se hodí degustační menu nebo masáž pro dva. Největší gesto je pobyt, kde obdarovaný nemusí nic řešit a může si užít klidu.</p>\n<h3>Jak dárek doplnit</h3>\n<p>K voucheru přidejte drobnost: kytici, čokoládu nebo ručně psaný dopis. Jednoduché gesto často řekne víc než drahý dárek. Pokud chcete mít jistotu, že zážitek skutečně využijete, naplánujte termín společně a dejte mu pevné datum.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>U pobytů a pro dva zkontrolujte, že je cena za pár, a co obsahuje (večeře, wellness, snídaně).</li>\n<li>Termín si vybírá obdarovaný, podle podmínek nabídky. Platnost voucheru najdete u nabídky.</li>\n<li>Voucher můžete vytisknout, zabalit do obálky a přidat ručně psaný vzkaz.</li>\n<li>Nákup probíhá u partnera, cena je stejná jako u něj.</li>\n</ul>",
+   "faq": [
+    {
+     "q": "Kdy objednat dárek na Valentýna?",
+     "a": "Voucher přijde e-mailem, takže to jde i na poslední chvíli. Pro snazší rezervaci termínu ale kupujte několik týdnů předem."
+    },
+    {
+     "q": "Co darovat na Valentýna kromě pobytu?",
+     "a": "Večeři, privátní wellness, masáž nebo kurz pro dva. Záleží na rozpočtu a vkusu."
+    },
+    {
+     "q": "Musí se zážitek využít přímo 14. února?",
+     "a": "Ne, termín si vybírá obdarovaný v rámci platnosti voucheru."
+    },
+    {
+     "q": "Je cena u pobytu za dvě osoby?",
+     "a": "U pobytů pro dva ano, vždy ale zkontrolujte popis nabídky."
+    },
+    {
+     "q": "Jak předat voucher?",
+     "a": "Voucher dorazí e-mailem, vytiskněte ho nebo ho předejte v obálce s vzkazem."
+    }
+   ]
+  },
+  {
+   "slug": "darky-do-500-kc",
+   "name": "Do 500 Kč",
+   "h1": "Zážitkové dárky do 500 Kč",
+   "icon": "cena",
+   "kw": "dárky do 500 kč (80)",
+   "cats": [],
+   "max": 500,
+   "title": "Dárky do 500 Kč – zážitky a poukazy | Kouzelný děda",
+   "desc": "Zážitkové dárky do 500 Kč: masáže, únikovky, degustace, kurzy a vstupenky. Malý dárek, velká radost.",
+   "intro": "I za pár stovek se dá darovat zážitek. Vybrali jsme nabídky do 500 Kč — ideální dárek pro kolegy, kamarády nebo jako pozornost k většímu dárku.",
+   "il": "cena",
+   "body": "<h2>Dárky do 500 Kč: zážitky, které nevypadají levně</h2>\n<p>Dárky do 500 Kč se hodí pro kolegy, kamarády, učitele nebo jako menší pozornost k větší oslavě. Zážitek za pár stovek dokáže potěšit víc než obyčejná věc, protože ukazuje, že jste se zamysleli. V nabídce je přes 2 400 voucherů do 500 Kč, takže výběr je široký.</p>\n<h3>Komu a k čemu se hodí</h3>\n<ul>\n<li><strong>Kolegové a známí:</strong> kavárna, bowling, degustace.</li>\n<li><strong>Děti a rodiny:</strong> zábavní parky, zoo, dětské aktivity.</li>\n<li><strong>Doplněk k většímu dárku:</strong> masáž nebo kosmetika vedle kytice.</li>\n</ul>\n<h2>Co koupit do 500 Kč</h2>\n<ul>\n<li><a href=\"/kavarny-a-dorty/\">Kavárny a dorty</a>: téměř všech 100 nabídek je do 500 Kč, v průměru kolem 250 Kč.</li>\n<li><a href=\"/bowling-a-zabava/\">Bowling a zábava</a>: většina z 62 nabídek vyjde do 500 Kč, vhodné pro skupinu.</li>\n<li><a href=\"/zabavni-parky/\">Zábavní parky a aquaparky</a>: 64 nabídek do 500 Kč, hodí se pro děti.</li>\n<li>Masáže: přes 230 nabídek do 500 Kč, začíná zhruba na 149 Kč.</li>\n<li>Kosmetika: přes 150 ošetření do 500 Kč.</li>\n<li>Únikové hry: přes 120 nabídek do 500 Kč.</li>\n</ul>\n<h2>Jak vybrat, aby dárek nevypadal jako povinnost</h2>\n<p>Při malém rozpočtu rozhoduje zacílení. Zážitek vybírejte podle zájmů obdarovaného, ne podle ceny: kdo rád sedí s knihou v kavárně, ocení posezení, ne bowling. U skupiny, třeba kolegů, může každý přispět drobnou částkou a jako dárek koupíte větší zážitek. Pokud potřebujete víc možností, podívejte se i na <a href=\"/darky-do-1000-kc/\">dárky do 1 000 Kč</a> a <a href=\"/darek-pro-kolegu/\">dárek pro kolegu</a>.</p>\n<h2>Dárky do 500 Kč pro různé příležitosti</h2>\n<p>Do 500 Kč se vejde dárek ke svátku, poděkování i drobná pozornost k narozeninám. Pro kolegy se hodí kavárna nebo bowling, pro děti zoo či aquapark, pro kamarády úniková hra. Pokud dárek kupuje celá skupina, stačí menší příspěvek a výsledný zážitek je pak větší než u samostatného dárku.</p>\n<h3>Rozpočet se dá využít chytře</h3>\n<p>Při kupování zkontrolujte, co cena zahrnuje. Někde jde o vstupné pro jednu osobu, jinde o hodinu pro skupinu. Vybírejte podle toho, kolik lidí chcete obdarovat, a podle toho, jestli zážitek může obdarovaný využít sám, nebo ho potřebuje sdílet s dalšími lidmi.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher přijde e-mailem. Můžete ho vytisknout a vložit do obálky nebo přidat k malému dárku.</li>\n<li>Termín si vybírá obdarovaný. Platnost voucheru je uvedena u nabídky.</li>\n<li>Zkontrolujte, zda cena platí za jednu osobu, nebo za skupinu, a jaké jsou podmínky.</li>\n<li>Nákup probíhá u partnera, cena je stejná jako u něj.</li>\n</ul>\n<p>Pro větší výběr zkuste <a href=\"/zazitkove-darky/\">zážitkové dárky</a> všeho druhu, nebo <a href=\"/darek-pro-deti/\">dárek pro děti</a>, kde je mnoho zážitků do 500 Kč.</p>",
+   "faq": [
+    {
+     "q": "Co darovat za 500 Kč?",
+     "a": "Posezení v kavárně, bowling, masáž, kosmetické ošetření nebo vstup do zábavního parku."
+    },
+    {
+     "q": "Dá se do 500 Kč koupit masáž?",
+     "a": "Ano, podle nabídky je přes 230 masáží do 500 Kč, od zhruba 149 Kč."
+    },
+    {
+     "q": "Je dárek za pár stovek slušný?",
+     "a": "Ano, pokud odpovídá zájmům obdarovaného. Zážitek působí osobně i při menší částce."
+    },
+    {
+     "q": "Cena je stejná jako u partnera?",
+     "a": "Ano, nakupujete přímo u něj."
+    },
+    {
+     "q": "Jak předat levnější voucher?",
+     "a": "Vytiskněte ho do obálky nebo ho přidejte k drobnosti, třeba kytici či čokoládě."
+    }
+   ]
+  },
+  {
+   "slug": "darky-do-1000-kc",
+   "name": "Do 1 000 Kč",
+   "h1": "Zážitkové dárky do 1 000 Kč",
+   "icon": "cena",
+   "kw": "dárky do 1000 kč (50)",
+   "cats": [],
+   "max": 1000,
+   "title": "Dárky do 1 000 Kč – zážitky a poukazy | Kouzelný děda",
+   "desc": "Zážitkové dárky do 1 000 Kč: masáže, wellness, adrenalin, kurzy i degustace. Voucher přijde hned e-mailem.",
+   "intro": "Do tisícovky se vejde masáž, wellness, úniková hra, kurz i pořádná večeře. Tady jsou nejlepší zážitkové dárky do 1 000 Kč.",
+   "il": "cena",
+   "body": "<h2>Dárky do 1 000 Kč: zážitky, které stojí za tisícovku</h2>\n<p>Dárky do 1 000 Kč jsou zlatá střední cesta: dost na to, aby dárek vypadal osobně, a přitom málo na to, aby zatížil rozpočet. V nabídce je více než 4 600 zážitků do tisíce korun, takže vybrat se dá téměř pro každého. Hodí se k narozeninám, svátku, na poděkování nebo jako vánoční dárek pro přátele.</p>\n<h3>Komu dárek za tisícovku dát</h3>\n<ul>\n<li><strong>Kamarádi a rodina:</strong> masáž, kosmetika, úniková hra, degustace.</li>\n<li><strong>Kolegové:</strong> menší dárek pro někoho z týmu, třeba bowling nebo kavárna.</li>\n<li><strong>Učitelé a trenéři:</strong> osobní poděkování bez nadsázky.</li>\n</ul>\n<h2>Co koupit do 1 000 Kč</h2>\n<ul>\n<li><a href=\"/masaze/\">Masáže</a>: přes 800 nabídek do 1 000 Kč, od klasických po sportovní či relaxační.</li>\n<li><a href=\"/kosmetika/\">Kosmetické ošetření</a>: téměř 500 nabídek do tisícovky.</li>\n<li>Sauna a privátní wellness: přes 190 nabídek, vhodné pro dva.</li>\n<li>Únikové hry: více než 300 nabídek do tisícovky, ideální pro partu.</li>\n<li>Degustační menu: více než 40 nabídek, začíná kolem 390 Kč.</li>\n<li>Degustace vína a piva: přes 100 nabídek, jen pro dospělé.</li>\n<li>Kurz malování: téměř 30 nabídek do tisícovky.</li>\n</ul>\n<h2>Jak vybrat dárek do 1 000 Kč</h2>\n<p>Nejlepší dárek za tisícovku pozná podle toho, že odpovídá zájmům. Obdarovaný, který miluje dobré jídlo, ocení degustační menu, tvořivý typ kurz malování, parta kamarádů úniku. Pokud váháte, masáž nebo wellness je bezpečná volba. Když hledáte větší zážitek, podívejte se i na <a href=\"/darky-do-2000-kc/\">dárky do 2 000 Kč</a>, pro menší pozornost zase na <a href=\"/darky-do-500-kc/\">dárky do 500 Kč</a>.</p>\n<h2>Kdy se dárek do 1 000 Kč hodí nejvíc</h2>\n<p>Tisícikoruna je částka, která funguje u narozenin, Vánoc, svátků i poděkování. Nehodí se pro každého, ale rozhodně pro ty, u nichž nechcete dárek přehánět: kolegy, spolužáky, vzdálenější příbuzné. Pokud skládáte dárek s dalšími lidmi, můžete spojit několik tisícovek a koupit větší zážitek. Naopak když jde o drobnost, volte kratší zážitek, který zabere hodinu či dvě a nevyžaduje cestování.</p>\n<h3>Jak zážitek nezkazit</h3>\n<p>Dívejte se na detail v popisu: délku, počet osob, podmínky věku nebo zdravotního stavu a to, v jaké oblasti se poskytuje. Zážitek na druhém konci republiky nemusí být pro obdarovaného vhodný. Nabídky se pak dají filtrovat podle kategorie a lokality na stránkách kategorií.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher přijde e-mailem po zaplacení. Můžete ho vytisknout a vložit do obálky.</li>\n<li>Termín si vybírá obdarovaný. Platnost voucheru je uvedena u nabídky.</li>\n<li>Zkontrolujte, zda cena platí za osobu, nebo za skupinu.</li>\n<li>Nákup probíhá u partnera, cena je stejná jako u něj.</li>\n</ul>\n<h3>Dárek pro konkrétní osobu</h3>\n<p>Pokud chcete dárek za tisícovku zacílit, mrkněte na <a href=\"/darek-pro-kolegu/\">dárek pro kolegu</a> nebo <a href=\"/darek-pro-ucitelku/\">dárek pro učitelku</a>, kde je rozpočet podobný, a na <a href=\"/darkovy-poukaz/\">dárkové poukazy</a>, když chcete, aby si obdarovaný vybral zážitek sám.</p>",
+   "faq": [
+    {
+     "q": "Co koupit za 1 000 Kč?",
+     "a": "Masáž, kosmetické ošetření, privátní saunu, únikovou hru, degustaci nebo kurz malování."
+    },
+    {
+     "q": "Kolik zážitků je do 1 000 Kč?",
+     "a": "Podle aktuální nabídky více než 4 600."
+    },
+    {
+     "q": "Je zážitek za tisícovku vhodný i pro kolegy?",
+     "a": "Ano, je to příjemná, ale neformální částka."
+    },
+    {
+     "q": "Je cena u vás stejná jako u partnera?",
+     "a": "Ano, nakupujete přímo u partnera za stejnou cenu."
+    },
+    {
+     "q": "Dá se voucher využít kdykoli?",
+     "a": "Termín si vybírá obdarovaný v rámci platnosti uvedené u nabídky."
+    }
+   ]
+  },
+  {
+   "slug": "darky-do-2000-kc",
+   "name": "Do 2 000 Kč",
+   "h1": "Zážitkové dárky do 2 000 Kč",
+   "icon": "cena",
+   "kw": "",
+   "cats": [],
+   "max": 2000,
+   "title": "Dárky do 2 000 Kč – zážitky a poukazy | Kouzelný děda",
+   "desc": "Zážitkové dárky do 2 000 Kč: jízdy, lety, wellness, degustace i krátké pobyty. Voucher hned e-mailem.",
+   "intro": "Do dvou tisíc pořídíte jízdu ve sportovním autě, vyhlídkový let, wellness pro dva nebo degustační menu. Vybrali jsme nejoblíbenější dárky v této ceně.",
+   "il": "cena",
+   "body": "<h2>Dárky do 2 000 Kč: větší zážitek bez velkého rozpočtu</h2>\n<p>Dárky do 2 000 Kč dovolují sáhnout po něčem, co by si obdarovaný sám zaplatil jen zřídka: jízdě ve sportovním voze, vyhlídkovém letu, wellness pro dva nebo degustačním menu. V aktuální nabídce je přes 7 500 zážitků do dvou tisíc korun, takže vybrat se dá pro skoro každého.</p>\n<h3>Komu se hodí</h3>\n<ul>\n<li><strong>Partneři a rodina:</strong> wellness nebo pobyt, kde si odpočinete spolu.</li>\n<li><strong>Přátelé a rodiče:</strong> oslava narozenin, výročí, poděkování.</li>\n<li><strong>Dobrodruzi:</strong> jízda, let nebo střelba.</li>\n</ul>\n<h2>Co koupit do 2 000 Kč</h2>\n<ul>\n<li><a href=\"/masaze/\">Masáže</a>: přes 1 180 nabídek, včetně delších a prémiových variant.</li>\n<li><a href=\"/pobyty-pro-dva/\">Pobyt pro dva</a>: téměř 580 pobytů do dvou tisíc.</li>\n<li><a href=\"/wellness-pobyty/\">Wellness pobyt</a>: přes 180 nabídek, nejlevnější začínají kolem 1 070 Kč.</li>\n<li><a href=\"/zazitkove-jizdy/\">Zážitkové jízdy</a>: přes 270 nabídek, od krátkých okruhů po delší.</li>\n<li>Vyhlídkové lety: přes 100 nabídek, vhodné pro odvážnější.</li>\n<li>Degustační menu: téměř 90 nabídek, v průměru kolem 1 500 Kč.</li>\n<li>Střelba: přes 70 nabídek, pro dospělé a podle podmínek partnera.</li>\n</ul>\n<h2>Jak vybrat dárek do 2 000 Kč</h2>\n<p>Při této částce už má smysl zvážit, jestli zážitek bude pro jednoho, nebo pro dva. Pobyt v této ceně bývá kratší, jízda zase kratší, ale intenzivnější. Podívejte se na popis: co je zahrnuto, jak dlouho zážitek trvá a kolik osob se může zúčastnit. Pokud váháte, nižší rozpočet najdete u <a href=\"/darky-do-1000-kc/\">dárků do 1 000 Kč</a>, vyšší u <a href=\"/zazitkove-darky/\">zážitkových dárků</a> obecně.</p>\n<h2>Kdy zvolit dárek do 2 000 Kč</h2>\n<p>Dva tisíce se hodí pro nejbližší lidi: partnera, rodiče, sourozence či přátele. Při této částce už dárek působí jako výraznější gesto a obdarovaný ho ocení jako opravdový zážitek, ne pozornost. Pokud dárek kupujete pro dva, projděte nabídky, kde je cena za pár, a vyhněte se těm, kde je cena za osobu a pro druhého byste museli doplatit.</p>\n<h3>Jak předat větší zážitek</h3>\n<p>Vytiskněte voucher, přidejte krátký dopis a třeba i návrh termínu. Obdarovaný uvidí, že jste se na dárku zamysleli, a hned ví, kdy se může těšit. U jízd a letů zkontrolujte věková a zdravotní omezení, aby se nestalo, že obdarovaný zážitek nemůže absolvovat.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher přijde e-mailem po zaplacení. Vytiskněte ho nebo ho předejte v obálce.</li>\n<li>Termín si vybírá obdarovaný, platnost voucheru je uvedena u nabídky.</li>\n<li>Na pobyty a víkendy rezervujte s předstihem.</li>\n<li>U pobytů zkontrolujte počet osob v ceně.</li>\n<li>Nákup probíhá u partnera, cena je stejná jako u něj.</li>\n</ul>\n<p>Hledáte konkrétnější nápad? Zkuste <a href=\"/darek-pro-pary/\">dárek pro pár</a>.</p>",
+   "faq": [
+    {
+     "q": "Co koupit za 2 000 Kč?",
+     "a": "Masáž, jízdu, vyhlídkový let, degustační menu nebo kratší pobyt pro dva."
+    },
+    {
+     "q": "Dá se do 2 000 Kč koupit pobyt?",
+     "a": "Ano, podle nabídky je přes 570 pobytů pro dva do dvou tisíc korun."
+    },
+    {
+     "q": "Jsou střelba a degustace pro všechny?",
+     "a": "Jsou určeny dospělým a mají podmínky podle partnera."
+    },
+    {
+     "q": "Platí cena za jednu osobu?",
+     "a": "Záleží na nabídce, vždy zkontrolujte popis."
+    },
+    {
+     "q": "Je cena stejná jako u partnera?",
+     "a": "Ano, nakupujete přímo u partnera."
+    }
+   ]
+  },
+  {
+   "slug": "darkovy-poukaz",
+   "name": "Dárkové poukazy",
+   "h1": "Dárkový poukaz na zážitek nebo pobyt",
+   "icon": "voucher",
+   "kw": "dárkový poukaz (3 500)",
+   "cats": [],
+   "title": "Dárkový poukaz na zážitek či pobyt | Kouzelný děda",
+   "desc": "Dárkový poukaz na pobyt, wellness, masáž nebo zážitek. Poukaz přijde hned e-mailem, obdarovaný si termín vybere sám.",
+   "intro": "Dárkový poukaz je jistota: obdarovaný si termín vybere sám a vy nemusíte hádat. Každá nabídka tady je voucher od ověřeného partnera — po zaplacení vám přijde e-mailem a můžete ho vytisknout nebo poslat dál.",
+   "il": "voucher",
+   "body": "<h2>Dárkový poukaz na zážitek nebo pobyt: jak funguje</h2>\n<p>Dárkový poukaz je jistota pro všechny, kdo nechtějí hádat. Obdarovaný si zážitek vybírá a rezervuje sám, vy zaplatíte a pošlete voucher. Voucher přijde e-mailem, můžete ho vytisknout nebo předat v obálce. Každá nabídka na rozcestníku je voucher od partnera, u něhož nakupujete za stejnou cenu jako přímo u něj.</p>\n<h3>Pro koho se dárkový poukaz hodí</h3>\n<ul>\n<li>Pro někoho, kdo má široké zájmy a nevíte, co zvolit.</li>\n<li>Pro obdarovaného s jiným bydlištěm, který si zážitek vybere poblíž.</li>\n<li>Pro dárek na poslední chvíli, protože voucher máte hned.</li>\n</ul>\n<h2>Jaké poukazy najdete</h2>\n<p>V nabídce je přes 14 000 aktivních zážitků a pobytů. Podle toho, kolik chcete utratit, můžete vybírat od několika desítek korun po tisíce.</p>\n<ul>\n<li><a href=\"/pobyty-pro-dva/\">Pobyty pro dva</a> a <a href=\"/wellness-pobyty/\">wellness pobyty</a>: větší dárek, nejčastěji od několika set po tisíce korun.</li>\n<li><a href=\"/masaze/\">Masáže</a> a <a href=\"/kosmetika/\">kosmetika</a>: dárek pro každého, kdo chce odpočívat.</li>\n<li>Zážitkové jízdy a adrenalin: pro odvážnější.</li>\n<li>Degustační menu: dárek pro gurmány.</li>\n</ul>\n<h2>Jak vybrat správnou hodnotu</h2>\n<p>Rozpočet určuje, jaký zážitek pořídíte. Do 500 Kč najdete kavárny, bowling či masáže, do tisíce kosmetiku, únikové hry a degustace, do dvou tisíc delší masáže, jízdy a pobyty pro dva. Pomůžou vám přehledy <a href=\"/darky-do-500-kc/\">dárky do 500 Kč</a> a <a href=\"/darky-do-1000-kc/\">dárky do 1 000 Kč</a>. Pokud chcete inspiraci podle příležitosti, mrkněte na <a href=\"/darek-k-narozeninam/\">dárek k narozeninám</a>.</p>\n<h2>Dárkový poukaz místo hotovosti nebo pevného termínu</h2>\n<p>Hlavní výhoda poukazu: obdarovaný si vybírá sám a nikdo ho nenutí k pevnému datu. Hodí se pro lidi, kteří se těžko rozhodují, mají nabitý kalendář nebo bydlí daleko. Pro vás je výhodou, že nemusíte řešit osobní odběr ani poštu, protože voucher dorazí e-mailem. A protože si termín domluví podle svého, odpadá nepříjemná situace, kdy dárek nevyjde.</p>\n<h3>Na co se zeptat před nákupem</h3>\n<p>Před nákupem si v nabídce zkontrolujte, zda voucher platí pro jednu osobu, nebo pro skupinu, kolik zážitek trvá a jak se rezervuje. U pobytů zjistěte, zda je v ceně strava a wellness, a ověřte omezení pro děti či zvířata, pokud je to důležité.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Termín si vybírá obdarovaný, podle podmínek konkrétní nabídky.</li>\n<li>Platnost voucheru je uvedena u každé nabídky, před nákupem ji zkontrolujte.</li>\n<li>U pobytů si ověřte počet osob v ceně a co je zahrnuto.</li>\n<li>Na oblíbené termíny a víkendy rezervujte s předstihem.</li>\n<li>Voucher přijde e-mailem, nemusí se nic posílat poštou.</li>\n</ul>\n<h3>Jak poukaz předat</h3>\n<p>Vytiskněte ho a vložte do obálky, nebo ho pošlete e-mailem. Pokud chcete mít dárek efektnější, zabalte ho s drobností vztahující se k zážitku. Obdarovanému napište pár slov a doporučení, kdy rezervovat.</p>",
+   "faq": [
+    {
+     "q": "Jak funguje dárkový poukaz?",
+     "a": "Zaplatíte nabídku u partnera, voucher přijde e-mailem a obdarovaný si domluví termín."
+    },
+    {
+     "q": "Musí si obdarovaný vybrat termín hned?",
+     "a": "Ne, má na to dobu platnosti uvedenou u nabídky."
+    },
+    {
+     "q": "Dá se voucher vytisknout?",
+     "a": "Ano, můžete ho vytisknout nebo poslat e-mailem."
+    },
+    {
+     "q": "Je cena u vás stejná jako u partnera?",
+     "a": "Ano, nakupujete přímo u něj za stejnou cenu."
+    },
+    {
+     "q": "Jak vybrat hodnotu poukazu?",
+     "a": "Podle rozpočtu a příležitosti. Pomůže přehled dárků do 500, 1 000 a 2 000 Kč."
+    }
+   ]
+  },
+  {
+   "slug": "darek-pro-sportovce",
+   "name": "Pro sportovce",
+   "h1": "Dárek pro sportovce a fanoušky: zájezdy na zápasy i sportovní zážitky",
+   "icon": "sport",
+   "kw": "dárek pro sportovce",
+   "cats": [
+    "sportovni-zajezdy",
+    "sport-a-pohyb",
+    "zazitkove-jizdy",
+    "zimni-sporty",
+    "cviceni-a-fitness",
+    "vodni-zazitky"
+   ],
+   "title": "Dárek pro sportovce a fanoušky – zájezdy na zápasy | Kouzelný děda",
+   "desc": "Zájezd na zápas Ligy mistrů, hokej v NHL, Velká cena F1 nebo sportovní zážitek. Tipy na dárek pro sportovce a fanoušky, muže i ženy.",
+   "intro": "Fanoušek má dres a šálu, další věc do sbírky ho nepotěší. Zájezd na zápas jeho oblíbeného klubu ano. Najdete tu zájezdy se vstupenkou na fotbal, hokej a Formuli 1, k tomu sportovní zážitky pro ty, kdo si sport raději zkusí sami. Hodí se pro muže i ženy.",
+   "il": "pro-nej",
+   "body": "<h2>Dárek pro sportovce a fanoušky: zájezdy i aktivní zážitky</h2>\n<p>Dárek pro sportovce není jen o sportovní výbavě. Aktivní lidé většinou mají, co potřebují, a nejvíc je potěší zážitek, který si sami nezařídí: zájezd na zápas oblíbeného klubu, den na lyžích, jízda nebo hodina s trenérem. Rozlišujte mezi aktivním sportovcem a pasivním fanouškem, každému se hodí něco jiného.</p>\n<h3>Jak vybrat</h3>\n<ul>\n<li><strong>Fanoušek:</strong> zájezd s vstupenkou na zápas, případně prohlídka stadionu.</li>\n<li><strong>Aktivní sportovec:</strong> nové sporty, vodní zážitky, zimní sporty, trénink.</li>\n<li><strong>Rekreační sportovec:</strong> cvičení, fitness, wellness na regeneraci.</li>\n</ul>\n<h2>Zážitky, které sportovce potěší</h2>\n<ul>\n<li><a href=\"/sportovni-zajezdy/\">Sportovní zájezdy</a>: zájezdy na zápasy, včetně nabídek FutbalTour. Zpravidla zahrnují vstupenku, termín zápasu je daný a ceny „od“ jsou orientační. Vždy zkontrolujte, co je v ceně, například doprava a ubytování.</li>\n<li><a href=\"/zimni-sporty/\">Zimní sporty</a>: lyže, snowboard či běžky, nejlépe s instruktorem.</li>\n<li><a href=\"/vodni-zazitky/\">Vodní zážitky</a>: rafting, paddleboard, potápění.</li>\n<li><a href=\"/zazitkove-jizdy/\">Zážitkové jízdy</a>: motokáry a závodní auta pro ty, kdo milují rychlost.</li>\n<li><a href=\"/sport-a-pohyb/\">Sport a pohyb</a>: lezení, trampolíny, střelba lukem a další aktivity.</li>\n<li>Cvičení a fitness: lekce, vstupy a individuální trénink.</li>\n</ul>\n<h2>Kolik dárek pro sportovce stojí</h2>\n<p>Podle aktuální nabídky začíná cvičení a fitness kolem 70 Kč a v průměru stojí zhruba 830 Kč, sport a pohyb vychází v průměru na 1 400 Kč. Vodní zážitky stojí v průměru přes 2 900 Kč, zážitkové jízdy kolem 2 900 Kč a zimní sporty téměř 3 900 Kč. Sportovní zájezdy jsou dražší, protože obsahují vstupenku a často dopravu. Ceny jsou orientační a rozhoduje údaj u konkrétní nabídky.</p>\n<h2>Jak vybrat zájezd na zápas</h2>\n<p>Zájezdy na zápasy jsou specifické tím, že termín zápasu je daný a nedá se posunout. Před koupí proto zjistěte, zda obdarovaný ten den může, a zda je v ceně vstupenka, doprava nebo ubytování. Cena „od“ je orientační, konečná částka závisí na zápase, kategorii vstupenky a délce zájezdu. Pokud si nejste jistí termínem, může být bezpečnější volbou jiný sportovní zážitek s flexibilním termínem.</p>\n<h3>Příležitosti</h3>\n<p>Zájezd či aktivní zážitek se hodí k narozeninám, Vánocům i jako odměna za výsledek. Pro dětské sportovce zase fungují sportovní kempy a aktivity, kde si děti zkusí nový sport s trenérem. Pokud dárek kupuje více lidí, vybrat se dá větší zážitek, třeba zájezd pro dva či tým.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>U zájezdů na zápasy dávejte pozor na termín zápasu: je pevný, takže voucher bývá vázaný na konkrétní utkání.</li>\n<li>U ostatních zážitků si termín vybírá obdarovaný podle platnosti voucheru.</li>\n<li>Voucher přijde e-mailem, vytiskněte ho nebo ho předejte v obálce.</li>\n<li>Zkontrolujte zdravotní, věková a výkonnostní omezení.</li>\n</ul>\n<p>Pro jiné typy příjemců se hodí <a href=\"/darek-pro-muze/\">dárek pro muže</a> nebo <a href=\"/darek-pro-pritele/\">dárek pro přítele</a>.</p>\n<p>Nákup probíhá u partnera za stejnou cenu jako přímo u něj.</p>",
+   "faq": [
+    {
+     "q": "Co darovat fanouškovi místo dresu?",
+     "a": "Zájezd na zápas jeho klubu. Zpravidla zahrnuje vstupenku, termín zápasu je ale pevný, proto zkontrolujte, co je v ceně."
+    },
+    {
+     "q": "Jsou ceny zájezdů na zápasy pevné?",
+     "a": "Ceny „od“ jsou orientační, závisí na zápase, termínu a dalších službách."
+    },
+    {
+     "q": "Co dát sportovci, který má vše?",
+     "a": "Nový sport, trénink s instruktorem, zážitkovou jízdu nebo wellness na regeneraci."
+    },
+    {
+     "q": "Dá se dárek koupit na poslední chvíli?",
+     "a": "Ano, voucher přijde e-mailem. U zájezdů na zápas ale zkontrolujte termín a dostupnost vstupenek."
+    },
+    {
+     "q": "Jak dlouho voucher platí?",
+     "a": "Platnost je uvedena u každé nabídky."
+    }
+   ]
+  },
+  {
+   "slug": "darek-pro-maminku",
+   "name": "Pro maminku",
+   "h1": "Dárek pro maminku: zážitky, které ji potěší",
+   "icon": "pro-ni",
+   "kw": "dárek pro maminku (3 500)",
+   "cats": [
+    "masaze",
+    "kosmetika",
+    "sauna",
+    "wellness-pobyty",
+    "lazenske-pobyty",
+    "pobyty-pro-dva",
+    "kavarny-a-dorty",
+    "kurzy-vareni",
+    "diy-kurzy",
+    "foceni"
+   ],
+   "title": "Dárek pro maminku – zážitky a pobyty | Kouzelný děda",
+   "desc": "Masáž, wellness, lázně nebo společný výlet. Tipy na dárek pro maminku k narozeninám, Vánocům i Dni matek. Voucher hned e-mailem.",
+   "intro": "Maminka si zaslouží chvíli jen pro sebe. Místo další věci jí darujte masáž, wellness, lázně nebo kurz, na který si sama nikdy nenajde čas. Vybrali jsme dárky, které potěší bez ohledu na věk, a většinu z nich pořídíte jako voucher s otevřeným termínem.",
+   "il": "pro-ni",
+   "body": "<h2>Dárek pro maminku: chvíle jen pro sebe</h2>\n<p>Maminky se většinou starají o všechny kolem sebe a samy si dopřávají nejméně. Proto dobrý dárek pro maminku není další hrnek ani župan, ale čas a klid, který si sama nezařídí. Zážitek mamince řekne: na tebe jsem myslel a chci, abys odpočívala. Vyplatí se dopředu nabídnout i praktickou pomoc, třeba pohlídat děti nebo psa, aby termín skutečně využila.</p>\n<h3>Jak vybrat podle maminky</h3>\n<ul>\n<li><strong>Maminka, která pořád běhá:</strong> masáž nebo wellness, kde se zastaví.</li>\n<li><strong>Maminka, která ráda tvoří:</strong> kurz malování či tvoření.</li>\n<li><strong>Maminka, která ráda vaří:</strong> kurz vaření nebo večeře v dobré restauraci.</li>\n<li><strong>Maminka, která si nic nekoupí sama:</strong> focení, lázně nebo pobyt.</li>\n</ul>\n<h2>Zážitky, které maminky ocení</h2>\n<ul>\n<li><a href=\"/masaze/\">Masáž</a>: záda, šíje, relaxační či aromatická. Od zhruba 149 Kč, průměrně kolem 1 250 Kč.</li>\n<li><a href=\"/kosmetika/\">Kosmetika</a>: ošetření pleti nebo úprava obočí. Od zhruba 99 Kč.</li>\n<li><a href=\"/sauna/\">Sauna a privátní wellness</a>: hodina v klidu, třeba s kamarádkou nebo dcerou.</li>\n<li><a href=\"/lazenske-pobyty/\">Lázeňský pobyt</a>: klid a procedury; začínají zhruba na 980 Kč, průměr kolem 4 600 Kč.</li>\n<li>Kurz vaření nebo tvoření: večer s novou dovedností.</li>\n<li>Focení: rodinné nebo portrétní, od zhruba 500 Kč.</li>\n</ul>\n<h2>Kolik dárek pro maminku stojí</h2>\n<p>Pro Den matek nebo malou pozornost stačí posezení v kavárně, které vychází často na pár stovek korun, nebo kratší masáž. Na narozeniny se hodí delší masáž, wellness či focení, tedy 1 000 až 2 500 Kč. Pro velkou příležitost, třeba padesátiny, můžete dárek složit s dětmi a koupit wellness či lázeňský pobyt. Wellness pobyty začínají přibližně na 1 070 Kč a v průměru stojí přes 5 300 Kč.</p>\n<h2>Jak dárek předat, aby maminka opravdu odpočinula</h2>\n<p>Nejčastější chyba je, že maminka voucher dostane, ale nikdy ho nevyužije, protože se vždycky najde něco důležitějšího. Pomůže konkrétní plán: domluvte datum, zajistěte hlídání nebo odvoz a rezervaci vyřiďte rovnou s ní. Pokud je dárek od dětí, může každé z nich napsat pár slov, čímž z dárku vznikne hezká vzpomínka.</p>\n<h3>Den matek, narozeniny, Vánoce</h3>\n<p>Na Den matek se hodí menší pozornost, na narozeniny delší masáž či focení, na Vánoce wellness nebo pobyt. Pokud chcete mamince udělat radost bez velkého rozpočtu, stačí poukaz do kavárny a odpoledne jen pro vás dva.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher přijde e-mailem, vytiskněte ho a vložte do obálky nebo ho předejte s kyticí.</li>\n<li>Termín si vybírá maminka. Platnost voucheru je uvedena u nabídky.</li>\n<li>U pobytů ověřte počet osob v ceně a rezervujte s předstihem.</li>\n<li>Nabídněte pomoc s domluvou termínu a hlídáním, maminky odkládají hodně věcí „až bude čas“.</li>\n</ul>\n<p>Pro jiné pohledy se podívejte na <a href=\"/darek-pro-babicku/\">dárek pro babičku</a>, <a href=\"/darek-pro-zenu/\">dárek pro ženu</a> nebo <a href=\"/darek-pro-rodice/\">dárek pro rodiče</a>.</p>\n<p>Nákup probíhá u partnera, cena je stejná jako přímo u něj.</p>",
+   "faq": [
+    {
+     "q": "Co darovat mamince k narozeninám nebo na Den matek?",
+     "a": "Zážitek, který si sama nezařídí: masáž, wellness, kosmetiku nebo kurz. Pro malý dárek stačí kavárna."
+    },
+    {
+     "q": "Dá se dárek pro maminku stihnout na poslední chvíli?",
+     "a": "Ano, voucher přijde e-mailem po zaplacení."
+    },
+    {
+     "q": "Jak předat voucher?",
+     "a": "Vytiskněte ho do obálky a přidejte kytici nebo ručně psaný vzkaz."
+    },
+    {
+     "q": "Může si maminka vybrat termín sama?",
+     "a": "Ano, termín si volí podle podmínek nabídky v rámci platnosti voucheru."
+    },
+    {
+     "q": "Kolik stojí masáž pro maminku?",
+     "a": "Od zhruba 149 Kč, v průměru kolem 1 250 Kč. Přesná cena je u nabídky."
+    }
+   ]
+  },
+  {
+   "slug": "darek-pro-babicku",
+   "name": "Pro babičku",
+   "h1": "Dárek pro babičku: pohodové zážitky a pobyty",
+   "icon": "pro-rodice",
+   "kw": "dárek pro babičku (2 400)",
+   "cats": [
+    "lazenske-pobyty",
+    "pobyty-pro-seniory",
+    "wellness-pobyty",
+    "masaze",
+    "kultura-a-vylety",
+    "kavarny-a-dorty",
+    "muzea-a-pamatky"
+   ],
+   "title": "Dárek pro babičku – pobyty a zážitky | Kouzelný děda",
+   "desc": "Lázeňský pobyt, masáž, výlet nebo kavárna. Tipy na dárek pro babičku, který potěší a nezatíží. Voucher přijde hned e-mailem.",
+   "intro": "Babička má doma všechno, a hlavně už nechce další hrnek. Potěší ji pobyt v lázních, masáž, příjemný výlet nebo posezení u kávy a dortu. Vybrali jsme klidné zážitky bez zbytečné námahy, které si může užít po svém a ve svém tempu.",
+   "il": "pro-rodice",
+   "body": "<h2>Dárek pro babičku: pohodové zážitky bez shonu</h2>\n<p>Babičky už většinou mají plné skříně hrnků, šátků a ubrousků. Přitom nejvíc je potěší pozornost a společný čas. Dárek pro babičku tedy volte klidný, bez fyzické námahy a ideálně takový, ke kterému ji můžete doprovodit. Pro mnoho babiček je největším dárkem to, že vnuci dorazí a stráví s nimi odpoledne.</p>\n<h3>Na co myslet při výběru</h3>\n<ul>\n<li><strong>Zdraví a pohyblivost:</strong> vyhněte se dlouhému stání, náročným schodům či dlouhým cestám.</li>\n<li><strong>Společnost:</strong> zážitek pro dva (babička a vnouče) je často lepší než samotný.</li>\n<li><strong>Technika:</strong> babička nemusí zvládnout e-mail, vytiskněte voucher a pomozte s rezervací.</li>\n</ul>\n<h2>Zážitky pro babičky</h2>\n<ul>\n<li><a href=\"/lazenske-pobyty/\">Lázeňský pobyt</a>: procedury a režim, které babičky znají a mají rády. Podle nabídky od zhruba 980 Kč.</li>\n<li><a href=\"/pobyty-pro-seniory/\">Pobyt pro seniory</a>: přizpůsobený program a tempo; začínají kolem 850 Kč.</li>\n<li><a href=\"/masaze/\">Masáž</a>: šetrná, třeba masáž zad nebo šíje.</li>\n<li><a href=\"/kavarny-a-dorty/\">Posezení v kavárně</a>: nenáročné, od několika desítek korun, a odpoledne společně.</li>\n<li>Kultura a výlety: divadlo, koncert, výlet lodí či vlakem.</li>\n<li>Muzea a prohlídky: pro babičky se zájmem o historii.</li>\n</ul>\n<h2>Kolik dárek pro babičku stojí</h2>\n<p>Kavárny vycházejí v průměru kolem 250 Kč, kultura a výlety v průměru kolem 1 000 Kč a muzea a prohlídky přibližně 1 250 Kč. Masáže stojí v průměru kolem 1 250 Kč. Lázeňské pobyty vycházejí v průměru zhruba na 4 600 Kč a pobyty pro seniory přes 5 900 Kč, na ty se vyplatí složit sourozenci či celá rodina.</p>\n<h2>Jak dárek předat a nezahltit babičku</h2>\n<p>Babičky často řeknou, že si dárek nezaslouží, a pak ho využijí s nadšením. Pomůže, když zážitek naplánujete společně: stanovíte den, zajistíte odvoz a doprovodíte ji. Sama babička by se na rezervaci mohla stydět zavolat, proto ji nabídněte udělat za ni. Voucher můžete předat při rodinné oslavě nebo spolu s fotografií rodiny.</p>\n<h3>Příležitosti</h3>\n<p>K narozeninám se hodí lázně či posezení v kavárně, na Vánoce pobyt pro seniory, ke Dni matek či jinému svátku menší pozornost. Pokud jde o společný dárek od celé rodiny, vyberte pobyt, kam se vydá babička spolu s dalším členem rodiny.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher přijde e-mailem. Babičce ho vytiskněte, nebo jí ho předejte s doprovodným dopisem.</li>\n<li>Termín domluvte společně, platnost voucheru je uvedena u nabídky.</li>\n<li>U pobytů zkontrolujte bezbariérovost, stravu a počet osob v ceně.</li>\n<li>Počítejte s tím, že babička bude potřebovat pomoc s rezervací nebo dopravou.</li>\n</ul>\n<p>Podobně se hodí <a href=\"/darek-pro-dedu/\">dárek pro dědu</a>, <a href=\"/darek-pro-maminku/\">dárek pro maminku</a> a <a href=\"/darek-pro-rodice/\">dárek pro rodiče</a>.</p>\n<p>Nákup probíhá u partnera za stejnou cenu jako přímo u něj.</p>",
+   "faq": [
+    {
+     "q": "Co darovat babičce, která nic nechce?",
+     "a": "Společný zážitek: kávu a dort, výlet, kulturu nebo lázně. Nejvíc potěší čas strávený spolu."
+    },
+    {
+     "q": "Jaký zážitek je vhodný pro starší babičky?",
+     "a": "Klidný: pobyt pro seniory, lázně, masáž, kavárna nebo kulturní program bez náročné chůze."
+    },
+    {
+     "q": "Co když babička nepoužívá e-mail?",
+     "a": "Vytiskněte voucher a pomozte s rezervací telefonicky."
+    },
+    {
+     "q": "Dá se dárek složit s rodinou?",
+     "a": "Ano, na dražší pobyt se mohou složit sourozenci i vnoučata."
+    },
+    {
+     "q": "Je cena stejná jako u partnera?",
+     "a": "Ano, nakupujete přímo u partnera."
+    }
+   ]
+  },
+  {
+   "slug": "darek-pro-dedu",
+   "name": "Pro dědečka",
+   "h1": "Dárek pro dědu: zážitky, které ocení",
+   "icon": "pro-nej",
+   "kw": "dárek pro dědu (1 200)",
+   "cats": [
+    "pobyty-pro-seniory",
+    "lazenske-pobyty",
+    "degustace-vina-a-piva",
+    "vyhlidkove-lety",
+    "zazitkove-jizdy",
+    "muzea-a-pamatky",
+    "steaky-a-burgery",
+    "kultura-a-vylety"
+   ],
+   "title": "Dárek pro dědu – zážitky a pobyty | Kouzelný děda",
+   "desc": "Vyhlídkový let, degustace piva a vína, lázně nebo výlet. Tipy na dárek pro dědečka, který má už všechno. Voucher hned e-mailem.",
+   "intro": "Co darovat dědovi, který tvrdí, že nic nepotřebuje? Zážitek, na který by si sám netroufl: vyhlídkový let, projížďku zajímavým autem, degustaci piva nebo vína, dobrý steak či pobyt v lázních. Vybrali jsme nabídky pro každý temperament a kondici.",
+   "il": "pro-nej",
+   "body": "<h2>Dárek pro dědu: zážitky, které ocení</h2>\n<p>Děda obvykle tvrdí, že nic nepotřebuje, a pak vypráví o zážitku celé týdny. Dárek pro dědu proto zvolte tak, aby byl smysluplný a nenáročný: něco, na co sám nedojde, třeba vyhlídkový let nebo degustace. Vhodné je počítat s jeho zdravím a nabídnout doprovod, kterému bude děda rád.</p>\n<h3>Jak vybrat</h3>\n<ul>\n<li><strong>Aktivní děda:</strong> jízda v zajímavém voze, let či výlet.</li>\n<li><strong>Klidný děda:</strong> pobyt, lázně, muzeum či degustace v klidném tempu.</li>\n<li><strong>Gurmán a pivař:</strong> degustace či steak.</li>\n</ul>\n<h2>Zážitky, které se hodí dědům</h2>\n<ul>\n<li><a href=\"/vyhlidkove-lety/\">Vyhlídkový let</a>: balónem, letadlem či vrtulníkem. Podle nabídky od zhruba 49 Kč, v průměru ale kolem 6 200 Kč.</li>\n<li><a href=\"/zazitkove-jizdy/\">Zážitková jízda</a>: veterán, sportovní auto nebo traktor, podle toho, co děda miluje.</li>\n<li><a href=\"/degustace-vina-a-piva/\">Degustace vína a piva</a>: pro dospělé, v průměru kolem 2 200 Kč.</li>\n<li><a href=\"/steaky-a-burgery/\">Steak či burger</a>: večeře v dobré restauraci, v průměru kolem 620 Kč.</li>\n<li>Muzea a prohlídky: technická muzea, hrady, zámky.</li>\n<li>Pobyt pro seniory nebo lázně: pro dědu, který ocení klid a procedury.</li>\n</ul>\n<h2>Kolik dárek pro dědu stojí</h2>\n<p>Muzea a výlety vychází často na stovky korun, steak v průměru kolem 620 Kč, degustace kolem 2 200 Kč a jízdy téměř 2 900 Kč. Pobyty pro seniory začínají kolem 850 Kč, v průměru přes 5 900 Kč, lázně zhruba od 980 Kč. Ceny se liší, zkontrolujte vždy konkrétní nabídku.</p>\n<h2>Jak dárek předat a zajistit, že ho děda využije</h2>\n<p>Dědové jsou často skromní a voucher raději odloží. Pomůže, když dárek předáte jako pozvánku: pojedeme spolu na jízdu, půjdeme na degustaci, vezmu tě na let. Termín domluvte hned a děda se bude těšit. U zážitků s fyzickou aktivitou se vyplatí zkontrolovat, zda jsou vhodné pro jeho zdravotní stav, případně nabídku vybrat klidnější.</p>\n<h3>Příležitosti</h3>\n<p>Narozeniny, Vánoce či rodinná oslava. Pokud se skládá více vnoučat, může být dárkem větší zážitek, třeba let nebo pobyt, který děda využije se svou partnerkou.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher přijde e-mailem, vytiskněte ho a vložte do obálky.</li>\n<li>Termín domluvte společně, platnost voucheru je uvedena u nabídky.</li>\n<li>U jízd a letů zkontrolujte věková, váhová a zdravotní omezení.</li>\n<li>Nabídněte doprovod nebo odvoz, pro dědu je to často největší radost.</li>\n</ul>\n<p>Rodinně se hodí též <a href=\"/darek-pro-babicku/\">dárek pro babičku</a>, a pokud máte jiného muže, zkuste <a href=\"/darek-pro-tatu/\">dárek pro tátu</a> nebo <a href=\"/darek-pro-muze/\">dárek pro muže</a>.</p>\n<p>Nákup probíhá u partnera za stejnou cenu jako přímo u něj.</p>",
+   "faq": [
+    {
+     "q": "Co darovat dědovi, který nic nechce?",
+     "a": "Zážitek: vyhlídkový let, jízdu, degustaci nebo výlet, na který by sám nešel."
+    },
+    {
+     "q": "Je vyhlídkový let vhodný pro seniora?",
+     "a": "Záleží na zdraví a podmínkách nabídky. Zkontrolujte věková a zdravotní omezení."
+    },
+    {
+     "q": "Jak předat voucher dědovi?",
+     "a": "Vytiskněte ho do obálky a nabídněte doprovod."
+    },
+    {
+     "q": "Pro koho je degustace vína a piva?",
+     "a": "Pouze pro dospělé."
+    },
+    {
+     "q": "Dá se dárek složit s rodinou?",
+     "a": "Ano, na větší zážitek se mohou složit vnoučata i děti."
+    }
+   ]
+  },
+  {
+   "slug": "darek-pro-tatu",
+   "name": "Pro tátu",
+   "h1": "Dárek pro tátu: zážitky, které ho nadchnou",
+   "icon": "pro-nej",
+   "kw": "dárek pro tátu (1 700)",
+   "cats": [
+    "zazitkove-jizdy",
+    "strelba",
+    "degustace-vina-a-piva",
+    "steaky-a-burgery",
+    "vyhlidkove-lety",
+    "sportovni-zajezdy",
+    "unikove-hry",
+    "wellness-pobyty"
+   ],
+   "title": "Dárek pro tátu – zážitky a poukazy | Kouzelný děda",
+   "desc": "Jízda ve sportovním autě, střelnice, degustace piva nebo zájezd na zápas. Tipy na dárek pro tátu, voucher přijde hned e-mailem.",
+   "intro": "Táta většinou řekne, že nic nechce, a pak se celé týdny směje u zážitku, který dostal. Najdete tu jízdy ve sportovních autech, střelnice, degustace, steaky, vyhlídkové lety i zájezdy na zápasy. Dárky pro tátu každého věku, od pár stovek po velké zážitky.",
+   "il": "pro-nej",
+   "body": "<h2>Dárek pro tátu: zážitky, které ho nadchnou</h2>\n<p>Táta bývá ten, kdo si všechno koupí sám a nikdy nic nechce. Zážitek tenhle problém obchází: místo další košile dostane hodinu za volantem nebo večer s grilovaným steakem. Nejlepší dárek pro tátu odpovídá tomu, co ho baví, a pokud to půjde, zahrnuje i společný čas s dítětem.</p>\n<h3>Podle čeho vybírat</h3>\n<ul>\n<li><strong>Táta technik:</strong> jízda, simulátor, let.</li>\n<li><strong>Táta sportovec:</strong> zájezd na zápas, aktivní sport.</li>\n<li><strong>Táta gurmán:</strong> steak, pivo nebo víno.</li>\n<li><strong>Táta pohodář:</strong> wellness nebo úniková hra s rodinou.</li>\n</ul>\n<h2>Zážitky, které táta ocení</h2>\n<ul>\n<li><a href=\"/zazitkove-jizdy/\">Zážitkové jízdy</a>: supersport, závodní okruh nebo terén; v průměru kolem 2 900 Kč.</li>\n<li><a href=\"/strelba/\">Střelba</a>: pro dospělé, podle podmínek partnera; v průměru kolem 2 900 Kč.</li>\n<li><a href=\"/vyhlidkove-lety/\">Vyhlídkový let</a>: letadlem, balónem či vrtulníkem.</li>\n<li><a href=\"/degustace-vina-a-piva/\">Degustace piva nebo vína</a>: jen pro dospělé.</li>\n<li>Steak či burger: v průměru kolem 620 Kč.</li>\n<li>Úniková hra: s dětmi, kolem 1 150 Kč v průměru.</li>\n<li>Sportovní zájezd: pro fanouška.</li>\n</ul>\n<h2>Kolik dárek pro tátu stojí</h2>\n<p>Pro Den otců stačí menší zážitek: steak, degustace či úniková hra, tedy stovky až kolem tisícovky. K narozeninám se hodí jízda či let, ceny začínají od několika set korun a vystoupat mohou do tisíců. Wellness pobyty začínají kolem 1 070 Kč a v průměru stojí přes 5 300 Kč, jsou vhodné pro větší příležitosti. Přesnou cenu vždy najdete u nabídky.</p>\n<h2>Jak dárek předat a z čeho zvolit</h2>\n<p>Táta ocení, když zážitek dostane s lehkým humorem: voucher v krabici od nářadí nebo v obálce s motivem auta. Pokud zážitek zahrnuje pozvánku pro děti, získá dárek další rozměr. Hodí se i skupinový zážitek, třeba úniková hra s celou rodinou, protože táta se nemusí stydět za neumění a všichni se zasmějí.</p>\n<h3>Příležitosti</h3>\n<p>Narozeniny, Vánoce a Den otců. Pro padesátníky a šedesátníky se hodí zážitek, který si sami nedopřejí, třeba jízda ve sportovním voze, vyhlídkový let nebo pobyt s manželkou. Pro mladšího tátu zase aktivita s dětmi.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher přijde e-mailem. Vytiskněte ho do obálky nebo zabalte s drobností k zážitku.</li>\n<li>Termín si vybírá táta, platnost voucheru je uvedena u nabídky.</li>\n<li>U jízd, letů a střelby zkontrolujte věková a zdravotní omezení.</li>\n<li>Pokud je zážitek pro dva, můžete se k němu přidat a udělat z něj společný den.</li>\n</ul>\n<p>Pro jiné členy rodiny se podívejte na <a href=\"/darek-pro-dedu/\">dárek pro dědu</a>, <a href=\"/darek-pro-muze/\">dárek pro muže</a> a <a href=\"/darek-pro-rodice/\">dárek pro rodiče</a>.</p>\n<p>Nákup probíhá u partnera za stejnou cenu jako přímo u něj.</p>",
+   "faq": [
+    {
+     "q": "Co darovat tátovi, který nic nechce?",
+     "a": "Zážitek: jízdu, let, steak, degustaci nebo únikovou hru. Zabere čas, ne místo."
+    },
+    {
+     "q": "Co se hodí na Den otců?",
+     "a": "Menší zážitek, třeba steak, degustace nebo úniková hra, nejlépe společně s dětmi."
+    },
+    {
+     "q": "Je střelba pro každého?",
+     "a": "Je pro dospělé a řídí se podmínkami partnera."
+    },
+    {
+     "q": "Jak předat voucher?",
+     "a": "Vytiskněte ho do obálky nebo ho pošlete e-mailem."
+    },
+    {
+     "q": "Je cena stejná jako u partnera?",
+     "a": "Ano, nakupujete přímo u partnera."
+    }
+   ]
+  },
+  {
+   "slug": "darek-pro-pritelkyni",
+   "name": "Pro přítelkyni",
+   "h1": "Dárek pro přítelkyni: romantika a péče o ni",
+   "icon": "pro-ni",
+   "kw": "dárek pro přítelkyni (2 000)",
+   "cats": [
+    "pobyty-pro-dva",
+    "masaze",
+    "wellness-pobyty",
+    "kosmetika",
+    "degustacni-menu",
+    "kurzy-malovani",
+    "foceni",
+    "kavarny-a-dorty"
+   ],
+   "title": "Dárek pro přítelkyni – zážitky a pobyty | Kouzelný děda",
+   "desc": "Romantický pobyt, masáž, wellness nebo večeře ve dvou. Tipy na dárek pro přítelkyni k výročí, narozeninám i Vánocům. Voucher hned e-mailem.",
+   "intro": "Přítelkyni potěšíte nejvíc, když jí věnujete čas a pozornost. Romantický pobyt, privátní wellness, masáž nebo večeře na místě, kde jste ještě nebyli. Vybrali jsme dárky, které působí osobně, a většinu z nich pořídíte jako voucher, který stačí vytisknout nebo poslat e-mailem.",
+   "il": "pro-ni",
+   "body": "<h2>Dárek pro přítelkyni: romantika a péče o ni</h2>\n<p>Dárek pro přítelkyni se vybírá jinak než pro maminku či kamarádku. Chcete dát najevo, že vám na ní záleží, a udělat jí radost způsobem, který je osobní, nikoli povinný. Zážitek k tomu sedí, protože je současně pozorností a společným časem. Nejlépe vybírat podle toho, co ji baví, a ne podle toho, co je zrovna v módě.</p>\n<h3>Jak vybrat</h3>\n<ul>\n<li><strong>Romantička:</strong> pobyt, večeře při svíčkách, privátní wellness.</li>\n<li><strong>Zaměřená na péči o sebe:</strong> masáž, kosmetika, wellness.</li>\n<li><strong>Tvůrčí duše:</strong> kurz malování nebo focení.</li>\n<li><strong>Gurmánka:</strong> degustační menu či kavárna s dortem.</li>\n</ul>\n<h2>Zážitky pro přítelkyni</h2>\n<ul>\n<li><a href=\"/pobyty-pro-dva/\">Pobyt pro dva</a>: víkend ve dvou, nabídek je téměř 2 900 a začínají zhruba na 520 Kč.</li>\n<li><a href=\"/wellness-pobyty/\">Wellness pobyt</a>: bazén, sauna a masáže; v průměru zhruba 5 300 Kč.</li>\n<li><a href=\"/masaze/\">Masáž</a>: od zhruba 149 Kč, vhodná i jako menší dárek.</li>\n<li><a href=\"/kosmetika/\">Kosmetické ošetření</a>: péče o pleť, v průměru kolem 1 080 Kč.</li>\n<li><a href=\"/degustacni-menu/\">Degustační menu</a>: večer ve dvou, v průměru kolem 1 500 Kč.</li>\n<li>Kurz malování nebo focení: aktivita, ze které zůstane vzpomínka.</li>\n</ul>\n<h2>Kolik dárek pro přítelkyni stojí</h2>\n<p>Pro menší pozornost stačí posezení v kavárně či masáž za několik set korun. Střední rozpočet kolem 1 000 až 2 000 Kč pokryje delší masáž, kosmetiku, degustační menu či focení. Pro velkou příležitost, třeba výročí, se hodí pobyt, kde ceny začínají na stovkách a v průměru vycházejí v tisících. Přesnou cenu a obsah zkontrolujte u konkrétní nabídky.</p>\n<h2>Jak dárek předat a načasovat</h2>\n<p>Zážitek se dá předat s trochou romantiky: voucher v obálce na polštáři, pozvánka při večeři nebo vzkaz s hádankou. Pokud jde o překvapení, naplánujte i termín a zajistěte, aby měla ten den volno. Pokud si nejste jisti jejími plány, nechte termín na ní, ať si vybere sama v rámci platnosti voucheru.</p>\n<h3>Příležitosti</h3>\n<p>Výročí vztahu, narozeniny, Vánoce či Valentýn. Na menší gesto stačí večeře nebo masáž, na výročí pobyt. Pokud je to začátek vztahu, držte se lehčí varianty, třeba wellness či kurz tvoření.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher přijde e-mailem, vytiskněte ho do obálky nebo ho předejte s kyticí.</li>\n<li>Termín si vybírá obdarovaná, platnost voucheru je uvedena u nabídky.</li>\n<li>U pobytů zkontrolujte počet osob a co je v ceně.</li>\n<li>Rezervujte s předstihem, zejména na víkendy.</li>\n</ul>\n<p>Podobně se hodí <a href=\"/darek-pro-zenu/\">dárek pro ženu</a> a <a href=\"/darek-na-valentyna/\">dárek na Valentýna</a>.</p>\n<p>Nákup probíhá u partnera za stejnou cenu jako přímo u něj.</p>",
+   "faq": [
+    {
+     "q": "Co darovat přítelkyni, která má vše?",
+     "a": "Zážitek, který si sama nezařídí: pobyt, wellness, masáž nebo kurz."
+    },
+    {
+     "q": "Hodí se pobyt i pro nový vztah?",
+     "a": "Spíše menší zážitek, třeba večeře nebo wellness. Pobyt se hodí pro vyzrálejší vztah."
+    },
+    {
+     "q": "Může si přítelkyně termín vybrat sama?",
+     "a": "Ano, v rámci platnosti voucheru uvedené u nabídky."
+    },
+    {
+     "q": "Jak předat voucher?",
+     "a": "Vytiskněte ho do obálky a přidejte kytici či vzkaz."
+    },
+    {
+     "q": "Je cena stejná jako u partnera?",
+     "a": "Ano, nakupujete přímo u partnera."
+    }
+   ]
+  },
+  {
+   "slug": "darek-pro-pritele",
+   "name": "Pro přítele",
+   "h1": "Dárek pro přítele: zážitky od adrenalinu po pohodu",
+   "icon": "pro-nej",
+   "kw": "dárek pro přítele (1 900)",
+   "cats": [
+    "sportovni-zajezdy",
+    "zazitkove-jizdy",
+    "adrenalinove-zazitky",
+    "unikove-hry",
+    "degustace-vina-a-piva",
+    "steaky-a-burgery",
+    "pobyty-pro-dva",
+    "vyhlidkove-lety"
+   ],
+   "title": "Dárek pro přítele – zážitky a poukazy | Kouzelný děda",
+   "desc": "Jízda ve sportovním autě, zájezd na zápas, únikovka nebo degustace. Tipy na dárek pro přítele, voucher přijde hned e-mailem.",
+   "intro": "Přítel pozná, že jste se snažili, když mu darujete něco, co by si sám nekoupil. Zájezd na zápas jeho klubu, jízdu v rychlém autě, střelnici, únikovku nebo víkend ve dvou. Vybrali jsme dárky pro každý styl, od adrenalinu po klidný relax.",
+   "il": "pro-nej",
+   "body": "<h2>Dárek pro přítele: zážitky od adrenalinu po pohodu</h2>\n<p>Přítel pozná, že jste se snažili, když mu darujete něco, co by si sám nekoupil. Dárek pro přítele proto neřešte přes značku či velikost, ale přes to, co ho baví. Zážitek se dá využít spolu, což z dárku dělá dvojnásobnou radost: dostane něco, co ho potěší, a navíc má vás.</p>\n<h3>Jak vybrat podle typu</h3>\n<ul>\n<li><strong>Fanoušek:</strong> zájezd na zápas jeho klubu.</li>\n<li><strong>Autíčkář:</strong> jízda ve sportovním voze nebo na okruhu.</li>\n<li><strong>Dobrodruh:</strong> adrenalin, vyhlídkový let.</li>\n<li><strong>Gurmán:</strong> steak či degustace piva a vína.</li>\n<li><strong>Pohodář:</strong> pobyt pro dva.</li>\n</ul>\n<h2>Zážitky pro přítele</h2>\n<ul>\n<li><a href=\"/sportovni-zajezdy/\">Sportovní zájezd</a>: vstupenka, doprava a termín zápasu; ceny „od“ jsou orientační.</li>\n<li><a href=\"/zazitkove-jizdy/\">Zážitková jízda</a>: supersport, závodní auto; v průměru téměř 2 900 Kč.</li>\n<li><a href=\"/adrenalinove-zazitky/\">Adrenalin</a>: skok, rafting, lety; široká nabídka od několika desítek korun.</li>\n<li><a href=\"/unikove-hry/\">Úniková hra</a>: pro dva či s partou; v průměru kolem 1 150 Kč.</li>\n<li><a href=\"/degustace-vina-a-piva/\">Degustace piva nebo vína</a>: jen pro dospělé.</li>\n<li>Steak či burger: dobrá večeře od zhruba 100 Kč.</li>\n<li>Vyhlídkový let: pro romantika i dobrodruha.</li>\n</ul>\n<h2>Kolik dárek pro přítele stojí</h2>\n<p>Pro menší dárek stačí steak či degustace, tedy stovky korun. Střední rozpočet, přibližně 1 000 až 2 000 Kč, pokryje únikovku, kratší jízdu či degustaci. Pro velké příležitosti se hodí delší jízdy, lety nebo pobyt pro dva, kde ceny začínají v řádu stovek korun a v průměru vycházejí v tisících. Pobyty pro dva začínají zhruba na 520 Kč.</p>\n<h2>Jak dárek předat a vybrat správné načasování</h2>\n<p>Muži často nechtějí slyšet, že mají dárek využít, a pak ho odkládají. Pomůže zážitek naplánovat společně nebo ho předat s konkrétním termínem. Voucher můžete vložit do obálky se vzkazem, nebo ho zabalit s drobností, třeba šálou klubu k zájezdu na zápas. Pokud zážitek zahrnuje dva, můžete se přidat a udělat z něj společný den.</p>\n<h3>Příležitosti</h3>\n<p>Narozeniny, výročí, Vánoce nebo jen tak. Na výročí se hodí pobyt, na narozeniny jízda, zájezd či adrenalin, na Vánoce večeře nebo wellness.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher přijde e-mailem. Vytiskněte ho do obálky nebo ho zabalte s drobností.</li>\n<li>Termín si vybírá obdarovaný. U zájezdů na zápas je termín pevný.</li>\n<li>U jízd a letů zkontrolujte omezení.</li>\n<li>Zážitek naplánujte společně, ať se oba těšíte.</li>\n</ul>\n<p>Podobně se hodí <a href=\"/darek-pro-muze/\">dárek pro muže</a> a <a href=\"/darek-pro-pritelkyni/\">dárek pro přítelkyni</a>, pokud hledáte pro druhou polovinu páru.</p>\n<p>Nákup probíhá u partnera za stejnou cenu jako přímo u něj.</p>",
+   "faq": [
+    {
+     "q": "Co darovat příteli, který má vše?",
+     "a": "Zážitek: jízdu, let, únikovku, degustaci nebo pobyt. Zabere čas, ne místo."
+    },
+    {
+     "q": "Hodí se zájezd na zápas?",
+     "a": "Ano, pro fanouška je to skvělý dárek. Termín zápasu je pevný, ceny „od“ jsou orientační."
+    },
+    {
+     "q": "Jak předat voucher?",
+     "a": "Vytiskněte ho do obálky nebo ho pošlete e-mailem."
+    },
+    {
+     "q": "Jsou degustace pro všechny?",
+     "a": "Jen pro dospělé."
+    },
+    {
+     "q": "Je cena stejná jako u partnera?",
+     "a": "Ano, nakupujete přímo u partnera."
+    }
+   ]
+  },
+  {
+   "slug": "darek-pro-ucitelku",
+   "name": "Pro učitelku",
+   "h1": "Dárek pro učitelku: poděkování, které potěší",
+   "icon": "dort",
+   "kw": "dárek pro učitelku (2 100)",
+   "cats": [
+    "kavarny-a-dorty",
+    "masaze",
+    "kosmetika",
+    "kurzy-malovani",
+    "diy-kurzy",
+    "degustacni-menu",
+    "kurzy-vareni"
+   ],
+   "max": 1000,
+   "title": "Dárek pro učitelku – zážitky do 1 000 Kč | Kouzelný děda",
+   "desc": "Poukaz na masáž, kávu s dortem, kurz nebo večeři. Nápady na dárek pro učitelku na konec roku i k Vánocům, do 1 000 Kč. Voucher hned e-mailem.",
+   "intro": "Poděkování učitelce nemusí být drahé, ale mělo by být osobní. Místo další čokolády darujte poukaz na masáž, posezení v kavárně, kreativní kurz nebo večeři. Vybrali jsme nabídky do 1 000 Kč, které se hodí od třídního kolektivu i od jednotlivého rodiče.",
+   "il": "dort",
+   "body": "<h2>Dárek pro učitelku: poděkování, které potěší</h2>\n<p>Poděkování učitelce nemusí být drahé, ale mělo by být osobní. Místo další čokolády a svíčky můžete darovat zážitek do 1 000 Kč, který si užije mimo školu a který ukáže, že na ni myslíte. Dárek se hodí na konec školního roku, k Vánocům či při odchodu dítěte ze školy.</p>\n<h3>Jak vybrat</h3>\n<ul>\n<li><strong>Cenové pásmo:</strong> do 1 000 Kč, nejlépe od celé třídy.</li>\n<li><strong>Vkus:</strong> neznáte-li ji, zvolte univerzální zážitek, třeba kavárnu nebo masáž.</li>\n<li><strong>Nenáročnost:</strong> ať si zážitek může vybrat v termínu, který jí vyhovuje.</li>\n</ul>\n<h2>Zážitky do 1 000 Kč, které se hodí</h2>\n<ul>\n<li><a href=\"/kavarny-a-dorty/\">Kavárna a dort</a>: nenáročné, většinou pár stovek, průměr kolem 250 Kč.</li>\n<li><a href=\"/masaze/\">Masáž</a>: více než 800 nabídek do 1 000 Kč, od zhruba 149 Kč.</li>\n<li><a href=\"/kosmetika/\">Kosmetické ošetření</a>: téměř 500 nabídek do 1 000 Kč.</li>\n<li><a href=\"/kurzy-malovani/\">Kurz malování</a> nebo tvoření: pro učitelky, které rády tvoří.</li>\n<li>Degustační menu: přes 40 nabídek do tisícovky, začíná kolem 390 Kč.</li>\n</ul>\n<h2>Kolik dárek pro učitelku stojí</h2>\n<p>V pásmu do 1 000 Kč najdete spoustu zážitků. Posezení v kavárně vyjde zhruba na 40 až 250 Kč, masáž či kosmetika od zhruba 100 do 1 000 Kč, kurz malování od zhruba 125 Kč a degustační menu od zhruba 390 Kč. Pro více rodičů, kteří se složí, je tu i <a href=\"/darky-do-1000-kc/\">přehled dárků do 1 000 Kč</a>.</p>\n<h2>Jak dárek předat ve třídě</h2>\n<p>Pokud dárek kupuje celá třída, rodiče mohou přispět menší částkou a vybrat něco, co se v rozpočtu do 1 000 Kč vejde, třeba masáž či kurz. Dárek by neměl být okázalý, spíš osobní. K voucheru přidejte ručně psaný dopis či obrázek od dětí, ten učitelky často potěší nejvíc. Voucher přijde e-mailem, tedy ho můžete vytisknout a předat na konci školního roku.</p>\n<h3>Etiketa</h3>\n<p>Řiďte se pravidly školy, někde se dary omezují. Nejlepší je, pokud je dárek poděkováním od celé třídy, ne od jednoho dítěte, a nemá konkrétní hodnotu viditelnou na první pohled.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher přijde e-mailem. Vytiskněte ho a vložte do obálky s dopisem od dětí.</li>\n<li>Termín si vybírá učitelka. Platnost voucheru je uvedena u nabídky.</li>\n<li>Zkontrolujte, zda cena platí za jednu osobu.</li>\n<li>Respektujte pravidla školy ohledně darů.</li>\n</ul>\n<p>Podobné nabídky najdete i u <a href=\"/darek-pro-kolegu/\">dárku pro kolegu</a> a <a href=\"/darek-pro-zenu/\">dárku pro ženu</a>.</p>\n<p>Nákup probíhá u partnera za stejnou cenu jako přímo u něj.</p>",
+   "faq": [
+    {
+     "q": "Co darovat učitelce do 1 000 Kč?",
+     "a": "Kavárnu, masáž, kosmetické ošetření, kurz malování nebo degustační menu."
+    },
+    {
+     "q": "Jak dárek předat?",
+     "a": "Vytiskněte voucher a přidejte ručně psaný dopis či obrázek od dětí."
+    },
+    {
+     "q": "Kdy dárek učitelce dát?",
+     "a": "Nejčastěji na konci školního roku, k Vánocům nebo při odchodu ze školy."
+    },
+    {
+     "q": "Může si učitelka vybrat termín sama?",
+     "a": "Ano, v rámci platnosti voucheru."
+    },
+    {
+     "q": "Je cena stejná jako u partnera?",
+     "a": "Ano, nakupujete přímo u partnera."
+    }
+   ]
+  },
+  {
+   "slug": "darek-pro-kolegu",
+   "name": "Pro kolegu",
+   "h1": "Dárek pro kolegu a kolegyni: nápady do 1 000 Kč",
+   "icon": "cena",
+   "kw": "dárek pro kolegu (460)",
+   "cats": [
+    "kavarny-a-dorty",
+    "degustace-vina-a-piva",
+    "unikove-hry",
+    "masaze",
+    "kurzy-vareni",
+    "bowling-a-zabava",
+    "sauna"
+   ],
+   "max": 1000,
+   "title": "Dárek pro kolegu a kolegyni – zážitky do 1 000 Kč | Kouzelný děda",
+   "desc": "Nápady na dárek pro kolegu nebo kolegyni do 1 000 Kč: únikovka, degustace, masáž, kurz. Voucher přijde hned e-mailem.",
+   "intro": "U dárku pro kolegu jde o to, aby byl příjemný, ne přehnaný. Zážitek do tisícovky funguje pro kolegyni i kolegu: degustace, úniková hra, kurz vaření nebo posezení v kavárně. Vybrali jsme nabídky, které se dobře předávají i hromadně za celý kolektiv.",
+   "il": "cena",
+   "body": "<h2>Dárek pro kolegu a kolegyni: nápady do 1 000 Kč</h2>\n<p>U dárku pro kolegu jde o to, aby byl příjemný, ne přehnaný. Zážitek do tisícovky funguje pro kolegyni i kolegu, neurazí a přitom je osobnější než lahev vína. Hodí se k narozeninám, odchodu z práce, při návratu z mateřské i jako poděkování.</p>\n<h3>Jak vybrat</h3>\n<ul>\n<li><strong>Znáte ho dobře:</strong> zvolte podle zájmů, třeba únikovou hru či degustaci.</li>\n<li><strong>Znáte ho málo:</strong> kavárna nebo masáž jsou bezpečná volba.</li>\n<li><strong>Dárek od týmu:</strong> složte se na větší zážitek, třeba bowling pro celé oddělení.</li>\n</ul>\n<h2>Zážitky do 1 000 Kč pro kolegy</h2>\n<ul>\n<li><a href=\"/kavarny-a-dorty/\">Kavárna a dort</a>: v průměru kolem 250 Kč, neformální a příjemné.</li>\n<li><a href=\"/degustace-vina-a-piva/\">Degustace piva či vína</a>: přes 100 nabídek do tisícovky, jen pro dospělé.</li>\n<li><a href=\"/unikove-hry/\">Úniková hra</a>: více než 300 nabídek do tisícovky, ideální pro tým.</li>\n<li><a href=\"/masaze/\">Masáž</a>: přes 800 nabídek do tisícovky, od zhruba 149 Kč.</li>\n<li>Bowling a zábava: většina nabídek do 500 Kč.</li>\n<li>Sauna: přes 190 nabídek do tisícovky, pro kolegu, který rád odpočívá.</li>\n</ul>\n<h2>Kolik dárek pro kolegu stojí</h2>\n<p>Do 500 Kč vyjde kavárna či bowling, do tisícovky masáž, degustace nebo úniková hra. Kurz vaření je v tomto pásmu méně častý, zpravidla vychází dráž. Pokud se dárek skládá z příspěvků celého týmu, můžete zvolit i dražší zážitek a využít přehledy <a href=\"/darky-do-500-kc/\">dárků do 500 Kč</a> a <a href=\"/darky-do-1000-kc/\">do 1 000 Kč</a>.</p>\n<h2>Jak dárek předat na pracovišti</h2>\n<p>V kanceláři funguje nejlépe nenápadný, ale osobní dárek: voucher v obálce, který kolega otevře, až bude chtít. Pokud kupuje celé oddělení, domluvte částku předem a vyberte zážitek, který kolegu nezahltí. Zvažte, zda jde o pracovní, nebo přátelský vztah, a podle toho volte formálnější či uvolněnější dárek.</p>\n<h3>Příležitosti</h3>\n<p>Narozeniny kolegy, odchod do jiné firmy, návrat z mateřské, Vánoce nebo poděkování po náročném projektu. Pro odcházejícího kolegu se hodí zážitek, který si odnese s sebou.</p>\n<h2>Praktické rady</h2>\n<ul>\n<li>Voucher přijde e-mailem. Vytiskněte ho do obálky nebo ho předejte s přáním.</li>\n<li>Termín si vybírá obdarovaný. Platnost voucheru je uvedena u nabídky.</li>\n<li>Zkontrolujte, zda cena platí za jednu osobu, nebo za skupinu.</li>\n<li>Na firemní dárky se vyplatí mít jednoduchou částku, ať se nikdo necítí trapně.</li>\n</ul>\n<p>Podobné nabídky najdete u <a href=\"/darek-pro-ucitelku/\">dárku pro učitelku</a>.</p>\n<p>Nákup probíhá u partnera za stejnou cenu jako přímo u něj.</p>",
+   "faq": [
+    {
+     "q": "Co darovat kolegovi do 1 000 Kč?",
+     "a": "Kavárnu, bowling, degustaci, masáž nebo únikovou hru."
+    },
+    {
+     "q": "Co darovat kolegyni?",
+     "a": "Masáž, kosmetiku, kavárnu s dortem nebo kurz."
+    },
+    {
+     "q": "Jsou degustace pro všechny?",
+     "a": "Jen pro dospělé."
+    },
+    {
+     "q": "Dá se dárek složit s týmem?",
+     "a": "Ano, můžete vybrat větší zážitek nebo skupinový zážitek pro celé oddělení."
+    },
+    {
+     "q": "Je cena stejná jako u partnera?",
+     "a": "Ano, nakupujete přímo u partnera."
+    }
+   ]
+  }
+ ]
 }

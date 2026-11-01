@@ -278,5 +278,19 @@
   "parent": "sportovni-zajezdy",
   "icon": "sport",
   "short": "Další sporty"
+ },
+ {
+  "slug": "cirkus",
+  "name": "Cirkus – vstupenky na představení",
+  "short": "Cirkus",
+  "parent": "kultura-a-vylety",
+  "icon": "divadlo"
+ },
+ {
+  "slug": "head-spa",
+  "name": "Head spa – hlava, vlasy a relax",
+  "short": "Head spa",
+  "parent": "wellness-a-krasa",
+  "icon": ""
  }
 ]
