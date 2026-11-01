@@ -427,6 +427,62 @@ export function sportTitle(raw: string, sport: string, league: string, iso: stri
   return `Zájezd: ${t}${when}`;
 }
 
+/** The feed's own image_link is a generated banner with the event text across the whole picture; sport stock photos (Pexels, hot-linked through wsrv) replace it. */
+const SPORT_PHOTOS: Record<string, string[]> = {
+ "Fotbal": [
+  "https://images.pexels.com/photos/30651230/pexels-photo-30651230.jpeg",
+  "https://images.pexels.com/photos/32190714/pexels-photo-32190714.jpeg",
+  "https://images.pexels.com/photos/29557630/pexels-photo-29557630.jpeg",
+  "https://images.pexels.com/photos/33210166/pexels-photo-33210166.jpeg"
+ ],
+ "Hokej": [
+  "https://images.pexels.com/photos/6469035/pexels-photo-6469035.jpeg",
+  "https://images.pexels.com/photos/6468744/pexels-photo-6468744.jpeg",
+  "https://images.pexels.com/photos/6847284/pexels-photo-6847284.jpeg"
+ ],
+ "Formule 1": [
+  "https://images.pexels.com/photos/28680795/pexels-photo-28680795.jpeg",
+  "https://images.pexels.com/photos/38041837/pexels-photo-38041837.jpeg",
+  "https://images.pexels.com/photos/10373654/pexels-photo-10373654.jpeg"
+ ],
+ "Basketbal": [
+  "https://images.pexels.com/photos/34688570/pexels-photo-34688570.jpeg",
+  "https://images.pexels.com/photos/16599399/pexels-photo-16599399.jpeg"
+ ],
+ "Tenis": [
+  "https://images.pexels.com/photos/27151849/pexels-photo-27151849.jpeg",
+  "https://images.pexels.com/photos/36765778/pexels-photo-36765778.jpeg"
+ ],
+ "Maratony a půlmaratony": [
+  "https://images.pexels.com/photos/10313668/pexels-photo-10313668.jpeg",
+  "https://images.pexels.com/photos/2654902/pexels-photo-2654902.jpeg"
+ ],
+ "Americký fotbal": [
+  "https://images.pexels.com/photos/274517/pexels-photo-274517.jpeg",
+  "https://images.pexels.com/photos/274577/pexels-photo-274577.jpeg"
+ ],
+ "Moto GP": [
+  "https://images.pexels.com/photos/38374472/pexels-photo-38374472.jpeg",
+  "https://images.pexels.com/photos/5713150/pexels-photo-5713150.jpeg"
+ ],
+ "Šipky": [
+  "https://images.pexels.com/photos/226573/pexels-photo-226573.jpeg"
+ ],
+ "Box": [
+  "https://images.pexels.com/photos/28238742/pexels-photo-28238742.jpeg"
+ ],
+ "Ostatní sporty a akce": [
+  "https://images.pexels.com/photos/40317576/pexels-photo-40317576.jpeg",
+  "https://images.pexels.com/photos/35898730/pexels-photo-35898730.jpeg"
+ ]
+};
+const sportPhoto = (sport: string, id: string): string => {
+  const l = SPORT_PHOTOS[sport] ?? SPORT_PHOTOS['Ostatní sporty a akce']!;
+  let h = 0;
+  for (const c of id) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return l[h % l.length]!;
+};
+
 /** FutbalTour (Google Merchant RSS via Mergado, eHub deep links): tickets + travel to football, hockey, F1 … events. */
 function futbaltour(n: XmlNode): Item | null {
   const id = txt(n, 'id');
@@ -448,7 +504,7 @@ function futbaltour(n: XmlNode): Item | null {
     ext: id,
     name: sportTitle(raw, sport, league, iso),
     target: affiliateUrl('futbaltour', id, url),
-    image,
+    image: sportPhoto(sport, id),
     images: [],
     price,
     priceOld: 0,
