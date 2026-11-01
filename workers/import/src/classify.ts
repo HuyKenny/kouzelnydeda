@@ -87,10 +87,21 @@ const SERIES: Array<[RegExp, string, boolean]> = [
   [/privatni (wellness|spa|sauna|virivk)|soukrom\w* (wellness|spa|sauna|virivk)/, 'privatni-wellness', true],
   [/tanecn|taneni|\btanec\b|\btance\b|salsa|bachata|zumba/, 'tanecni-kurzy', false],
   [/\bkoz[aeouy]\b|kozami|kozou|alpak|oslik/, 'prochazka-s-kozou-a-alpakami', false],
+  [/bungee|bunge\w* jump|skok z (jerabu|mostu)/, 'bungee-jumping', false],
+  [/skol\w* smyku|\bsmyk\b|driftov\w* (kurz|skol)|bezpecn\w* jizd/, 'kurzy-smyku-a-bezpecne-jizdy', false],
+  [/\bl-?39\b|albatros|stihack/, 'let-stihackou', false],
+  [/romantick\w* (pobyt|vikend|noc|ubytovani|wellness|dovolena|escape)/, 'romanticke-pobyty', true],
+  [/zamek|zamku|zamecke|zamecky|chateau/, 'pobyty-na-zamku', true],
+  [/rybar|rybol|rybolov|rybni/, 'rybareni', false],
+  [/romantick\w* vecer|vecer\w* (pro dva|pri svick)/, 'romanticka-vecere', false],
+  [/rozluck/, 'rozlucka-se-svobodou', true],
+  [/(pokoj|apartma|chata|chatka|domek)\w* s (soukromou |privatni )?virivk|virivk\w* (na|v) pokoj/, 'pokoje-s-virivkou', true],
 ];
+// series that only make sense for stays (a castle tour or a romantic dinner is not a castle stay)
+const STAY_ONLY = new Set(['romanticke-pobyty', 'pobyty-na-zamku', 'pokoje-s-virivkou']);
 export const seriesCats = (name: string): string[] => {
   const n = norm(name), stay = isStay(n);
-  return SERIES.filter(([re, , stayOk]) => re.test(n) && (stayOk || !stay)).map(([, s]) => '@' + s);
+  return SERIES.filter(([re, s, stayOk]) => re.test(n) && (stayOk || !stay) && (stay || !STAY_ONLY.has(s))).map(([, s]) => '@' + s);
 };
 
 /** True when the offer is an overnight stay (variants "2 noci", "pobyt", accommodation words). */

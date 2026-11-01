@@ -439,5 +439,68 @@
   "short": "Kozy a alpaky",
   "parent": "zoo-a-zviratka",
   "icon": ""
+ },
+ {
+  "slug": "bungee-jumping",
+  "name": "Bungee jumping a skok z jeřábu",
+  "short": "Bungee jumping",
+  "parent": "lanova-centra",
+  "icon": ""
+ },
+ {
+  "slug": "kurzy-smyku-a-bezpecne-jizdy",
+  "name": "Škola smyku a bezpečná jízda",
+  "short": "Škola smyku",
+  "parent": "zazitkove-jizdy",
+  "icon": ""
+ },
+ {
+  "slug": "let-stihackou",
+  "name": "Let stíhačkou L-39 Albatros",
+  "short": "Let stíhačkou",
+  "parent": "vyhlidkove-lety",
+  "icon": ""
+ },
+ {
+  "slug": "romanticke-pobyty",
+  "name": "Romantické pobyty pro dva",
+  "short": "Romantické pobyty",
+  "parent": "pobyty",
+  "icon": ""
+ },
+ {
+  "slug": "pobyty-na-zamku",
+  "name": "Pobyty na zámku a v zámeckých hotelech",
+  "short": "Pobyty na zámku",
+  "parent": "pobyty",
+  "icon": ""
+ },
+ {
+  "slug": "rybareni",
+  "name": "Rybaření a rybářské zážitky",
+  "short": "Rybaření",
+  "parent": "zazitky",
+  "icon": ""
+ },
+ {
+  "slug": "romanticka-vecere",
+  "name": "Romantická večeře pro dva",
+  "short": "Romantická večeře",
+  "parent": "jidlo-a-piti",
+  "icon": ""
+ },
+ {
+  "slug": "rozlucka-se-svobodou",
+  "name": "Rozlučka se svobodou",
+  "short": "Rozlučka se svobodou",
+  "parent": "zazitky",
+  "icon": ""
+ },
+ {
+  "slug": "pokoje-s-virivkou",
+  "name": "Pokoje a apartmány s vířivkou",
+  "short": "Pokoj s vířivkou",
+  "parent": "pobyty",
+  "icon": ""
  }
 ]
