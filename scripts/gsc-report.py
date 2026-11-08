@@ -50,4 +50,10 @@ for x in q(*w1, ['query', 'page'], 5000):
 for kw in TRACKED:
     x = byq.get(kw)
     L.append(f"| {kw} | {x['position']:.1f} | {int(x['impressions'])} | {int(x['clicks'])} | {tp[kw]['keys'][1].replace('https://kouzelnydeda.cz', '') if kw in tp else ''} |" if x else f'| {kw} | nezobrazuje se | 0 | 0 | |')
+# pages that lost clicks: last 28 days vs the 56 days before (expired offers, dropped rankings)
+cur = {x['keys'][0]: x for x in q(end - dt.timedelta(days=27), end, ['page'], 5000)}
+prev = {x['keys'][0]: x for x in q(end - dt.timedelta(days=83), end - dt.timedelta(days=28), ['page'], 5000)}
+lost = sorted([(u, x, cur.get(u, {'clicks': 0, 'impressions': 0})) for u, x in prev.items() if x['clicks'] >= 2], key=lambda t: -(t[1]['clicks'] / 2 - t[2]['clicks']))[:15]
+L += ['', '## Stránky, které ztrácejí kliky (28 d vs. předchozích 56 d, kliky/28 d)', '| stránka | dřív | teď | zobr. dřív→teď |', '|---|---|---|---|']
+for u, o, n in lost: L.append(f"| {u.replace('https://kouzelnydeda.cz', '')[:80]} | {o['clicks'] / 2:.1f} | {int(n['clicks'])} | {int(o['impressions'] / 2)}→{int(n['impressions'])} |")
 f = OUT / f'gsc-tyden-{end}.md'; f.write_text('\n'.join(L) + '\n'); print(f)

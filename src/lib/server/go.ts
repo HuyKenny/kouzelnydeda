@@ -53,6 +53,12 @@ export async function handleGo(id: string | undefined, request: Request, env: Ap
     const va = (await env.DB.prepare("SELECT json_extract(info, '$.va') AS va FROM products WHERE id = ?").bind(row.id).first<{ va: string | null }>())?.va;
     try { const t = (JSON.parse(va ?? '[]') as Array<[string, number, string?]>)[Number(v)]?.[2]; if (isSafeTarget(t)) target = t; } catch { /* the offer's own target */ }
   }
+  // a real click comes from one of our pages (referrer = own origin); scrapers with rotating proxies call /go/ cold (Nov 2026: ~1 000 such
+  // "clicks" a day against ~11 organic visits) and would poison popularity/ranking → redirect them, but do not count them
+  const ref = request.headers.get('referer') ?? '';
+  let own = false;
+  try { const h = new URL(ref).hostname; own = h === 'kouzelnydeda.cz' || h === 'www.kouzelnydeda.cz' || isLocal(env); } catch { /* no referrer */ }
+  if (!own) return new Response(null, { status: 302, headers: { ...NO_STORE, location: target } });
   const log = (async () => {
     await env.DB.prepare('INSERT INTO clicks (product_id, source, context, ip_hash, clicked_at) VALUES (?, ?, ?, ?, ?)')
       .bind(row.id, row.source, ctx, await ipHash(ip, env), new Date().toISOString()).run();
