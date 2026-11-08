@@ -293,7 +293,12 @@ export async function productView(db: D1Database, id: number) {
   // an offer that ended 30+ days ago: 301 to its category (kd-redirects.php did the same right away)
   if (!p.active) {
     const ended = Date.parse((p.expired_at || p.updated_at).replace(' ', 'T') + 'Z');
-    if (!Number.isFinite(ended) || Date.now() - ended > EXPIRED_KEEP_DAYS * 86400_000) return { redirect: primary && primary.count_total > 0 ? `/${primary.slug}/` : themeTarget(p.slug) } as const;
+    if (!Number.isFinite(ended) || Date.now() - ended > EXPIRED_KEEP_DAYS * 86400_000) {
+      // the narrowest live category the offer sat in (series hubs such as /cirkus/ beat the generic primary category)
+      const best = catIds.map((i) => t.byId.get(i)).filter((c): c is Cat => !!c && c.count_total >= 3 && !c.noindex && !c.canon_id).sort((a, b) => a.count_total - b.count_total)[0];
+      const to = best ?? (primary && primary.count_total > 0 ? primary : undefined);
+      return { redirect: to ? `/${to.slug}/` : themeTarget(p.slug) } as const;
+    }
   }
   let info: Info = {};
   try { info = JSON.parse(p.info) as Info; } catch { /* legacy */ }
