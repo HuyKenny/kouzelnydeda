@@ -7,6 +7,7 @@ const CITIES: Array<[string, string]> = [['praha', 'Praha'], ['brno', 'Brno'], [
 	['olomouc', 'Olomouc'], ['liberec', 'Liberec']];
 const PERSONAL: Array<[string, string]> = [['darek-pro-maminku', 'Dárek pro maminku'], ['darek-pro-tatu', 'Dárek pro tátu'], ['darek-pro-babicku', 'Dárek pro babičku'], ['darek-pro-dedu', 'Dárek pro dědu'], ['darek-pro-dceru', 'Dárek pro dceru'], ['darek-pro-syna', 'Dárek pro syna'], ['darek-pro-sestru', 'Dárek pro sestru'], ['darek-pro-bratra', 'Dárek pro bratra'], ['darek-pro-kamaradku', 'Dárek pro kamarádku'], ['darek-pro-kamarada', 'Dárek pro kamaráda'], ['darek-pro-pritelkyni', 'Dárek pro přítelkyni'], ['darek-pro-pritele', 'Dárek pro přítele'], ['darek-pro-manzela', 'Dárek pro manžela'], ['darek-pro-manzelku', 'Dárek pro manželku'], ['darek-pro-kolegu', 'Dárek pro kolegu'], ['darek-pro-sefa', 'Dárek pro šéfa'], ['darek-pro-seniory', 'Dárek pro seniory'], ['darek-pro-teenagera', 'Dárek pro teenagera'], ['darek-k-narozeninam', 'Dárek k narozeninám'], ['vanocni-darek', 'Vánoční dárek'], ['darky-do-500-kc', 'Dárky do 500 Kč'], ['darky-do-1000-kc', 'Dárky do 1000 Kč'], ['darky-do-2000-kc', 'Dárky do 2000 Kč']];
 const WISHES: Array<[string, string]> = [['prani-k-narozeninam', 'Přání k narozeninám'], ['prani-k-svatku', 'Přání k svátku'], ['vanocni-prani-texty', 'Vánoční přání'], ['novorocni-prani', 'Novoroční přání'], ['prani-k-vyroci-svatby', 'Přání k výročí svatby'], ['prani-ke-dni-matek', 'Přání ke Dni matek']];
+const TRIPS: Array<[string, string]> = [['kam-na-vylet-s-detmi', 'Kam na výlet s dětmi'], ['kam-na-vylet-v-praze', 'Praha'], ['kam-na-vylet-v-okoli-prahy', 'Okolí Prahy'], ['kam-na-vylet-stredocesky-kraj', 'Středočeský kraj'], ['kam-na-vylet-jihocesky-kraj', 'Jihočeský kraj'], ['kam-na-vylet-plzensky-kraj', 'Plzeňský kraj'], ['kam-na-vylet-karlovarsky-kraj', 'Karlovarský kraj'], ['kam-na-vylet-ustecky-kraj', 'Ústecký kraj'], ['kam-na-vylet-liberecky-kraj', 'Liberecký kraj'], ['kam-na-vylet-kralovehradecky-kraj', 'Královéhradecký kraj'], ['kam-na-vylet-pardubicky-kraj', 'Pardubický kraj'], ['kam-na-vylet-vysocina', 'Vysočina'], ['kam-na-vylet-jihomoravsky-kraj', 'Jihomoravský kraj'], ['kam-na-vylet-olomoucky-kraj', 'Olomoucký kraj'], ['kam-na-vylet-zlinsky-kraj', 'Zlínský kraj'], ['kam-na-vylet-moravskoslezsky-kraj', 'Moravskoslezský kraj'], ['kam-na-dovolenou', 'Kam na dovolenou']];
 ---
 <footer class="ft">
 	<div class="w ft__in">
@@ -29,6 +30,8 @@ const WISHES: Array<[string, string]> = [['prani-k-narozeninam', 'Přání k nar
 	<div class="w ft__more">
 		<h2>Dárky pro koho</h2>
 		<ul class="ft__tags">{PERSONAL.map(([s, n]) => <li><a href={`/${s}/`}>{n}</a></li>)}</ul>
+		<h2>Kam na výlet</h2>
+		<ul class="ft__tags">{TRIPS.map(([s, n]) => <li><a href={`/${s}/`}>{n}</a></li>)}</ul>
 		<h2>Přání a nápady</h2>
 		<ul class="ft__tags">{WISHES.map(([s, n]) => <li><a href={`/${s}/`}>{n}</a></li>)}</ul>
 	</div>
