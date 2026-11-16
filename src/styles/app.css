@@ -414,6 +414,9 @@ button, input, select { font: inherit; color: inherit; }
 .ft li { padding: 3px 0; font-size: .93rem; }
 .ft__logo { background: #fff; display: inline-block; border-radius: 16px; padding: 10px 14px; margin-bottom: 14px; transform: rotate(-2deg); }
 .ft__logo img { width: 140px; }
+.ft__more { padding-bottom: 22px; }
+.ft__tags { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0 0 16px; }
+.ft__tags li { padding: 2px 0; font-size: .88rem; }
 .ft__pozn { border-top: 1px solid rgb(255 255 255 / 14%); padding-top: 16px; padding-bottom: 30px; font-size: .85rem; color: #ada5c4; }
 @media (max-width: 900px) { .ft__in { grid-template-columns: 1fr 1fr; } }
 

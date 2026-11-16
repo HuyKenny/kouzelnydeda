@@ -5,6 +5,8 @@ import { TOP_GIFTS } from '../lib/views';
 const year = new Date().getFullYear();
 const CITIES: Array<[string, string]> = [['praha', 'Praha'], ['brno', 'Brno'], ['ostrava', 'Ostrava'], ['plzen', 'Plzeň'], ['ceske-budejovice', 'České Budějovice'], ['hradec-kralove', 'Hradec Králové'],
 	['olomouc', 'Olomouc'], ['liberec', 'Liberec']];
+const PERSONAL: Array<[string, string]> = [['darek-pro-maminku', 'Dárek pro maminku'], ['darek-pro-tatu', 'Dárek pro tátu'], ['darek-pro-babicku', 'Dárek pro babičku'], ['darek-pro-dedu', 'Dárek pro dědu'], ['darek-pro-dceru', 'Dárek pro dceru'], ['darek-pro-syna', 'Dárek pro syna'], ['darek-pro-sestru', 'Dárek pro sestru'], ['darek-pro-bratra', 'Dárek pro bratra'], ['darek-pro-kamaradku', 'Dárek pro kamarádku'], ['darek-pro-kamarada', 'Dárek pro kamaráda'], ['darek-pro-pritelkyni', 'Dárek pro přítelkyni'], ['darek-pro-pritele', 'Dárek pro přítele'], ['darek-pro-manzela', 'Dárek pro manžela'], ['darek-pro-manzelku', 'Dárek pro manželku'], ['darek-pro-kolegu', 'Dárek pro kolegu'], ['darek-pro-sefa', 'Dárek pro šéfa'], ['darek-pro-seniory', 'Dárek pro seniory'], ['darek-pro-teenagera', 'Dárek pro teenagera'], ['darek-k-narozeninam', 'Dárek k narozeninám'], ['vanocni-darek', 'Vánoční dárek'], ['darky-do-500-kc', 'Dárky do 500 Kč'], ['darky-do-1000-kc', 'Dárky do 1000 Kč'], ['darky-do-2000-kc', 'Dárky do 2000 Kč']];
+const WISHES: Array<[string, string]> = [['prani-k-narozeninam', 'Přání k narozeninám'], ['prani-k-svatku', 'Přání k svátku'], ['vanocni-prani-texty', 'Vánoční přání'], ['novorocni-prani', 'Novoroční přání'], ['prani-k-vyroci-svatby', 'Přání k výročí svatby'], ['prani-ke-dni-matek', 'Přání ke Dni matek']];
 ---
 <footer class="ft">
 	<div class="w ft__in">
@@ -23,6 +25,12 @@ const CITIES: Array<[string, string]> = [['praha', 'Praha'], ['brno', 'Brno'], [
 			<li><a href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a></li><li><a href="/prohlaseni-o-pouzivani-cookies/">Cookies</a></li>
 			<li><a href="#" data-kd-consent-open>Nastavení cookies</a></li>
 		</ul></div>
+	</div>
+	<div class="w ft__more">
+		<h2>Dárky pro koho</h2>
+		<ul class="ft__tags">{PERSONAL.map(([s, n]) => <li><a href={`/${s}/`}>{n}</a></li>)}</ul>
+		<h2>Přání a nápady</h2>
+		<ul class="ft__tags">{WISHES.map(([s, n]) => <li><a href={`/${s}/`}>{n}</a></li>)}</ul>
 	</div>
 	<div class="w ft__pozn">
 		<p>Kouzelný děda je rozcestník nabídek. Za nákup přes odkaz na partnera můžeme dostat provizi — cena pro vás zůstává stejná. Nabídky, ceny a jejich platnost určuje partner.</p>

@@ -268,7 +268,7 @@ export async function giftView(db: D1Database, idx: number, page: number, sp: UR
   const faq = g.faq?.length ? g.faq : categoryFaq(g.name, 'zazitek');
   return {
     meta: {
-      title: paged(g.title, page), description: g.desc, robots: filtered ? ['noindex', 'follow'] : robots(false),
+      title: paged(yearTitle(g.title), page), description: g.desc, robots: filtered ? ['noindex', 'follow'] : robots(false),
       ...(filtered ? {} : { canonical: url }),
       ...(page > 1 && !filtered ? { prev: abs(pagePath(base, page - 1)) } : {}),
       ...(page < pages && !filtered ? { next: abs(pagePath(base, page + 1)) } : {}),
@@ -281,6 +281,14 @@ export async function giftView(db: D1Database, idx: number, page: number, sp: UR
     related: [], subcats: [], faq, trust: '', tree: t, pageType: 'gift', icon: g.icon, section: 'darky', gifts: [], ...(g.il ? { ill: g.il } : {}),
     side: { title: 'Tipy na dárek', url: `/${hub.slug}/`, icon: 'darek', groups: [{ g: '', items: [...TOP_GIFTS, ...(TOP_GIFTS.includes(g) || g.hub ? [] : [g])].map((x) => ({ name: x.name, url: `/${x.slug}/`, icon: x.icon, active: x.slug === g.slug })) }], cities: [] },
   };
+}
+
+/** "Dárek pro maminku – pobyty a zážitky | Kouzelný děda" → "Dárek pro maminku 2026 – pobyty a zážitky | …": the year is what the SERP competitors lead with. */
+function yearTitle(t: string): string {
+  const y = new Date().getFullYear();
+  if (/\d{4}/.test(t) || !t.includes(' – ')) return t;
+  const r = t.replace(' – ', ` ${y} – `);
+  return r.length <= 66 ? r : t;
 }
 
 // ---------- offer ----------
