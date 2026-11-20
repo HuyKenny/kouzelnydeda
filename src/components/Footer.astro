@@ -1,6 +1,6 @@
 ---
 // Footer: sections, gifts, popular cities, information, affiliate disclosure, operator.
-import { OPERATOR } from '../lib/site';
+import { DISCLAIMER, OPERATOR } from '../lib/site';
 import { TOP_GIFTS } from '../lib/views';
 const year = new Date().getFullYear();
 const CITIES: Array<[string, string]> = [['praha', 'Praha'], ['brno', 'Brno'], ['ostrava', 'Ostrava'], ['plzen', 'Plzeň'], ['ceske-budejovice', 'České Budějovice'], ['hradec-kralove', 'Hradec Králové'],
@@ -37,6 +37,7 @@ const TRIPS: Array<[string, string]> = [['kam-na-vylet-s-detmi', 'Kam na výlet 
 	</div>
 	<div class="w ft__pozn">
 		<p>Kouzelný děda je rozcestník nabídek. Za nákup přes odkaz na partnera můžeme dostat provizi — cena pro vás zůstává stejná. Nabídky, ceny a jejich platnost určuje partner.</p>
+		<p class="ft__distance">{DISCLAIMER}</p>
 		<p>© {year} Kouzelný děda · provozovatel {OPERATOR.name}, IČO {OPERATOR.ico}, DS {OPERATOR.ds}, {OPERATOR.street}, {OPERATOR.zip} {OPERATOR.city}</p>
 	</div>
 </footer>

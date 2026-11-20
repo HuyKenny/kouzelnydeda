@@ -20,6 +20,9 @@ export const EXPIRED_KEEP_DAYS = 30;
 /** Operator (same as the legal pages). */
 export const OPERATOR = { name: 'Ha Duy Huy', ico: '07876823', ds: 'dxmsrdt', street: 'Bartáková 36', zip: '140 00', city: 'Praha', email: 'info@kouzelnydeda.cz' };
 
+/** Footer / legal-page notice: this site is not the former holder of the domain (neutral wording, no accusations). */
+export const DISCLAIMER = 'Upozornění: provozovatel tohoto webu (Ha Duy Huy, IČO 07876823) nemá žádnou právní, majetkovou ani osobní vazbu na společnost DOBROGEM s.r.o., IČ 03740153, která doménu kouzelnydeda.cz dříve užívala. Web provozujeme samostatně, nepřebíráme závazky, objednávky ani služby původního provozovatele domény a za jeho činnost neodpovídáme. Kouzelný děda je rozcestník nabídek partnerů, sami nic neprodáváme. Dotazy k dřívějšímu provozu domény prosím směřujte na uvedenou společnost.';
+
 /** Founder (Kenny's personal site huy.cz is the Person entity; same node on all his projects). */
 export const FOUNDER = { '@type': 'Person', '@id': 'https://huy.cz/#kenny', name: 'Ha Duy Huy', alternateName: 'Kenny', url: 'https://huy.cz/', jobTitle: 'SEO konzultant' };
 
