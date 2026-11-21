@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Insert blog posts from JSON files into the production D1 (posts + slugs), with a Pexels featured image each.
 
-    python3 scripts/vlozit-clanky.py <dir with *.json> [--apply]
+    python3 scripts/vlozit-clanky.py <dir with *.json> [--apply] [--update]
 
-JSON: {slug, title, seo_title, seo_desc, excerpt, image_query, image_alt, content_html}. Without --apply only validates.
+JSON: {slug, title, seo_title, seo_desc, excerpt, image_query, image_alt, content_html[, offers_cat]}. Without --apply only validates.
+Existing slugs are skipped, unless --update: then the post is rewritten in place (new text, new Pexels image, noindex=0, modified now).
+Files starting with "_" are ignored.
 Checks: internal links must point to a live slug (slugs table or a slug in the same batch), no "sleva", seo_title <= 60 chars.
 Images go to public/wp-content/uploads/2026/11/<slug>(.webp|-768.webp) (deploy the web afterwards). PEXELS_API_KEY comes from
 credentials/.alkoholicky-credentials.env. Never prints secrets.
@@ -31,7 +33,7 @@ def d1(sql=None, file=None):
     a = ['npx', 'wrangler', 'd1', 'execute', 'DB', '--env', 'production', '--remote', '--json'] + (['--command', sql] if sql else ['--file', file])
     r = subprocess.run(a, cwd=ROOT, env=ev, capture_output=True, text=True)
     try:
-        return json.loads(r.stdout)
+        return json.loads(r.stdout[r.stdout.index('['):])
     except Exception:
         sys.exit('D1 failed: ' + r.stdout[-300:] + r.stderr[-300:])
 
@@ -57,14 +59,15 @@ def pexels(query, slug):
 def main():
     if len(sys.argv) < 2:
         sys.exit(__doc__)
-    files = sorted(Path(sys.argv[1]).glob('*.json'))
+    files = sorted(f for f in Path(sys.argv[1]).glob('*.json') if not f.name.startswith('_'))
     apply = '--apply' in sys.argv
+    update = '--update' in sys.argv
     posts = [json.loads(f.read_text()) for f in files]
     live = {r['slug'] for r in d1("SELECT slug FROM slugs")[0]['results']}
     batch = {p['slug'] for p in posts}
     taken = [p['slug'] for p in posts if p['slug'] in live]
     if taken:
-        print('slug already exists (will be skipped):', taken)
+        print('slug already exists (will be ' + ('updated' if update else 'skipped') + '):', taken)
     bad = 0
     for p in posts:
         h = p['content_html']
@@ -85,19 +88,25 @@ def main():
     mx = d1("SELECT max(id) m FROM posts")[0]['results'][0]['m']
     sql = []
     for p in posts:
+        oc = p.get('offers_cat', '')
         if p['slug'] in live:
+            if not update:
+                continue
+            w, h = pexels(p['image_query'], p['slug'])
+            img = f"/wp-content/uploads/2026/11/{p['slug']}.webp"; card = f"/wp-content/uploads/2026/11/{p['slug']}-768.webp"
+            sql.append(f"UPDATE posts SET title={esc(p['title'])}, content_html={esc(p['content_html'])}, excerpt={esc(p['excerpt'])}, modified_at=datetime('now'), image={esc(img)}, image_card={esc(card)}, image_alt={esc(p['image_alt'])}, image_w={w}, image_h={h}, noindex=0, seo_robots='', seo_title={esc(p['seo_title'])}, seo_desc={esc(p['seo_desc'])}, offers_cat={esc(oc)}, status='publish' WHERE type='post' AND slug={esc(p['slug'])};")
             continue
         mx += 1
         w, h = pexels(p['image_query'], p['slug'])
         img = f"/wp-content/uploads/2026/11/{p['slug']}.webp"; card = f"/wp-content/uploads/2026/11/{p['slug']}-768.webp"
         sql.append("INSERT INTO posts (id, type, slug, title, content_html, excerpt, published_at, modified_at, cat_id, image, image_card, image_alt, image_w, image_h, author, noindex, seo_title, seo_desc, seo_robots, canonical, offers_cat, ld_json, status) VALUES "
-                   f"({mx}, 'post', {esc(p['slug'])}, {esc(p['title'])}, {esc(p['content_html'])}, {esc(p['excerpt'])}, datetime('now'), datetime('now'), 431, {esc(img)}, {esc(card)}, {esc(p['image_alt'])}, {w}, {h}, 'Jan', 0, {esc(p['seo_title'])}, {esc(p['seo_desc'])}, '', '', '', '', 'publish');")
+                   f"({mx}, 'post', {esc(p['slug'])}, {esc(p['title'])}, {esc(p['content_html'])}, {esc(p['excerpt'])}, datetime('now'), datetime('now'), 431, {esc(img)}, {esc(card)}, {esc(p['image_alt'])}, {w}, {h}, 'Jan', 0, {esc(p['seo_title'])}, {esc(p['seo_desc'])}, '', '', {esc(oc)}, '', 'publish');")
         sql.append(f"INSERT INTO slugs (slug, kind, ref_id) VALUES ({esc(p['slug'])}, 'post', {mx});")
     if not sql:
         sys.exit('nothing to insert')
     f = Path('/tmp/kdw/insert-posts.sql'); f.write_text('\n'.join(sql))
     d1(file=str(f))
-    print('inserted', len(sql) // 2, 'posts')
+    print('done:', sum(x.startswith('INSERT INTO posts') for x in sql), 'inserted,', sum(x.startswith('UPDATE') for x in sql), 'updated')
 
 
 main()
