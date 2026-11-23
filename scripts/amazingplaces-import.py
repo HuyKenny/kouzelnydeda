@@ -62,10 +62,14 @@ def scrape(u):
 with ThreadPoolExecutor(4) as ex: items = [x for x in ex.map(scrape, urls) if x and x['image']]
 print(len(items), 'places scraped')
 if len(items) < 100: sys.exit('too few places — page layout changed?')
+import os
 creds = {}
-for line in open('/home/kenny/ai/credentials/.kouzelnydeda-credentials.env'):
-    if '=' in line and not line.startswith('#'): k, v = line.strip().split('=', 1); creds[k] = v.strip('"\'')
+if os.environ.get('IMPORT_BASE'):   # static build: the import Worker runs locally (scripts/static/run-worker.ts)
+    creds['IMPORT_SHARED_SECRET_' + env.upper()] = os.environ['IMPORT_SHARED_SECRET']
+else:
+  for line in open('/home/kenny/ai/credentials/.kouzelnydeda-credentials.env'):
+      if '=' in line and not line.startswith('#'): k, v = line.strip().split('=', 1); creds[k] = v.strip('"\'')
 host = 'kouzelnydeda-import-staging.huy-kenny.workers.dev' if env == 'staging' else 'kouzelnydeda-import.huy-kenny.workers.dev'
-req = urllib.request.Request(f'https://{host}/ingest/amazingplaces?force=1', data=json.dumps(items).encode(), method='POST',
+req = urllib.request.Request((os.environ.get('IMPORT_BASE') or f'https://{host}') + f'/ingest/amazingplaces?force=1', data=json.dumps(items).encode(), method='POST',
                              headers={'Authorization': 'Bearer ' + creds['IMPORT_SHARED_SECRET_' + env.upper()], 'Content-Type': 'application/json', 'User-Agent': 'kd-ingest/1.0'})
 print(urllib.request.urlopen(req, timeout=250).read().decode()[:300])

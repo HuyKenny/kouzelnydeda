@@ -1,0 +1,23 @@
+{
+ "domain": "kouzelnydeda.cz",
+ "worker": "kouzelnydeda",
+ "port": 8831,
+ "cron": "15 1 * * *",
+ "go": "products",
+ "import": [["pnpm", "exec", "tsx", "scripts/static/run-worker.ts", "--db", "{db}", "--serve", "8839",
+             "--run", "python3 scripts/firmanazazitky-import.py production",
+             "--run", "python3 scripts/excursia-import.py production",
+             "--run", "[ \"$(date +%u)\" = 7 ] && python3 scripts/amazingplaces-import.py production || true",
+             "--tick", "--finalize"]],
+ "crawl": {"workers": 4, "extra_until": 0, "no_go": true, "skip": [], "exits": "/go/"},
+ "fts": ["INSERT INTO product_fts (rowid, name, city) SELECT id, name, city FROM products"],
+ "min_pages": 3000,
+ "smoke_paths": [],
+ "workflow_env": {"CJ_API_TOKEN": "CJ_API_TOKEN"},
+ "actions": {"repo": "HuyKenny/kouzelnydeda", "cred": ".kouzelnydeda-credentials.env", "zone": "kouzelnydeda.cz",
+             "secrets": {"CJ_API_TOKEN": ".kakapo-credentials.env:CJ_API_TOKEN"},
+             "feed_urls": {"FEED_URL_SLEVOMAT": ".kouzelnydeda-feeds.json#slevomat", "FEED_URL_ADROP": ".kouzelnydeda-feeds.json#adrop",
+                           "FEED_URL_ZAZITKY": ".kouzelnydeda-feeds.json#zazitky", "FEED_URL_SKVELECESKO": ".kouzelnydeda-feeds.json#skvelecesko",
+                           "FEED_URL_KORMIDLO": ".kouzelnydeda-feeds.json#kormidlo", "FEED_URL_RADYNACESTU": ".kouzelnydeda-feeds.json#radynacestu",
+                           "FEED_URL_FUTBALTOUR": ".kouzelnydeda-feeds.json#futbaltour"}}
+}
