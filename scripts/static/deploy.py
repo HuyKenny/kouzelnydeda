@@ -70,7 +70,7 @@ def sticky_plan(files, prev):
 
 
 def deploy(site, out, plan_file, dry=False):
-    out = Path(out)
+    out = Path(out).resolve()
     worker, domain = site['worker'], site['domain']
     acc = zmraz.account_id()
     z = api(f'/zones?name={site.get("zone", domain)}')['result']
@@ -117,11 +117,11 @@ def deploy(site, out, plan_file, dry=False):
         cp.write_text(json.dumps(cfg))
         res = subprocess.run([wr, 'deploy', '-c', str(cp)], cwd=str(work), env=env, capture_output=True, text=True)
         full = res.stdout + res.stderr
-        up = re.search(r'Uploaded (\d+) of (\d+) assets', full) or re.search(r'(\d+) new or modified', full)
+        up = re.search(r'Uploaded \d+ files?(?: \([^)]*\))?', full) or re.search(r'No (?:updated )?asset files to upload', full)
         if res.returncode != 0 or 'Current Version ID' not in full:
             print(re.sub(r'(?i)(token|key)[^\n]*', '[redacted]', full[-1500:]))
             sys.exit(f'deploy {name} failed')
-        print(f'{name}: {len(fl)} files, {up.group(0) if up else "no new assets"}', flush=True)
+        print(f'{name}: {len(fl)} files, {up.group(0) if up else "uploaded"}', flush=True)
         shutil.rmtree(d)
     # zone routes of the shards
     want = {f'{domain}{p}*': s['name'] for s in shards for p in s['prefixes']}
