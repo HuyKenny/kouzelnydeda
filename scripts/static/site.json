@@ -9,7 +9,7 @@
              "--run", "python3 scripts/excursia-import.py production",
              "--run", "[ \"$(date +%u)\" = 7 ] && python3 scripts/amazingplaces-import.py production || true",
              "--tick", "--finalize"]],
- "crawl": {"workers": 4, "extra_until": 45000, "extra_paths_sql": ["SELECT '/' || slug || '/' FROM products WHERE active = 0 AND expired_at >= datetime('now', '-30 days') ORDER BY expired_at DESC"], "no_go": true, "skip": [], "exits": "/go/"},
+ "crawl": {"workers": 4, "extra_until": 45000, "extra_paths_sql": ["SELECT '/hledat/'", "SELECT '/' || slug || '/' FROM products WHERE active = 0 AND expired_at >= datetime('now', '-30 days') ORDER BY expired_at DESC"], "no_go": true, "skip": [], "exits": "/go/"},
  "fts": ["INSERT INTO product_fts (rowid, name, city) SELECT id, name, city FROM products"],
  "min_pages": 3000,
  "smoke_paths": [],

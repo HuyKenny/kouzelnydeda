@@ -19,6 +19,8 @@ const partners = [...v.tree.stores.values()].filter((s) => s.count > 0).sort((a,
 const heroImgs = v.top.filter((p) => p.image).slice(0, 2).map((p) => card(p.image, 360));
 ---
 <Base meta={v.meta} pageType="home" searchAction>
+	<!-- the static home ignores ?s= (Workers static assets): old search links and the SearchAction go on to the search page -->
+	<script is:inline>if (/[?&]s=/.test(location.search)) location.replace('/hledat/' + location.search);</script>
 	<section class="hero">
 		<div class="w hero__in">
 			<div>
